@@ -6,25 +6,43 @@
 **Status**: Not Started
 **Objective**: Initialize project dependencies and folder structure
 
-- [ ] Install `vue-i18n` package
-- [ ] Install additional UI libraries (if needed)
-- [ ] Create Vuex store structure:
-  - [ ] `/store/game.js` - Game state (phase, round, players, roles, actions)
-  - [ ] `/store/players.js` - Player profiles
-  - [ ] `/store/roles.js` - Role configurations
+**Dependencies to install:**
+- [ ] Install `@nuxtjs/i18n` (for Nuxt 4)
+- [ ] Install `pinia` (state management - Nuxt 4 standard)
+- [ ] Install `@pinia/nuxt` (Pinia Nuxt module)
+- [ ] Additional UI libraries if needed (e.g., `clsx`, `lucide-vue-next`)
+
+**Project Structure:**
+- [ ] Create Pinia store structure:
+  - [ ] `/stores/game.ts` - Game state (phase, round, players, roles, actions)
+  - [ ] `/stores/players.ts` - Player profiles
+  - [ ] `/stores/roles.ts` - Role configurations
+  - [ ] Configure `defineStore()` with TypeScript
 - [ ] Create `/locales` directory
 - [ ] Create `/locales/en.json` - English translations
 - [ ] Create `/locales/vi.json` - Vietnamese translations
-- [ ] Configure i18n in `nuxt.config.js`
-- [ ] Create main layout with language switcher
-- [ ] Create page routing structure:
-  - [ ] `/index.vue` - Home menu
-  - [ ] `/roles.vue` - Role management
-  - [ ] `/players.vue` - Player management
-  - [ ] `/game-setup.vue` - Game setup
-  - [ ] `/game.vue` - Game flow
-  - [ ] `/game-end.vue` - Game end screen
-- [ ] Set up global styles (Tailwind config)
+- [ ] Update `nuxt.config.ts` with i18n and Pinia modules
+- [ ] Create composables:
+  - [ ] `/composables/useI18n.ts` - i18n helper (if needed)
+  - [ ] `/composables/useGame.ts` - Game logic helper
+- [ ] Create main layout with language switcher:
+  - [ ] `/layouts/default.vue` - Main layout (already exists, verify)
+- [ ] Verify page routing structure:
+  - [ ] `/pages/index.vue` - Home menu (already exists)
+  - [ ] `/pages/roles.vue` - Role management
+  - [ ] `/pages/players.vue` - Player management
+  - [ ] `/pages/game-setup.vue` - Game setup
+  - [ ] `/pages/game.vue` - Game flow
+  - [ ] `/pages/game-end.vue` - Game end screen
+- [ ] Set up global styles:
+  - [ ] Configure Tailwind CSS (already installed via @nuxtjs/tailwindcss)
+  - [ ] Verify SCSS setup in `/app/assets/css/main.scss`
+  - [ ] Create CSS variables for theme (dark/light mode)
+
+**TypeScript Configuration:**
+- [ ] Ensure `tsconfig.json` is properly configured
+- [ ] Add type definitions for store modules
+- [ ] Enable strict mode in tsconfig for better type safety
 
 **Effort**: Medium | **Time**: 2-3 hours
 
@@ -35,13 +53,16 @@
 **Objective**: Create role management interface with balance calculation
 
 **Components to create:**
-- [ ] `components/RoleCard.vue` - Display individual role
+- [ ] `components/RoleCard.vue` - Display individual role (with TypeScript `<script setup lang="ts">`)
 - [ ] `components/RoleManagement.vue` - Main role management page
 - [ ] `pages/roles.vue` - Route handler
+- [ ] Create TypeScript interfaces:
+  - [ ] `types/role.ts` - Role interface
+  - [ ] `types/game.ts` - Game-related types
 
 **Features:**
-- [ ] Display all 38+ roles from docs.js
-- [ ] Show role image (use existing `/static/images/roles/en/`)
+- [ ] Display all 38+ roles from docs.ts
+- [ ] Show role image (use existing `/public/images/roles/en/`)
 - [ ] Show role name in current language
 - [ ] Show role description
 - [ ] Show balance point value
@@ -66,7 +87,7 @@
   - [ ] Special factions (Cult, Vampire)
 - [ ] Add "Clear all" button
 - [ ] Add "Load preset" button (for common configurations)
-- [ ] Save selected configuration to Vuex store
+- [ ] Save selected configuration to Pinia store
 - [ ] Mobile responsive layout
 
 **Effort**: Medium | **Time**: 3-4 hours
@@ -78,21 +99,23 @@
 **Objective**: Create player profile management system
 
 **Components to create:**
-- [ ] `components/PlayerCard.vue` - Display player info
-- [ ] `components/PlayerForm.vue` - Add/edit player form
+- [ ] `components/PlayerCard.vue` - Display player info (TypeScript setup)
+- [ ] `components/PlayerForm.vue` - Add/edit player form (TypeScript setup)
 - [ ] `components/PlayerManagement.vue` - Player list manager
 - [ ] `pages/players.vue` - Route handler
+- [ ] Create TypeScript interface:
+  - [ ] `types/player.ts` - Player interface
 
 **Features:**
-- [ ] Create player data structure:
-  ```javascript
-  {
-    id: string,
-    name: string,
-    avatar: string, // base64 or image URL
-    joinedDate: timestamp,
-    gamesPlayed: number,
-    wins: number
+- [ ] Create player data structure (TypeScript interface):
+  ```typescript
+  interface Player {
+    id: string;
+    name: string;
+    avatar: string; // base64 or image URL
+    joinedDate: number; // timestamp
+    gamesPlayed: number;
+    wins: number;
   }
   ```
 - [ ] Display all players in list/grid view:
@@ -108,14 +131,15 @@
   - [ ] Cancel button
 - [ ] Edit existing player:
   - [ ] Pre-fill form with current data
-  - [ ] Update Vuex store
+  - [ ] Update Pinia store
   - [ ] Show confirmation message
 - [ ] Delete player:
   - [ ] Confirmation dialog
   - [ ] Remove from store and localStorage
 - [ ] Implement persistence:
-  - [ ] Save players to localStorage
+  - [ ] Save players to localStorage (or use Pinia persistence plugin)
   - [ ] Load players on app start
+  - [ ] Sync with Pinia store
 - [ ] Create player avatar helper:
   - [ ] Generate default avatar if not provided
   - [ ] Support upload/crop functionality
@@ -144,26 +168,26 @@
   - [ ] Click to toggle selection
   - [ ] Show selected state (checked, highlight)
 - [ ] **Smart auto-selection**:
-  - [ ] Query game history from Vuex
+  - [ ] Query game history from Pinia store
   - [ ] Auto-select players from last game
   - [ ] Allow moderator to override selections
 - [ ] Display real-time counts:
   - [ ] Players selected: X
   - [ ] Roles configured: Y
-  - [ ] Status message
+  - [ ] Status message (computed property)
 - [ ] After player selection, show roles screen:
   - [ ] Display selected roles and their counts
   - [ ] Show total role slots
   - [ ] Allow role adjustment
   - [ ] Show game balance indicator
-- [ ] Validation logic:
+- [ ] Validation logic (use composable):
   - [ ] Total players === Total role slots
   - [ ] Show clear error message if mismatch
   - [ ] Example: "You have 8 players but 9 roles. Please adjust."
 - [ ] Start Game button:
   - [ ] **Disabled state**: Numbers don't match (visual feedback, greyed out)
   - [ ] **Enabled state**: Numbers match (bright color, ready)
-  - [ ] **Click action**: Save game setup to Vuex, navigate to game page
+  - [ ] **Click action**: Save game setup to Pinia store, navigate to game page using `navigateTo()`
 - [ ] Show warning/error prominently:
   - [ ] Red alert box
   - [ ] Clear, actionable message
@@ -187,20 +211,20 @@
 - [ ] `pages/game.vue` - Route handler
 
 **Features:**
-- [ ] Phase display:
+- [ ] Phase display (computed from Pinia store):
   - [ ] Current phase (NIGHT or DAY)
   - [ ] Current round number
   - [ ] Living player count
   - [ ] Werewolf count
 - [ ] Night phase sequence:
-  - [ ] Query which roles need to act (from docs.js line 113 order)
+  - [ ] Query which roles need to act (from docs.ts)
   - [ ] For each active role, display action panel:
     - [ ] Role name and icon
     - [ ] Role description
     - [ ] Action prompt (e.g., "Select player to investigate")
     - [ ] Player selection UI (clickable list/grid)
     - [ ] Confirm/Skip buttons
-  - [ ] Process actions in correct order (per docs)
+  - [ ] Process actions in correct order (per docs.ts)
   - [ ] Apply all night actions
   - [ ] Determine who dies
   - [ ] Announce results
@@ -217,7 +241,7 @@
   - [ ] Show selected player
   - [ ] Option to change selection
   - [ ] Confirm action button
-- [ ] Track all night actions in store
+- [ ] Track all night actions in Pinia store
 - [ ] Handle edge cases:
   - [ ] Role died before night phase
   - [ ] Multiple protections (first one wins)
@@ -291,7 +315,9 @@
 
 **Components to create:**
 - [ ] `components/NarrationDisplay.vue` - Text + TTS button
-- [ ] `/mixins/textToSpeech.js` - TTS utility
+- [ ] `/composables/useTextToSpeech.ts` - TTS utility (replaces mixins)
+  - [ ] Composable should return functions and state for TTS control
+  - [ ] TypeScript types for voice selection
 
 **Features:**
 - [ ] Web Speech API integration:
@@ -515,14 +541,19 @@
 - [ ] Performance adequate
 
 **Linting & Code Quality:**
-- [ ] Run ESLint and fix all errors
+- [ ] Run ESLint (if configured) and fix all errors
+- [ ] TypeScript strict mode enabled and passing
+  - [ ] No `any` types (except where absolutely necessary)
+  - [ ] All props properly typed
+  - [ ] All computed properties typed
 - [ ] No console warnings or errors
 - [ ] No Vue lifecycle warnings
-- [ ] All components have proper prop validation
+- [ ] All components use `<script setup lang="ts">` pattern
+- [ ] All props have type definitions (interface or type)
 - [ ] No unused variables/imports
 - [ ] Code follows naming conventions
 - [ ] Comments for complex logic
-- [ ] Consistent code formatting
+- [ ] Consistent code formatting (use Prettier if available)
 
 **Browser Compatibility:**
 - [ ] Chrome (latest)
@@ -551,11 +582,20 @@
 - [ ] Comments added for maintainability
 
 **Deployment Preparation:**
-- [ ] Build and generate static site
-- [ ] Test generated build locally
-- [ ] Optimize for web
-- [ ] Update meta tags (favicon, description)
-- [ ] Test PWA functionality (offline ready)
+- [ ] Run `npm run build` and verify no errors
+- [ ] Run `npm run generate` for static site (if using SSG)
+- [ ] Test generated build locally with `npm run preview`
+- [ ] Optimize for web:
+  - [ ] Image optimization in `/public/images/`
+  - [ ] Remove unused dependencies
+  - [ ] Check bundle size with `nuxt build --analyze` (if available)
+- [ ] Update meta tags in `nuxt.config.ts`:
+  - [ ] favicon
+  - [ ] page title and description
+  - [ ] viewport settings
+- [ ] Verify environment variables configured (if using `.env`)
+- [ ] Test on production build locally
+- [ ] Check TypeScript build passes
 
 **Effort**: High | **Time**: 4-5 hours
 
