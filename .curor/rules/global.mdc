@@ -1,0 +1,22 @@
+---
+alwaysApply: true
+---
+
+## ALWAYS Use Tailwind CSS - NEVER Write Raw CSS Unless Absolutely Necessary
+
+**RULE: Always use Tailwind CSS classes. Do NOT use `<style>` blocks or write raw CSS unless it is absolutely impossible to achieve with Tailwind.**
+
+**Requirements:**
+- ✅ Use Tailwind utility classes for ALL styling needs
+- ❌ NEVER write `<style>` blocks in components unless absolutely required
+- ❌ NEVER create separate CSS files for component styling
+- ✅ Use Tailwind's responsive prefixes (sm:, md:, lg:, xl:, 2xl:)
+- ✅ Use Tailwind's state variants (hover:, focus:, active:, disabled:, dark:, etc.)
+- ✅ Use Tailwind's theme values (colors, spacing, fonts, etc.)
+- ✅ Only use `<style>` with `@apply` for reusable utility combinations if needed
+- ✅ Leverage Tailwind config for custom values before writing raw CSS
+
+**Exception:** Only use raw CSS in `<style>` blocks if:
+1. Tailwind cannot provide the required styling
+2. Complex animations or pseudo-elements are needed
+3. Browser-specific hacks are required

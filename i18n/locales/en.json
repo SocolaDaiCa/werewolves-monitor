@@ -23,7 +23,9 @@
     "error": "Error",
     "success": "Success",
     "confirm": "Confirm",
-    "close": "Close"
+    "close": "Close",
+    "increase": "Increase",
+    "decrease": "Decrease"
   },
   "home": {
     "welcome": "Welcome to Werewolves Monitor",
@@ -38,12 +40,26 @@
     "selectRoles": "Select Roles for Your Game",
     "roleBalance": "Game Balance",
     "totalSlots": "Total Role Slots",
+    "balancePoints": "points",
+    "roles": "roles",
     "clearAll": "Clear All",
+    "savePreset": "Save Configuration",
     "loadPreset": "Load Preset",
     "balancePerfect": "Perfect Balance",
     "balanceLightGreen": "Slightly Favors Village",
     "balanceLightRed": "Slightly Favors Werewolves",
-    "balanceRed": "Heavily Unbalanced"
+    "balanceRed": "Heavily Unbalanced",
+    "favorVillage": "favors villagers",
+    "favorWerewolves": "favors werewolves",
+    "confirmClearAll": "Are you sure you want to clear all selected roles?",
+    "presetSaved": "Configuration saved successfully!",
+    "quantity": "Quantity",
+    "filterByFaction": "Filter by Faction",
+    "villagers": "Villagers",
+    "werewolves": "Werewolves",
+    "cult": "Cult",
+    "vampire": "Vampire",
+    "special": "Special"
   },
   "players": {
     "title": "Player Management",

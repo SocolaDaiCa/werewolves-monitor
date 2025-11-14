@@ -7,42 +7,42 @@
 **Objective**: Initialize project dependencies and folder structure
 
 **Dependencies to install:**
-- [ ] Install `@nuxtjs/i18n` (for Nuxt 4)
-- [ ] Install `pinia` (state management - Nuxt 4 standard)
-- [ ] Install `@pinia/nuxt` (Pinia Nuxt module)
-- [ ] Additional UI libraries if needed (e.g., `clsx`, `lucide-vue-next`)
+- [x] Install `@nuxtjs/i18n` (for Nuxt 4)
+- [x] Install `pinia` (state management - Nuxt 4 standard)
+- [x] Install `@pinia/nuxt` (Pinia Nuxt module)
+- [x] Additional UI libraries if needed (e.g., `clsx`, `lucide-vue-next`)
 
 **Project Structure:**
-- [ ] Create Pinia store structure:
-  - [ ] `/stores/game.ts` - Game state (phase, round, players, roles, actions)
-  - [ ] `/stores/players.ts` - Player profiles
-  - [ ] `/stores/roles.ts` - Role configurations
+- [x] Create Pinia store structure:
+  - [x] `/stores/game.ts` - Game state (phase, round, players, roles, actions)
+  - [x] `/stores/players.ts` - Player profiles
+  - [x] `/stores/roles.ts` - Role configurations
   - [ ] Configure `defineStore()` with TypeScript
-- [ ] Create `/locales` directory
-- [ ] Create `/locales/en.json` - English translations
-- [ ] Create `/locales/vi.json` - Vietnamese translations
-- [ ] Update `nuxt.config.ts` with i18n and Pinia modules
-- [ ] Create composables:
-  - [ ] `/composables/useI18n.ts` - i18n helper (if needed)
-  - [ ] `/composables/useGame.ts` - Game logic helper
-- [ ] Create main layout with language switcher:
-  - [ ] `/layouts/default.vue` - Main layout (already exists, verify)
-- [ ] Verify page routing structure:
-  - [ ] `/pages/index.vue` - Home menu (already exists)
-  - [ ] `/pages/roles.vue` - Role management
-  - [ ] `/pages/players.vue` - Player management
-  - [ ] `/pages/game-setup.vue` - Game setup
-  - [ ] `/pages/game.vue` - Game flow
-  - [ ] `/pages/game-end.vue` - Game end screen
-- [ ] Set up global styles:
-  - [ ] Configure Tailwind CSS (already installed via @nuxtjs/tailwindcss)
-  - [ ] Verify SCSS setup in `/app/assets/css/main.scss`
-  - [ ] Create CSS variables for theme (dark/light mode)
+- [x] Create `/locales` directory
+- [x] Create `/locales/en.json` - English translations
+- [x] Create `/locales/vi.json` - Vietnamese translations
+- [x] Update `nuxt.config.ts` with i18n and Pinia modules
+- [x] Create composables:
+  - [x] `/composables/useI18n.ts` - i18n helper (if needed)
+  - [x] `/composables/useGame.ts` - Game logic helper
+- [x] Create main layout with language switcher:
+  - [x] `/layouts/default.vue` - Main layout (already exists, verify)
+- [x] Verify page routing structure:
+  - [x] `/pages/index.vue` - Home menu (already exists)
+  - [x] `/pages/roles.vue` - Role management
+  - [x] `/pages/players.vue` - Player management
+  - [x] `/pages/game-setup.vue` - Game setup
+  - [x] `/pages/game.vue` - Game flow
+  - [x] `/pages/game-end.vue` - Game end screen
+- [x] Set up global styles:
+  - [x] Configure Tailwind CSS (already installed via @nuxtjs/tailwindcss)
+  - [x] Verify SCSS setup in `/app/assets/css/main.scss`
+  - [x] Create CSS variables for theme (dark/light mode)
 
 **TypeScript Configuration:**
-- [ ] Ensure `tsconfig.json` is properly configured
-- [ ] Add type definitions for store modules
-- [ ] Enable strict mode in tsconfig for better type safety
+- [x] Ensure `tsconfig.json` is properly configured
+- [x] Add type definitions for store modules
+- [x] Enable strict mode in tsconfig for better type safety
 
 **Effort**: Medium | **Time**: 2-3 hours
 
@@ -53,42 +53,42 @@
 **Objective**: Create role management interface with balance calculation
 
 **Components to create:**
-- [ ] `components/RoleCard.vue` - Display individual role (with TypeScript `<script setup lang="ts">`)
-- [ ] `components/RoleManagement.vue` - Main role management page
-- [ ] `pages/roles.vue` - Route handler
-- [ ] Create TypeScript interfaces:
-  - [ ] `types/role.ts` - Role interface
-  - [ ] `types/game.ts` - Game-related types
+- [x] `components/RoleCard.vue` - Display individual role (with TypeScript `<script setup lang="ts">`)
+- [x] `components/RoleManagement.vue` - Main role management page
+- [x] `pages/roles.vue` - Route handler
+- [x] Create TypeScript interfaces:
+  - [x] `types/role.ts` - Role interface
+  - [x] `types/game.ts` - Game-related types
 
 **Features:**
-- [ ] Display all 38+ roles from docs.ts
-- [ ] Show role image (use existing `/public/images/roles/en/`)
-- [ ] Show role name in current language
-- [ ] Show role description
-- [ ] Show balance point value
-- [ ] Implement quantity controls:
-  - [ ] Minus button (decrease quantity)
-  - [ ] Input field (display quantity)
-  - [ ] Plus button (increase quantity)
-  - [ ] Prevent negative quantities
-  - [ ] Set max quantity limit
-- [ ] Calculate total game weight:
-  - [ ] Sum all role balance points
-  - [ ] Real-time calculation as quantities change
-- [ ] Implement color-coded balance indicator:
-  - [ ] Green (perfect: 0 points)
-  - [ ] Light Green (+1 to +5)
-  - [ ] Light Red (-5 to -1)
-  - [ ] Red (< -5 or > +5)
-- [ ] Display balance status text
-- [ ] Implement role filtering by faction:
-  - [ ] Villagers
-  - [ ] Werewolves
-  - [ ] Special factions (Cult, Vampire)
-- [ ] Add "Clear all" button
-- [ ] Add "Load preset" button (for common configurations)
-- [ ] Save selected configuration to Pinia store
-- [ ] Mobile responsive layout
+- [x] Display all 38+ roles from docs.ts
+- [x] Show role image (use existing `/public/images/roles/en/`)
+- [x] Show role name in current language
+- [x] Show role description
+- [x] Show balance point value
+- [x] Implement quantity controls:
+  - [x] Minus button (decrease quantity)
+  - [x] Input field (display quantity)
+  - [x] Plus button (increase quantity)
+  - [x] Prevent negative quantities
+  - [x] Set max quantity limit
+- [x] Calculate total game weight:
+  - [x] Sum all role balance points
+  - [x] Real-time calculation as quantities change
+- [x] Implement color-coded balance indicator:
+  - [x] Green (perfect: 0 points)
+  - [x] Light Green (+1 to +5)
+  - [x] Light Red (-5 to -1)
+  - [x] Red (< -5 or > +5)
+- [x] Display balance status text
+- [x] Implement role filtering by faction:
+  - [x] Villagers
+  - [x] Werewolves
+  - [x] Special factions (Cult, Vampire)
+- [x] Add "Clear all" button
+- [x] Add "Load preset" button (for common configurations)
+- [x] Save selected configuration to Pinia store
+- [x] Mobile responsive layout
 
 **Effort**: Medium | **Time**: 3-4 hours
 
