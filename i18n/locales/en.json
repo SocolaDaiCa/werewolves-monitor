@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "Werewolves Monitor",
+    "subtitle": "Ultimate Werewolf Game Manager"
+  },
+  "navigation": {
+    "home": "Home",
+    "roles": "Roles",
+    "players": "Players",
+    "gameSetup": "Game Setup",
+    "settings": "Settings"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "back": "Back",
+    "next": "Next",
+    "start": "Start",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "confirm": "Confirm",
+    "close": "Close"
+  },
+  "home": {
+    "welcome": "Welcome to Werewolves Monitor",
+    "description": "Manage your Ultimate Werewolf game with ease",
+    "startGame": "Start New Game",
+    "manageRoles": "Manage Roles",
+    "managePlayers": "Manage Players",
+    "viewStats": "View Statistics"
+  },
+  "roles": {
+    "title": "Role Management",
+    "selectRoles": "Select Roles for Your Game",
+    "roleBalance": "Game Balance",
+    "totalSlots": "Total Role Slots",
+    "clearAll": "Clear All",
+    "loadPreset": "Load Preset",
+    "balancePerfect": "Perfect Balance",
+    "balanceLightGreen": "Slightly Favors Village",
+    "balanceLightRed": "Slightly Favors Werewolves",
+    "balanceRed": "Heavily Unbalanced"
+  },
+  "players": {
+    "title": "Player Management",
+    "addPlayer": "Add New Player",
+    "noPlayers": "No players yet",
+    "gamesPlayed": "Games Played",
+    "wins": "Wins",
+    "winRate": "Win Rate",
+    "export": "Export Players",
+    "import": "Import Players",
+    "confirmDelete": "Are you sure you want to delete this player?"
+  },
+  "gameSetup": {
+    "title": "Game Setup",
+    "selectPlayers": "Select Players",
+    "playersSelected": "Players Selected",
+    "rolesConfigured": "Roles Configured",
+    "validation": {
+      "playerRoleMismatch": "Number of players must match number of roles",
+      "example": "You have {players} players but {roles} roles. Please adjust.",
+      "noPlayersSelected": "Please select at least 2 players",
+      "noRolesSelected": "Please select at least 1 role"
+    },
+    "startGameBtn": "Start Game"
+  },
+  "game": {
+    "phase": "Phase",
+    "round": "Round",
+    "night": "Night",
+    "day": "Day",
+    "phaseTransition": "Transitioning to {phase}...",
+    "livingPlayers": "Living Players",
+    "werewolves": "Werewolves"
+  },
+  "validation": {
+    "required": "This field is required",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be no more than {max} characters",
+    "invalidEmail": "Please enter a valid email address"
+  }
+}
+

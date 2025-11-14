@@ -1,0 +1,88 @@
+{
+  "app": {
+    "title": "Giám Sát Sói Đêm",
+    "subtitle": "Trình Quản Lý Game Ultimate Werewolf"
+  },
+  "navigation": {
+    "home": "Trang Chủ",
+    "roles": "Chức Năng",
+    "players": "Người Chơi",
+    "gameSetup": "Thiết Lập Game",
+    "settings": "Cài Đặt"
+  },
+  "common": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Chỉnh Sửa",
+    "add": "Thêm",
+    "back": "Quay Lại",
+    "next": "Tiếp Theo",
+    "start": "Bắt Đầu",
+    "loading": "Đang Tải...",
+    "error": "Lỗi",
+    "success": "Thành Công",
+    "confirm": "Xác Nhận",
+    "close": "Đóng"
+  },
+  "home": {
+    "welcome": "Chào Mừng Đến Với Giám Sát Sói Đêm",
+    "description": "Quản lý game Ultimate Werewolf của bạn một cách dễ dàng",
+    "startGame": "Bắt Đầu Game Mới",
+    "manageRoles": "Quản Lý Chức Năng",
+    "managePlayers": "Quản Lý Người Chơi",
+    "viewStats": "Xem Thống Kê"
+  },
+  "roles": {
+    "title": "Quản Lý Chức Năng",
+    "selectRoles": "Chọn Chức Năng Cho Game",
+    "roleBalance": "Cân Bằng Game",
+    "totalSlots": "Tổng Vị Trí Chức Năng",
+    "clearAll": "Xóa Tất Cả",
+    "loadPreset": "Tải Cấu Hình Sẵn",
+    "balancePerfect": "Cân Bằng Hoàn Hảo",
+    "balanceLightGreen": "Hơi Lợi Cho Dân Làng",
+    "balanceLightRed": "Hơi Lợi Cho Sói",
+    "balanceRed": "Mất Cân Bằng Nghiêm Trọng"
+  },
+  "players": {
+    "title": "Quản Lý Người Chơi",
+    "addPlayer": "Thêm Người Chơi Mới",
+    "noPlayers": "Chưa có người chơi nào",
+    "gamesPlayed": "Game Đã Chơi",
+    "wins": "Chiến Thắng",
+    "winRate": "Tỷ Lệ Thắng",
+    "export": "Xuất Người Chơi",
+    "import": "Nhập Người Chơi",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa người chơi này không?"
+  },
+  "gameSetup": {
+    "title": "Thiết Lập Game",
+    "selectPlayers": "Chọn Người Chơi",
+    "playersSelected": "Người Chơi Được Chọn",
+    "rolesConfigured": "Chức Năng Được Cấu Hình",
+    "validation": {
+      "playerRoleMismatch": "Số lượng người chơi phải bằng số lượng chức năng",
+      "example": "Bạn có {players} người chơi nhưng {roles} chức năng. Vui lòng điều chỉnh.",
+      "noPlayersSelected": "Vui lòng chọn ít nhất 2 người chơi",
+      "noRolesSelected": "Vui lòng chọn ít nhất 1 chức năng"
+    },
+    "startGameBtn": "Bắt Đầu Game"
+  },
+  "game": {
+    "phase": "Pha",
+    "round": "Vòng",
+    "night": "Đêm",
+    "day": "Ngày",
+    "phaseTransition": "Chuyển sang {phase}...",
+    "livingPlayers": "Người Chơi Còn Sống",
+    "werewolves": "Sói"
+  },
+  "validation": {
+    "required": "Trường này là bắt buộc",
+    "minLength": "Phải có ít nhất {min} ký tự",
+    "maxLength": "Không được vượt quá {max} ký tự",
+    "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ"
+  }
+}
+
