@@ -122,6 +122,10 @@ export const useGameStore = defineStore('game', () => {
     roleAcknowledgments.value[playerId] = roleId
   }
 
+  function deacknowledgeRole(playerId: string) {
+    delete roleAcknowledgments.value[playerId]
+  }
+
   function setCurrentRoleRevealIndex(index: number) {
     currentRoleRevealIndex.value = index
   }
@@ -185,6 +189,7 @@ export const useGameStore = defineStore('game', () => {
     endGame,
     resetGame,
     acknowledgeRole,
+    deacknowledgeRole,
     setCurrentRoleRevealIndex,
     resetRoleReveal,
     assignRolesToPlayers,

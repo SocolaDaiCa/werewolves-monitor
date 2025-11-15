@@ -19,48 +19,29 @@
 
     <!-- Player Cards Grid -->
     <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-      <button
+      <SelectableCard
         v-for="player in playersStore.allPlayers"
         :key="player.id"
-        @click="togglePlayer(player.id)"
-        class="relative group"
+        :is-selected="playersStore.selectedPlayerIds.includes(player.id)"
+        @toggle="togglePlayer(player.id)"
       >
-        <!-- Card Background -->
-        <div
-          :class="[
-            'relative h-40 rounded-2xl transition-all duration-300 border-3',
-            playersStore.selectedPlayerIds.includes(player.id)
-              ? 'border-green-500 bg-green-50 shadow-lg scale-105'
-              : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
-          ]"
-        >
-          <!-- Checkmark Badge -->
-          <div
-            v-if="playersStore.selectedPlayerIds.includes(player.id)"
-            class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"
-          >
-            ✓
+        <div class="absolute inset-0 flex flex-col items-center justify-center p-3">
+          <img
+            v-if="player.avatar"
+            :src="player.avatar"
+            :alt="player.name"
+            class="w-12 h-12 rounded-full object-cover mb-2"
+          />
+          <div v-else class="w-12 h-12 rounded-full bg-gray-300 mb-2 flex items-center justify-center text-xs font-bold text-gray-600">
+            {{ getInitials(player.name) }}
           </div>
 
-          <!-- Player Avatar -->
-          <div class="absolute inset-0 flex flex-col items-center justify-center p-3">
-            <img
-              v-if="player.avatar"
-              :src="player.avatar"
-              :alt="player.name"
-              class="w-12 h-12 rounded-full object-cover mb-2"
-            />
-            <div v-else class="w-12 h-12 rounded-full bg-gray-300 mb-2 flex items-center justify-center text-xs font-bold text-gray-600">
-              {{ getInitials(player.name) }}
-            </div>
-
-            <!-- Player Name -->
-            <p class="font-semibold text-sm text-gray-800 text-center line-clamp-2">
-              {{ player.name }}
-            </p>
-          </div>
+          <!-- Player Name -->
+          <p class="font-semibold text-sm text-gray-800 text-center line-clamp-2">
+            {{ player.name }}
+          </p>
         </div>
-      </button>
+      </SelectableCard>
     </div>
 
     <!-- Stats Summary -->

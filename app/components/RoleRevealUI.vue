@@ -16,7 +16,6 @@
             :current-index="currentRoleIndex"
             :roles-array="sortedRoles"
           />
-
         </div>
 
         <!-- Right: Role Progress and Status -->

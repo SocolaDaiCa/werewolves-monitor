@@ -48,60 +48,43 @@
     <!-- Player List with Acknowledgment Status -->
     <div class="bg-white rounded-2xl p-6 shadow-md">
       <h3 class="text-xl font-bold text-gray-800 mb-4">{{ $t('nightZero.playerAcknowledgments') }}</h3>
-      <div class="space-y-3">
-        {{  gameStore.roleAcknowledgments }}
-        {{ playersWithRole }}
-        <div
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <!-- v-show="!hasPlayerAcknowledged(player.id) || gameStore.roleAcknowledgments[player.id] == currentRole?.id" -->
+        <SelectableCard
           v-for="player in players"
           :key="player.id"
-          :class="[
-            'flex items-center gap-4 p-4 rounded-lg transition',
-            !hasPlayerAcknowledged(player.id)
-              ? 'bg-blue-50 border-2 border-blue-300'
-              : 'bg-gray-50 border-2 border-gray-200'
-          ]"
+          v-show="!isPlayerHasRole(player.id) || hasPlayerAcknowledged(player.id)"
+          :is-selected="hasPlayerAcknowledged(player.id)"
+          @toggle="togglePlayerAcknowledgment(player.id)"
         >
-          <!-- Avatar -->
-          <img
-            v-if="player.avatar"
-            :src="player.avatar"
-            :alt="player.name"
-            class="w-12 h-12 rounded-full object-cover flex-shrink-0"
-          />
-          <div v-else class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold flex-shrink-0">
-            {{ player.name.charAt(0).toUpperCase() }}
-          </div>
+          <div class="flex flex-col items-center justify-center text-center">
+            <!-- Avatar -->
+            <img
+              v-if="player.avatar"
+              :src="player.avatar"
+              :alt="player.name"
+              class="w-16 h-16 rounded-full object-cover mb-3"
+            />
+            <div v-else class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white font-bold mb-3 text-xl">
+              {{ player.name.charAt(0).toUpperCase() }}
+            </div>
 
-          <!-- Player Info -->
-          <div class="flex-1 min-w-0">
-            <p class="font-semibold text-gray-800 truncate">{{ player.name }}</p>
+            <!-- Player Name -->
+            <p class="font-semibold text-gray-800 line-clamp-2">{{ player.name }}</p>
+
+            <!-- Status Text -->
             <p
               :class="[
-                'text-sm',
-                !hasPlayerAcknowledged(player.id) ? 'text-blue-600 font-semibold' : 'text-gray-500'
+                'text-xs mt-2 font-semibold',
+                hasPlayerAcknowledged(player.id)
+                  ? 'text-green-600'
+                  : 'text-blue-600'
               ]"
             >
-              {{ !hasPlayerAcknowledged(player.id) ? $t('nightZero.thisIsYourRole') : $t('nightZero.noMatchingRole') }}
+              {{ hasPlayerAcknowledged(player.id) ? $t('nightZero.acknowledged') : $t('nightZero.thisIsYourRole') }}
             </p>
           </div>
-
-          <!-- Action Button -->
-          <div class="flex-shrink-0">
-            <button
-              v-if="!hasPlayerAcknowledged(player.id)"
-              @click="acknowledgePlayer(player.id)"
-              class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition"
-            >
-              ✓ Mark
-            </button>
-            <div
-              v-else-if="hasPlayerAcknowledged(player.id)"
-              class="bg-green-100 text-green-700 font-bold py-2 px-4 rounded-lg"
-            >
-              ✓ Done
-            </div>
-          </div>
-        </div>
+        </SelectableCard>
       </div>
     </div>
   </div>
@@ -131,10 +114,11 @@ const playersStore = usePlayersStore()
 const totalRoles = computed(() => props.rolesArray.length)
 
 const players = computed(() => {
-  // Get all players from the game store
+  // Get all players from the game store, excluding those already assigned roles
   return gameStore.players.map(playerId => 
     playersStore.getPlayerById(playerId)
   ).filter((p): p is Player => p !== undefined)
+    .filter(p => !gameStore.playerRoles[p.id]) // Hide players with assigned roles
 })
 
 const currentRole = computed(() => props.rolesArray[props.currentIndex])
@@ -176,14 +160,26 @@ const acknowledgedCount = computed(() => {
 })
 
 // Helper functions
+function isPlayerHasRole(playerId: string): boolean {
+  return !!gameStore.roleAcknowledgments[playerId];
+}
+
 function hasPlayerAcknowledged(playerId: string): boolean {
   const acknowledgedRole = gameStore.roleAcknowledgments[playerId]
   return acknowledgedRole === currentRole.value?.id
 }
 
-function acknowledgePlayer(playerId: string) {
+function togglePlayerAcknowledgment(playerId: string) {
   const roleId = currentRole.value?.id
-  if (roleId) {
+  if (!roleId) return
+
+  const isCurrentlyAcknowledged = hasPlayerAcknowledged(playerId)
+  
+  if (isCurrentlyAcknowledged) {
+    // Deacknowledge by clearing the role for this player
+    gameStore.deacknowledgeRole(playerId)
+  } else {
+    // Acknowledge the role for this player
     gameStore.acknowledgeRole(playerId, roleId)
   }
 }
