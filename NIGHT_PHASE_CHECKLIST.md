@@ -5,31 +5,35 @@
 ### 🔴 PHASE 1: Core Investigation & Protection (CRITICAL)
 Status: `NOT_STARTED` | Priority: 🔥🔥🔥
 
-- [ ] **Seer (Tiên tri)**
-  - [ ] Add to roles.ts with nightOrder=14, actionType='SELECT_PLAYER'
-  - [ ] Add handler in useNightPhaseActions.ts
-  - [ ] Add UI for player selection
-  - [ ] Implement investigation logic (werewolf vs villager)
-  - [ ] Add translations (en.json, vi.json)
+- [x] **Seer (Tiên tri)**
+  - [x] Add to roles.ts with nightOrder=14, actionType='SELECT_PLAYER'
+  - [x] Add handler in useNightPhaseActions.ts
+  - [x] Create RoleActionPanelSeer.vue (dedicated component)
+  - [x] Update RoleActionPanel.vue to use RoleActionPanelSeer
+  - [x] Implement investigation logic (werewolf vs villager)
+  - [x] Add translations (en.json, vi.json)
 
 - [ ] **Witch (Phù thủy)**
   - [ ] Add to roles.ts with nightOrder=13, actionType='DUAL_OPTION'
   - [ ] Add handler in useNightPhaseActions.ts
+  - [ ] Create RoleActionPanelWitch.vue (dedicated component with heal/poison buttons)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelWitch
   - [ ] Track potion usage (heal uses, poison uses)
-  - [ ] Add UI with 3 buttons: "Use Heal", "Use Poison", "Skip"
   - [ ] Implement heal priority over kill resolution
   - [ ] Add translations
 
 - [ ] **Body Guard (Bảo vệ)**
   - [ ] Add to roles.ts with nightOrder=12, actionType='SELECT_PLAYER'
   - [ ] Add handler in useNightPhaseActions.ts
+  - [ ] Create RoleActionPanelBodyguard.vue (dedicated component)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelBodyguard
   - [ ] Add protection to kill resolution
   - [ ] Cannot protect self (validation)
   - [ ] Add translations
 
 - [ ] **Wolf Cub & Dire Wolf**
   - [ ] Add as separate entries to roles.ts
-  - [ ] Integrate into werewolf kill handling
+  - [ ] Integrate into werewolf kill handling (use RoleActionPanelWerewolf)
   - [ ] Add special death effect tracking
   - [ ] Add translations
 
@@ -41,46 +45,56 @@ Status: `NOT_STARTED` | Priority: 🔥🔥
 - [ ] **Cupid (Thần tình yêu)**
   - [ ] Add to roles.ts with nightOrder=2, actionType='DUAL_SELECT', nightly='FIRST_NIGHT'
   - [ ] Add handler in useNightPhaseActions.ts
+  - [ ] Create RoleActionPanelCupid.vue (dual selection with lover pairing preview)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelCupid
   - [ ] Store lover pairs in game state
   - [ ] Implement linked death logic (if one dies, other dies too)
-  - [ ] Add UI for dual player selection
   - [ ] Add translations
 
 - [ ] **Minion (Kẻ phản bội)**
   - [ ] Add to roles.ts with nightOrder=6, actionType='ACKNOWLEDGE', nightly='FIRST_NIGHT'
+  - [ ] Create RoleActionPanelMinion.vue (show werewolf list)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelMinion
   - [ ] Show Minion list of werewolves during night 1
   - [ ] Don't count Minion as werewolf for kill actions
   - [ ] Add translations
 
 - [ ] **Mason (Sinh đôi)**
   - [ ] Add to roles.ts with nightOrder=22, actionType='SELECT_PLAYER', nightly='FIRST_NIGHT'
+  - [ ] Create RoleActionPanelMason.vue (show other masons)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelMason
   - [ ] Show all Masons to each other
   - [ ] Create Mason group in game state
   - [ ] Add translations
 
 - [ ] **Drunk (Kẻ say rượu)**
   - [ ] Add to roles.ts with nightOrder=17, actionType='SELECT_PLAYER', nightly='FIRST_NIGHT'
+  - [ ] Create RoleActionPanelDrunk.vue (role swap preview)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelDrunk
   - [ ] Swap roles with target (doesn't know actual role until night 3)
   - [ ] Hide actual role from Drunk until night 3
-  - [ ] Add UI for player selection
   - [ ] Add translations
 
 - [ ] **Doppelganger (Người nhân bản)**
   - [ ] Add to roles.ts with nightOrder=3, actionType='SELECT_PLAYER', nightly='FIRST_NIGHT'
+  - [ ] Create RoleActionPanelDoppelganger.vue
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelDoppelganger
   - [ ] Track if target dies at night, Doppelganger becomes that role
-  - [ ] Add UI for target selection
   - [ ] Add translations
 
 - [ ] **Nostradamis (Nhà tiên tri)**
   - [ ] Add to roles.ts with nightOrder=4, actionType='SELECT_PLAYER', nightly='FIRST_NIGHT'
+  - [ ] Create RoleActionPanelNostradamis.vue
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelNostradamis
   - [ ] Store prediction
   - [ ] Reveal if prediction was correct after night resolves
   - [ ] Add translations
 
 - [ ] **Old Hag (Mụ già)**
   - [ ] Add to roles.ts with nightOrder=19, actionType='SELECT_PLAYER'
+  - [ ] Create RoleActionPanelOldHag.vue
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelOldHag
   - [ ] Track cursed players (cannot speak during next day)
-  - [ ] Add UI for target selection
   - [ ] Add translations
 
 - [ ] **Game State Extensions**
@@ -98,50 +112,52 @@ Status: `NOT_STARTED` | Priority: 🔥
 
 - [ ] **Vampire (Ma cà rồng)**
   - [ ] Add to roles.ts with nightOrder=7, actionType='SELECT_PLAYER'
+  - [ ] Create RoleActionPanelVampire.vue (dusk kill preview)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelVampire
   - [ ] Implement dusk death (after morning announcement)
-  - [ ] Separate from regular night kills
   - [ ] Add translations
 
 - [ ] **Cult Leader (Kẻ sùng đạo)**
   - [ ] Add to roles.ts with nightOrder=27, actionType='SELECT_PLAYER'
+  - [ ] Create RoleActionPanelCultLeader.vue (recruitment preview)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelCultLeader
   - [ ] Track recruited players
-  - [ ] Recruited players change faction to CULT
-  - [ ] Add to cult on target reveal
   - [ ] Add translations
 
 - [ ] **Hunter (Thợ săn) & Huntress (Nữ thợ săn)**
   - [ ] Add to roles.ts with nightly='NEVER' (actions on day when eliminated)
+  - [ ] Create RoleActionPanelHunter.vue (for day phase shooting)
   - [ ] Implement shoot action in day phase
-  - [ ] Allow hunter to shoot when eliminated
   - [ ] Add translations
 
 - [ ] **Aura Seer (Tiên tri vũ trụ)**
   - [ ] Add to roles.ts with nightOrder=42, actionType='SELECT_PLAYER'
-  - [ ] Detect if target has special role (not villager/werewolf)
+  - [ ] Create RoleActionPanelAuraSeer.vue (special role detection)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelAuraSeer
   - [ ] Add translations
 
 - [ ] **Priest (Mục sư)**
   - [ ] Add to roles.ts with nightOrder=23, actionType='SELECT_PLAYER'
-  - [ ] Similar to bodyguard but different faction/description
-  - [ ] Limited uses per game (1 or configurable)
+  - [ ] Create RoleActionPanelPriest.vue (protection preview)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelPriest
   - [ ] Add translations
 
 - [ ] **P.I (Thám tử)**
   - [ ] Add to roles.ts with nightOrder=18, actionType='DUAL_SELECT'
-  - [ ] Investigate relationship between 2 players
-  - [ ] One is "aligned" with evil factions, or both are good
+  - [ ] Create RoleActionPanelPI.vue (relationship investigation)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelPI
   - [ ] Add translations
 
 - [ ] **Troublemaker (Kẻ phá rối)**
   - [ ] Add to roles.ts with nightOrder=20, actionType='DUAL_SELECT'
-  - [ ] Swap 2 players' roles
-  - [ ] Implement swap in action resolution
+  - [ ] Create RoleActionPanelTroublemaker.vue (role swap preview)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelTroublemaker
   - [ ] Add translations
 
 - [ ] **Spellcaster (Pháp sư câm)**
   - [ ] Add to roles.ts with nightOrder=29, actionType='SELECT_PLAYER'
-  - [ ] Silence target (cannot speak during next day)
-  - [ ] Track silenced players in game state
+  - [ ] Create RoleActionPanelSpellcaster.vue (silence effect preview)
+  - [ ] Update RoleActionPanel.vue to use RoleActionPanelSpellcaster
   - [ ] Add translations
 
 ---

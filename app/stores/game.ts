@@ -289,7 +289,6 @@ export const useGameStore = defineStore('game', () => {
     return playerEliminations.value.find(e => e.playerId === playerId)
   }
 
-
   return {
     phase,
     round,

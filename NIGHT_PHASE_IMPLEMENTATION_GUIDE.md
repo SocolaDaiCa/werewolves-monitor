@@ -188,6 +188,75 @@ const getActionComponent = computed(() => {
 })
 ```
 
+### Step 5.5: Create Role-Specific ActionPanels ⭐ **IMPORTANT**
+
+**Each role with a night action should have its own dedicated component!**
+
+**Pattern**: `RoleActionPanel{RoleName}.vue`
+
+**Examples:**
+- `RoleActionPanelSeer.vue` - Investigation results preview
+- `RoleActionPanelWitch.vue` - Heal/Poison buttons
+- `RoleActionPanelCupid.vue` - Dual selection with lover pairing
+- `RoleActionPanelBodyguard.vue` - Protection preview
+- etc.
+
+**Key Benefits:**
+✅ Custom UI for each role's unique mechanics  
+✅ Real-time result preview (show what happens)  
+✅ Better visual feedback and player experience  
+✅ Cleaner code than generic RoleAction.vue  
+✅ Easier to maintain and debug  
+
+**Template Structure:**
+```vue
+<template>
+  <div class="space-y-6">
+    <!-- Role Header (branded colors) -->
+    <div class="bg-gradient-to-r from-[role-color-1] to-[role-color-2] text-white rounded-xl p-6">
+      <h2 class="text-3xl font-bold mb-2">🔮 {Role Name} Night Action</h2>
+      <p class="text-opacity-90">Description of the action</p>
+    </div>
+
+    <!-- Status Display -->
+    <div class="bg-white rounded-xl p-6 shadow-md border-2">
+      <!-- Show relevant stats -->
+    </div>
+
+    <!-- Player Selection Grid (or custom UI) -->
+    <div class="bg-white rounded-xl p-6 shadow-md">
+      <!-- Interactive selection UI -->
+    </div>
+
+    <!-- Result Preview -->
+    <div v-if="actionResult" class="bg-gradient-to-r rounded-xl p-6">
+      <!-- Show what will happen -->
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex gap-3">
+      <button @click="skipAction">Skip</button>
+      <button @click="confirmAction" :disabled="!isValid">Confirm</button>
+    </div>
+  </div>
+</template>
+```
+
+**Register in RoleActionPanel.vue:**
+```typescript
+// 1. Import the component
+import RoleActionPanelSeer from './RoleActionPanelSeer.vue'
+import RoleActionPanelWitch from './RoleActionPanelWitch.vue'
+
+// 2. Add computed check
+const isSeerRole = computed(() => currentRole.value?.id.toLowerCase() === 'seer')
+const isWitchRole = computed(() => currentRole.value?.id.toLowerCase() === 'witch')
+
+// 3. Use in template
+<RoleActionPanelSeer v-if="isSeerRole" @confirm="handleActionConfirm" @skip="handleActionSkip" />
+<RoleActionPanelWitch v-else-if="isWitchRole" @confirm="handleActionConfirm" @skip="handleActionSkip" />
+```
+
 ### Step 6: Update RoleActionPanel.vue
 
 **Sort roles by nightOrder:**

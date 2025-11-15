@@ -83,12 +83,12 @@ const totalActions = computed(() => gameStore.nightPhaseActions.length)
 
 const avgRoundTime = computed(() => {
   if (gameEvents.value.length === 0) return 0
-  if (!gameEvents.value[0] || !gameEvents.value[gameEvents.value.length - 1])
-    return 0
+  const firstEvent = gameEvents.value[0]
+  const lastEvent = gameEvents.value[gameEvents.value.length - 1]
+  if (!firstEvent || !lastEvent) return 0
 
-  const firstTimestamp = gameEvents.value[0].timestamp
-  const lastTimestamp =
-    gameEvents.value[gameEvents.value.length - 1].timestamp
+  const firstTimestamp = firstEvent.timestamp
+  const lastTimestamp = lastEvent.timestamp
   const totalMinutes = Math.floor((lastTimestamp - firstTimestamp) / 60000)
   const avgMinutes = Math.ceil(totalMinutes / gameStore.round)
 
@@ -117,4 +117,3 @@ function eventPhaseLabel(event: GameEvent): string {
   return `${phaseLabel} ${event.round}`
 }
 </script>
-

@@ -59,6 +59,13 @@
         @skip="handleActionSkip"
       />
       
+      <!-- Seer Role Action Panel -->
+      <RoleActionPanelSeer
+        v-else-if="isSeerRole"
+        @confirm="handleActionConfirm"
+        @skip="handleActionSkip"
+      />
+      
       <!-- Other Roles (Generic) -->
       <RoleAction
         v-else
@@ -110,6 +117,7 @@ import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 import RoleAction from './RoleAction.vue'
 import RoleActionPanelWerewolf from './RoleActionPanelWerewolf.vue'
+import RoleActionPanelSeer from './RoleActionPanelSeer.vue'
 
 interface Props {
   readonly: boolean
@@ -131,14 +139,16 @@ const completedRoles = ref<number[]>([])
 
 // Get all roles that need to act this night
 const activeRoles = computed(() => {
-  return rolesStore.roles.filter(role => {
-    if (role.nightly === 'NEVER') return false
-    if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
-    // Check if any alive player has this role
-    return Object.entries(gameStore.playerRoles).some(
-      ([playerId, roleId]) => roleId === role.id && gameStore.alivePlayers.includes(playerId)
-    )
-  })
+  return rolesStore.roles
+    .filter(role => {
+      if (role.nightly === 'NEVER') return false
+      if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
+      // Check if any alive player has this role
+      return Object.entries(gameStore.playerRoles).some(
+        ([playerId, roleId]) => roleId === role.id && gameStore.alivePlayers.includes(playerId)
+      )
+    })
+    .sort((a, b) => (a.nightOrder || 999) - (b.nightOrder || 999))
 })
 
 const currentRoleIndex = computed(() => gameStore.currentNightRoleIndex)
@@ -157,16 +167,28 @@ const isWerewolfRole = computed(() => {
   return currentRole.value?.id.toLowerCase().includes('werewolf') || false
 })
 
+const isSeerRole = computed(() => {
+  return currentRole.value?.id.toLowerCase() === 'seer'
+})
+
 const getRoleName = (roleId: string): string => {
   return rolesStore.getRoleById(roleId)?.name || 'Unknown'
 }
 
 const getRoleActionType = (roleId: string): RoleActionType => {
+  const role = rolesStore.getRoleById(roleId)
+  
+  // If role has actionType defined, use it
+  if (role?.actionType) {
+    return role.actionType
+  }
+  
+  // Fallback for roles without actionType (backward compatibility)
   const roleName = roleId.toLowerCase()
   
   // Roles with single target selection
   if (['werewolf', 'seer', 'hunter', 'bodyguard', 'witch', 'aura-seer', 'priest'].includes(roleName)) {
-    return 'SELECT_TARGET'
+    return 'SELECT_PLAYER'
   }
   
   // Roles with dual selection
@@ -179,7 +201,7 @@ const getRoleActionType = (roleId: string): RoleActionType => {
     return 'NONE'
   }
   
-  return 'SELECT_TARGET'
+  return 'SELECT_PLAYER'
 }
 
 const selectRole = (index: number) => {
@@ -198,6 +220,79 @@ const nextRole = () => {
   }
 }
 
+/**
+ * Format action log message based on role and action
+ */
+const formatActionLog = (
+  roleId: string,
+  playerId: string,
+  action: { targetPlayerId?: string; secondaryTargetPlayerId?: string }
+): string => {
+  const player = playersStore.getPlayerById(playerId)
+  const playerName = player?.name || 'Unknown'
+  const roleName = rolesStore.getRoleById(roleId)?.name || 'Unknown'
+
+  if (!action.targetPlayerId) return ''
+
+  const targetPlayer = playersStore.getPlayerById(action.targetPlayerId)
+  const targetName = targetPlayer?.name || 'Unknown'
+
+  switch (roleId.toLowerCase()) {
+    case 'seer':
+      if (!action.targetPlayerId) return ''
+      const targetRole = gameStore.playerRoles[action.targetPlayerId]
+      const targetRoleObj = rolesStore.getRoleById(targetRole || '')
+      const isWerewolf = targetRoleObj?.faction === 'WEREWOLF'
+      return `🔮 ${roleName} (${playerName}) kiểm tra ${targetName} là ${isWerewolf ? 'sói 🐺' : 'không phải sói 👤'}`
+
+    case 'werewolf':
+    case 'wolf-cub':
+    case 'dire-wolf':
+      return `🐺 ${roleName} (${playerName}) đã cắn ${targetName}`
+
+    case 'witch':
+      // Nếu có secondary target, là poison, nếu không là heal
+      const message = action.secondaryTargetPlayerId ? 'đã độc' : 'đã chữa'
+      const targetForWitch = action.secondaryTargetPlayerId || action.targetPlayerId
+      const targetPlayerWitch = playersStore.getPlayerById(targetForWitch)
+      return `🧙 ${roleName} (${playerName}) ${message} ${targetPlayerWitch?.name || 'Unknown'}`
+
+    case 'bodyguard':
+    case 'priest':
+      return `🛡️ ${roleName} (${playerName}) bảo vệ ${targetName}`
+
+    case 'cupid':
+      const secondaryPlayer = playersStore.getPlayerById(action.secondaryTargetPlayerId || '')
+      const secondaryName = secondaryPlayer?.name || 'Unknown'
+      return `💕 ${roleName} (${playerName}) ghép đôi ${targetName} và ${secondaryName}`
+
+    case 'old-hag':
+      return `👵 ${roleName} (${playerName}) nguyền rủa ${targetName}`
+
+    case 'minion':
+      return `⚫ ${roleName} (${playerName}) được tiết lộ`
+
+    case 'mason':
+      return `🧱 ${roleName} (${playerName}) nhận biết ${targetName}`
+
+    case 'drunk':
+      return `🍷 ${roleName} (${playerName}) đổi vai trò với ${targetName}`
+
+    case 'doppelganger':
+      return `👥 ${roleName} (${playerName}) chọn ${targetName} để sao chép`
+
+    case 'aura-seer':
+      if (!action.targetPlayerId) return ''
+      const targetRole2 = gameStore.playerRoles[action.targetPlayerId]
+      const targetRoleObj2 = rolesStore.getRoleById(targetRole2 || '')
+      const isSpecial = targetRole2 && !['villager', 'werewolf'].includes(targetRole2)
+      return `✨ ${roleName} (${playerName}) cảm nhận ${targetName} có vai trò đặc biệt: ${isSpecial ? 'Có' : 'Không'}`
+
+    default:
+      return `${roleName} (${playerName}) thực hiện hành động trên ${targetName}`
+  }
+}
+
 const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetPlayerId?: string }) => {
   console.log('action', action);
   
@@ -210,6 +305,12 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
       secondaryTargetPlayerId: action.secondaryTargetPlayerId,
       timestamp: Date.now(),
     })
+
+    // Log the action to game log
+    const logMessage = formatActionLog(currentRole.value.id, currentRolePlayer.value.id, action)
+    if (logMessage) {
+      gameStore.addGameEvent(logMessage)
+    }
     
     // Mark this role as completed
     if (!completedRoles.value.includes(currentRoleIndex.value)) {

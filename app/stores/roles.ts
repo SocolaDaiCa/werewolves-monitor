@@ -10,6 +10,8 @@ export interface Role {
   faction: 'VILLAGER' | 'WEREWOLF' | 'CULT' | 'VAMPIRE' | 'SPECIAL'
   balancePoints: number
   nightly: 'ALWAYS' | 'FIRST_NIGHT' | 'NEVER'
+  nightOrder?: number
+  actionType?: 'SELECT_PLAYER' | 'DUAL_SELECT' | 'TEXT_INPUT' | 'ACKNOWLEDGE' | 'DUAL_OPTION' | 'NONE'
   icon?: string
 }
 
@@ -26,16 +28,18 @@ const defaultRoles: Role[] = [
     balancePoints: 1,
     nightly: 'NEVER',
   },
-  // {
-  //   id: 'seer',
-  //   name: 'Seer',
-  //   nameVi: 'Tiên Tri',
-  //   description: 'Each night, choose a player to learn if they are a werewolf or not.',
-  //   descriptionVi: 'Mỗi đêm, chọn một người chơi để biết họ có phải sói hay không.',
-  //   faction: 'VILLAGER',
-  //   balancePoints: 7,
-  //   nightly: 'ALWAYS',
-  // },
+  {
+    id: 'seer',
+    name: 'Seer',
+    nameVi: 'Tiên Tri',
+    description: 'Each night, choose a player to learn if they are a werewolf or not.',
+    descriptionVi: 'Mỗi đêm, chọn một người chơi để biết họ có phải sói hay không.',
+    faction: 'VILLAGER',
+    balancePoints: 7,
+    nightly: 'ALWAYS',
+    nightOrder: 14,
+    actionType: 'SELECT_PLAYER',
+  },
   // {
   //   id: 'witch',
   //   name: 'Witch',

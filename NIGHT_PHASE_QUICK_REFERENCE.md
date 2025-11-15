@@ -125,6 +125,118 @@ GAMEMASTER ORDERED (23-35):
 
 ---
 
+## 🎨 ActionPanel Component Pattern ⭐ **REQUIRED**
+
+**Every role with a night action MUST have a dedicated RoleActionPanel component!**
+
+### File Pattern
+```
+RoleActionPanel{RoleName}.vue
+RoleActionPanelSeer.vue
+RoleActionPanelWitch.vue
+RoleActionPanelBodyguard.vue
+```
+
+### Minimal Template
+```vue
+<template>
+  <div class="space-y-6">
+    <!-- Header with role colors -->
+    <div class="bg-gradient-to-r from-[color-1] to-[color-2] text-white rounded-xl p-6">
+      <h2 class="text-3xl font-bold mb-2">🔮 {Role Name}</h2>
+      <p class="text-opacity-90">What the role does</p>
+    </div>
+
+    <!-- Status -->
+    <div class="bg-white rounded-xl p-6 shadow-md border-2 border-[color]">
+      <div class="grid grid-cols-2 gap-4">
+        <div class="text-center">
+          <p class="text-sm font-medium text-gray-600">Alive Players</p>
+          <p class="text-2xl font-bold">{{ alivePlayers.length }}</p>
+        </div>
+        <div class="text-center">
+          <p class="text-sm font-medium text-gray-600">Result Status</p>
+          <p class="text-2xl font-bold">{{ resultIcon }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Selection UI -->
+    <div class="bg-white rounded-xl p-6 shadow-md border-2 border-gray-200">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Select action:</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Player selection buttons OR custom UI -->
+      </div>
+    </div>
+
+    <!-- Result Preview -->
+    <div v-if="actionResult" class="bg-gradient-to-r rounded-xl p-6 border-2">
+      <h3 class="text-2xl font-bold mb-3">Result Preview</h3>
+      <p>Show what will happen when confirmed</p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex gap-3">
+      <button @click="skipAction" class="flex-1 py-3 px-4 bg-gray-500">Skip</button>
+      <button @click="confirmAction" class="flex-1 py-3 px-4 bg-gradient-to-r">Confirm</button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { computed, ref } from 'vue'
+import { useGameStore } from '~/stores/game'
+import { usePlayersStore } from '~/stores/players'
+import { useRolesStore } from '~/stores/roles'
+
+const emit = defineEmits<{
+  (e: 'confirm', action: { targetPlayerId?: string; secondaryTargetPlayerId?: string }): void
+  (e: 'skip'): void
+}>()
+
+const selectedTarget = ref<string>('')
+const actionResult = ref<any>(null)
+
+const alivePlayers = computed(() => {
+  return gameStore.alivePlayers
+    .map(id => playersStore.getPlayerById(id))
+    .filter(Boolean)
+})
+
+const confirmAction = () => {
+  if (selectedTarget.value) {
+    emit('confirm', { targetPlayerId: selectedTarget.value })
+    selectedTarget.value = ''
+    actionResult.value = null
+  }
+}
+
+const skipAction = () => {
+  emit('skip')
+  selectedTarget.value = ''
+  actionResult.value = null
+}
+</script>
+```
+
+### Register in RoleActionPanel.vue
+```typescript
+// 1. Import
+import RoleActionPanelSeer from './RoleActionPanelSeer.vue'
+import RoleActionPanelWitch from './RoleActionPanelWitch.vue'
+
+// 2. Add computed check
+const isSeerRole = computed(() => currentRole.value?.id.toLowerCase() === 'seer')
+const isWitchRole = computed(() => currentRole.value?.id.toLowerCase() === 'witch')
+
+// 3. Template
+<RoleActionPanelSeer v-if="isSeerRole" @confirm @skip />
+<RoleActionPanelWitch v-else-if="isWitchRole" @confirm @skip />
+<RoleAction v-else /> <!-- fallback generic -->
+```
+
+---
+
 ## 💾 Data Structure Cheatsheet
 
 ### Role Interface Addition

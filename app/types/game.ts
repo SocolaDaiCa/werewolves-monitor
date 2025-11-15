@@ -28,7 +28,7 @@ export interface PlayerRole {
 }
 
 // Night Phase Action Types
-export type RoleActionType = 'SELECT_PLAYER' | 'SELECT_TARGET' | 'DUAL_SELECT' | 'SKIP' | 'NONE'
+export type RoleActionType = 'SELECT_PLAYER' | 'SELECT_TARGET' | 'DUAL_SELECT' | 'TEXT_INPUT' | 'ACKNOWLEDGE' | 'DUAL_OPTION' | 'SKIP' | 'NONE'
 
 export interface RoleAction {
   roleId: string
