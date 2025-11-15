@@ -14,6 +14,7 @@ description: Prevent automatic creation of summary documentation files
 - `*_DOCUMENTATION.md`
 - `*_SUMMARY.md`
 - `*_QUICK_REFERENCE.md`
+- `*_IMPLEMENTATION.md`
 - `*_IMPLEMENTATION_SUMMARY.md`
 - `*_API_DOCUMENTATION.md`
 - `*_FIX.md`

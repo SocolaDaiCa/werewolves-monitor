@@ -119,5 +119,7 @@ export const usePlayersStore = defineStore('players', () => {
     exportPlayers,
     clearAllPlayers,
   }
+}, {
+  persist: true,
 })
 

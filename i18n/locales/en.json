@@ -25,7 +25,8 @@
     "confirm": "Confirm",
     "close": "Close",
     "increase": "Increase",
-    "decrease": "Decrease"
+    "decrease": "Decrease",
+    "confirmDelete": "Are you sure you want to delete this?"
   },
   "home": {
     "welcome": "Welcome to Werewolves Monitor",
@@ -63,14 +64,33 @@
   },
   "players": {
     "title": "Player Management",
+    "subtitle": "Create and manage player profiles",
     "addPlayer": "Add New Player",
     "noPlayers": "No players yet",
+    "noPlayersDescription": "Start by creating your first player profile",
+    "createFirstPlayer": "Create First Player",
     "gamesPlayed": "Games Played",
     "wins": "Wins",
     "winRate": "Win Rate",
+    "joinedOn": "Joined",
     "export": "Export Players",
     "import": "Import Players",
-    "confirmDelete": "Are you sure you want to delete this player?"
+    "importExport": "Import/Export",
+    "playerList": "Player List",
+    "confirmDelete": "Are you sure you want to delete this player?",
+    "deleteConfirmMessage": "You are about to permanently delete",
+    "name": "Player Name",
+    "namePlaceholder": "Enter player name (at least 2 characters)",
+    "avatar": "Player Avatar",
+    "uploadAvatar": "Upload Image",
+    "generateAvatar": "Generate Avatar",
+    "addNewPlayer": "Add New Player",
+    "editPlayer": "Edit Player",
+    "searchPlaceholder": "Search players...",
+    "downloadJSON": "Download JSON",
+    "selectFile": "Select JSON File",
+    "exportDescription": "Download all player data as a JSON file",
+    "importDescription": "Upload a previously exported JSON file to import players"
   },
   "gameSetup": {
     "title": "Game Setup",

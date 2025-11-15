@@ -25,7 +25,8 @@
     "confirm": "Xác Nhận",
     "close": "Đóng",
     "increase": "Tăng",
-    "decrease": "Giảm"
+    "decrease": "Giảm",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa không?"
   },
   "home": {
     "welcome": "Chào Mừng Đến Với Giám Sát Sói Đêm",
@@ -63,14 +64,33 @@
   },
   "players": {
     "title": "Quản Lý Người Chơi",
+    "subtitle": "Tạo và quản lý hồ sơ người chơi",
     "addPlayer": "Thêm Người Chơi Mới",
     "noPlayers": "Chưa có người chơi nào",
+    "noPlayersDescription": "Bắt đầu bằng cách tạo hồ sơ người chơi đầu tiên",
+    "createFirstPlayer": "Tạo Người Chơi Đầu Tiên",
     "gamesPlayed": "Game Đã Chơi",
     "wins": "Chiến Thắng",
     "winRate": "Tỷ Lệ Thắng",
+    "joinedOn": "Tham Gia",
     "export": "Xuất Người Chơi",
     "import": "Nhập Người Chơi",
-    "confirmDelete": "Bạn có chắc chắn muốn xóa người chơi này không?"
+    "importExport": "Nhập/Xuất",
+    "playerList": "Danh Sách Người Chơi",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa người chơi này không?",
+    "deleteConfirmMessage": "Bạn sắp xóa vĩnh viễn",
+    "name": "Tên Người Chơi",
+    "namePlaceholder": "Nhập tên người chơi (ít nhất 2 ký tự)",
+    "avatar": "Ảnh Đại Diện",
+    "uploadAvatar": "Tải Lên Ảnh",
+    "generateAvatar": "Tạo Ảnh Đại Diện",
+    "addNewPlayer": "Thêm Người Chơi Mới",
+    "editPlayer": "Chỉnh Sửa Người Chơi",
+    "searchPlaceholder": "Tìm kiếm người chơi...",
+    "downloadJSON": "Tải JSON",
+    "selectFile": "Chọn Tệp JSON",
+    "exportDescription": "Tải xuống tất cả dữ liệu người chơi dưới dạng tệp JSON",
+    "importDescription": "Tải lên tệp JSON đã xuất trước đó để nhập người chơi"
   },
   "gameSetup": {
     "title": "Thiết Lập Game",
