@@ -42,10 +42,11 @@
                 {{ isValid ? 'Ready to Start!' : 'Fix Mismatches' }}
               </p>
               <p
-                :class="[
-                  'text-sm mt-1',
-                  isValid ? 'text-green-700' : 'text-red-700'
-                ]"
+                class="text-sm mt-1"
+                :class="{
+                  'text-green-700': (isValid ? 1 : 0),
+                  'text-red-700': (isValid ? 0 : 1)
+                }"
               >
                 {{ validationMessage }}
               </p>
@@ -72,6 +73,7 @@
                 ? 'bg-green-500 hover:bg-green-600 text-white cursor-pointer'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             ]"
+            type="button"
           >
             {{ $t('gameSetup.startGameBtn') }}
           </button>
@@ -88,28 +90,34 @@
 import { computed } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
+import { usePlayersStore } from '~/stores/players'
 import PlayerSelector from '~/components/PlayerSelector.vue'
 import RoleConfirmation from '~/components/RoleConfirmation.vue'
 
 const gameStore = useGameStore()
 const rolesStore = useRolesStore()
+const playersStore = usePlayersStore()
 const router = useRouter()
 
 // Computed properties
 const playerCount = computed(() => gameStore.players.length)
 const totalRoles = computed(() => rolesStore.totalRoleCount)
 
-const isValid = computed(() => {
-  return playerCount.value === totalRoles.value && totalRoles.value > 0 && playerCount.value >= 2
+const isValid = computed<boolean>(() => {
+  // Ensure we're watching the reactive object and all its properties
+  // by accessing Object.keys which forces full object reactivity
+  Object.keys(rolesStore.selectedRoles)
+  return playersStore.selectedPlayers.length === totalRoles.value && totalRoles.value > 0 && playersStore.selectedPlayers.length >= 2
 })
 
 const validationMessage = computed(() => {
-  if (playerCount.value === 0 || totalRoles.value === 0) {
+  const selectedCount = playersStore.selectedPlayers.length
+  if (selectedCount === 0 || totalRoles.value === 0) {
     return 'Please select players and configure roles'
   }
-  if (playerCount.value !== totalRoles.value) {
-    const diff = Math.abs(playerCount.value - totalRoles.value)
-    return playerCount.value > totalRoles.value
+  if (selectedCount !== totalRoles.value) {
+    const diff = Math.abs(selectedCount - totalRoles.value)
+    return selectedCount > totalRoles.value
       ? `Need ${diff} more role(s)`
       : `Too many role(s) by ${diff}`
   }
@@ -122,13 +130,16 @@ async function startGame() {
 
   try {
     // Initialize game with selected players and roles
+    console.log('playersStore.selectedPlayerIds', playersStore.selectedPlayerIds)
+    console.log('rolesStore.selectedRoles', rolesStore.selectedRoles)
     gameStore.initializeGame(
-      gameStore.players,
+      // gameStore.players,
+      playersStore.selectedPlayerIds,
       rolesStore.selectedRoles
     )
 
-    // Navigate to game page
-    await router.push('/game')
+    // Navigate to night zero (role reveal) page
+    await router.push('/night-zero')
   } catch (error) {
     console.error('Failed to start game:', error)
   }

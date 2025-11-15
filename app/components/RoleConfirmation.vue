@@ -4,7 +4,8 @@
     <div class="space-y-2">
       <h2 class="text-2xl font-bold text-gray-800">{{ $t('gameSetup.rolesConfigured') }}</h2>
       <p class="text-sm text-gray-600">
-        {{ totalRoles }} {{ $t('roles.roles') }} for {{ playerCount }} {{ $t('gameSetup.playersSelected').toLowerCase() }}
+        {{ totalRoles }} {{ $t('roles.roles') }} for {{ playerSelectedCount }}
+        {{ $t('gameSetup.playersSelected').toLowerCase() }}
       </p>
     </div>
 
@@ -145,17 +146,19 @@ import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRolesStore } from '~/stores/roles'
 import { useGameStore } from '~/stores/game'
+import { usePlayersStore } from '~/stores/players'
 
 const { t } = useI18n()
 const rolesStore = useRolesStore()
 const gameStore = useGameStore()
+const playersStore = usePlayersStore()
 
 // Computed properties
 const selectedRolesData = computed(() => rolesStore.selectedRoles)
 
 const totalRoles = computed(() => rolesStore.totalRoleCount)
 
-const playerCount = computed(() => gameStore.players.length)
+const playerSelectedCount = computed(() => playersStore.selectedPlayers.length)
 
 const totalBalancePoints = computed(() => rolesStore.totalBalancePoints)
 
@@ -169,17 +172,17 @@ const balanceLabel = computed(() => {
   return t('roles.balanceRed') || 'Heavily Unbalanced'
 })
 
-const isValid = computed(() => playerCount.value === totalRoles.value && totalRoles.value > 0)
+const isValid = computed(() => playerSelectedCount.value === totalRoles.value && totalRoles.value > 0)
 
 const mismatchMessage = computed(() => {
   if (totalRoles.value === 0) return t('gameSetup.validation.noRolesSelected') || 'Please select at least 1 role'
-  if (playerCount.value === 0) return t('gameSetup.validation.noPlayersSelected') || 'Please select at least 2 players'
-  
-  const difference = Math.abs(playerCount.value - totalRoles.value)
-  if (playerCount.value > totalRoles.value) {
-    return `You have ${playerCount.value} players but only ${totalRoles.value} roles. Need ${difference} more role${difference > 1 ? 's' : ''}.`
+  if (playerSelectedCount.value === 0) return t('gameSetup.validation.noPlayersSelected') || 'Please select at least 2 players'
+
+  const difference = Math.abs(playerSelectedCount.value - totalRoles.value)
+  if (playerSelectedCount.value > totalRoles.value) {
+    return `You have ${playerSelectedCount.value} players but only ${totalRoles.value} roles. Need ${difference} more role${difference > 1 ? 's' : ''}.`
   } else {
-    return `You have ${playerCount.value} players but ${totalRoles.value} roles. Too many roles by ${difference}.`
+    return `You have ${playerSelectedCount.value} players but ${totalRoles.value} roles. Too many roles by ${difference}.`
   }
 })
 

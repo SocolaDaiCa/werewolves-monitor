@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
   modules: [
@@ -27,5 +28,14 @@ export default defineNuxtConfig({
       { code: 'en', name: 'English', file: 'en.json' },
       { code: 'vi', name: 'Tiếng Việt', file: 'vi.json' },
     ],
+  },
+  piniaPluginPersistedstate: {
+    storage: 'localStorage',
+    // key: 'werewolves-monitor',
+    // storageKey: 'werewolves-monitor',
+    storageType: 'localStorage',
+    // storageOptions: {
+    //   key: 'werewolves-monitor',
+    // },
   },
 })

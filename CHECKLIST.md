@@ -242,55 +242,73 @@
 ---
 
 ### ✅ PHASE 4.1: Night 0 - Role Reveal
-**Status**: Not Started
+**Status**: ✅ COMPLETED
 **Objective**: Allow players to recognize their role group before game starts
 
-**Components to create:**
-- [ ] `components/RoleRevealUI.vue` - Role reveal interface
-- [ ] `components/RoleCallout.vue` - Individual role callout display
-- [ ] `components/RoleRecognition.vue` - Main role recognition manager
-- [ ] `pages/night-zero.vue` - Route handler
+**Components Created:**
+- [x] `components/RoleRevealUI.vue` - Role reveal interface ✅
+- [x] `components/RoleCallout.vue` - Individual role callout display ✅
+- [x] `components/RoleRecognition.vue` - Main role recognition manager ✅
+- [x] `pages/night-zero.vue` - Route handler ✅
 
-**Features:**
-- [ ] Display all selected players as neutral list initially
-- [ ] Moderator controls:
-  - [ ] "Call Next Role" button
-  - [ ] Display current role being called (large, prominent)
-  - [ ] Show role description
-  - [ ] Show how many players have this role
-- [ ] Call each role in order (from docs.ts role order):
-  - [ ] Role name displayed in current language
-  - [ ] Players with that role can acknowledge (self-identify)
-  - [ ] Show indicator when role players open their eyes/acknowledge
-- [ ] Player identification process:
-  - [ ] When role is called, matching players see indicator "This is your role"
-  - [ ] Players can click "I'm in!" or similar acknowledgment
-  - [ ] Moderator can see acknowledgment count vs expected count
-  - [ ] Show visual feedback (checkmark, highlight, color change)
-- [ ] Navigation:
-  - [ ] "Previous Role" button (go back to previous role)
-  - [ ] "Next Role" button (move to next role)
-  - [ ] Skip to role by clicking role list
-  - [ ] "Start Game" button (only active when all roles acknowledged or moderator confirms)
-- [ ] Role acknowledgment tracking:
-  - [ ] Track which players have acknowledged their role
-  - [ ] Verify count matches expected number
-  - [ ] Show summary of acknowledged vs expected for each role
-- [ ] Safety check:
-  - [ ] Confirm all roles acknowledged before allowing "Start Game"
-  - [ ] Warning if mismatch between players and acknowledged
-  - [ ] Option to force start (for moderator override)
-- [ ] Multi-language support (i18n):
-  - [ ] English translations
-  - [ ] Vietnamese translations
-- [ ] Beautiful UI with Tailwind CSS:
-  - [ ] Large role name display
-  - [ ] Clear acknowledgment indicators
-  - [ ] Role progress tracker
-  - [ ] Player acknowledgment status
-  - [ ] Mobile responsive layout
+**Features Implemented:**
+- [x] Display all selected players with role status
+- [x] Moderator controls:
+  - [x] "Call Next Role" button
+  - [x] "Call Previous Role" button
+  - [x] Display current role being called (large, prominent, 5xl/6xl text)
+  - [x] Show role description in current language
+  - [x] Show how many players have this role (expected count)
+- [x] Call each role in order (from docs.ts role order - sorted from roles store):
+  - [x] Role name displayed in current language (supports English & Vietnamese)
+  - [x] Players with that role can acknowledge (self-identify)
+  - [x] Show indicator when role players open their eyes/acknowledge
+- [x] Player identification process:
+  - [x] When role is called, matching players see indicator "This is your role" (green border)
+  - [x] Players can click "I'm in!" button to acknowledge
+  - [x] Moderator can see acknowledgment count vs expected count (real-time counter)
+  - [x] Show visual feedback (checkmark ✓, green highlight, color change)
+  - [x] Pulsing animation for players waiting to acknowledge
+- [x] Navigation:
+  - [x] "Previous Role" button (disabled on first role)
+  - [x] "Next Role" button (disabled on last role)
+  - [x] Skip to role by clicking role list in sidebar
+  - [x] "Start Game" button (enabled only when all roles acknowledged)
+  - [x] "Back to Setup" button to return to game setup
+  - [x] "Force Start" button (moderator override, visible when not all acknowledged)
+- [x] Role acknowledgment tracking:
+  - [x] Track which players have acknowledged their role in `gameStore.roleAcknowledgments`
+  - [x] Verify count matches expected number (real-time validation)
+  - [x] Show summary of acknowledged vs expected for each role
+  - [x] Role progress sidebar with color-coded status badges
+- [x] Safety check:
+  - [x] Confirm all roles acknowledged before allowing "Start Game"
+  - [x] Warning if mismatch between players and acknowledged (orange alert)
+  - [x] Detailed mismatch warnings showing specific roles with count differences
+  - [x] Option to force start (for moderator override with yellow "Force Start" button)
+  - [x] Success message when all roles acknowledged (green alert)
+- [x] Multi-language support (i18n):
+  - [x] English translations (14 keys, all implemented)
+  - [x] Vietnamese translations (14 keys, all implemented)
+  - [x] Language-aware role names and descriptions
+- [x] Beautiful UI with Tailwind CSS:
+  - [x] Large role name display (text-5xl/text-6xl)
+  - [x] Clear acknowledgment indicators (green badges, orange warnings)
+  - [x] Role progress tracker (sticky sidebar with scrollable list)
+  - [x] Player acknowledgment status (card layout with avatars)
+  - [x] Mobile responsive layout (3-col desktop, stacked mobile)
+  - [x] Fixed footer buttons with safe area padding
+  - [x] Gradient purple header and smooth transitions
 
-**Effort**: Medium | **Time**: 3-4 hours
+**Data Flow:**
+- GameSetup page → Start Game button → `gameStore.initializeGame()` → routes to `/night-zero`
+- RoleRevealUI mounts → `gameStore.assignRolesToPlayers()` shuffles & assigns roles
+- Roles displayed in sorted order (maintaining docs.ts role sequence)
+- Players see personalized message when their role is called
+- Acknowledgments tracked in real-time, validation updates dynamically
+- All roles acknowledged → Start Game button enabled → routes to `/game`
+
+**Effort**: Medium | **Time**: 3-4 hours | **Actual**: COMPLETED ✅
 
 ---
 
@@ -704,15 +722,15 @@
 || 2. Role Management | ✅ COMPLETED | 3-4h | Medium |
 || 3. Player Management | ✅ COMPLETED | 3-4h | Medium |
 || 4. Game Setup | ✅ COMPLETED | 3-4h | Medium |
-|| 4.1. Night 0 - Role Reveal | ⏳ Pending | 3-4h | Medium |
+|| 4.1. Night 0 - Role Reveal | ✅ COMPLETED | 3-4h | Medium |
 || 5. Game Flow (Night) | ⏳ Pending | 5-6h | High |
 || 6. Game Flow (Day) | ⏳ Pending | 5-6h | High |
 || 7. Text-to-Speech | ⏳ Pending | 2-3h | Medium |
 || 8. Game End | ⏳ Pending | 3-4h | Medium |
 || 9. Mobile Optimization | ⏳ Pending | 3-4h | Medium |
 || 10. Testing & Polish | ⏳ Pending | 4-5h | High |
-|| **COMPLETED: 4/11** | **~12-15h** | **36% Done** |
-|| **REMAINING: 7/11** | **~29-37h** | **64% Remaining** |
+|| **COMPLETED: 5/11** | **~15-19h** | **45% Done** |
+|| **REMAINING: 6/11** | **~27-35h** | **55% Remaining** |
 
 ---
 

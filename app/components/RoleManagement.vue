@@ -2,7 +2,13 @@
   <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
     <!-- Header -->
     <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-8 rounded-b-3xl shadow-lg">
-      <h1 class="text-3xl font-bold mb-2">{{ $t('roles.title') }}</h1>
+      <h1 class="text-3xl font-bold mb-2">
+        <!-- back button -->
+        <button @click="$router.go(-1)" class="text-white">
+          <span class="text-2xl">←</span>
+        </button>
+        {{ $t('roles.title') }}
+      </h1>
       <p class="text-orange-100">{{ $t('roles.selectRoles') }}</p>
     </div>
 

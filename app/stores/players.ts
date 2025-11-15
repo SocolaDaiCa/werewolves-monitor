@@ -13,21 +13,11 @@ export interface Player {
 export const usePlayersStore = defineStore('players', () => {
   // State
   const players = ref<Player[]>([])
-
-  // Persist to localStorage
-  const storageKey = 'werewolves_players'
-
-  // Load from localStorage on initialization
-  if (process.client) {
-    const stored = localStorage.getItem(storageKey)
-    if (stored) {
-      try {
-        players.value = JSON.parse(stored)
-      } catch (e) {
-        console.error('Failed to load players from localStorage:', e)
-      }
-    }
-  }
+  const selectedPlayerIds = ref<string[]>([])
+  watch(players, (newPlayers) => {
+    // remove selectedPlayerIds not in newPlayers
+    selectedPlayerIds.value = selectedPlayerIds.value.filter(id => newPlayers.some(p => p.id === id));
+  })
 
   // Getters
   const allPlayers = computed(() => players.value)
@@ -38,13 +28,11 @@ export const usePlayersStore = defineStore('players', () => {
     return players.value.find(p => p.id === id)
   })
 
-  // Actions
-  function saveToLocalStorage() {
-    if (process.client) {
-      localStorage.setItem(storageKey, JSON.stringify(players.value))
-    }
-  }
+  const selectedPlayers = computed(() => {
+    return players.value.filter(p => selectedPlayerIds.value.includes(p.id))
+  })
 
+  // Actions
   function addPlayer(name: string, avatar: string = '') {
     const newPlayer: Player = {
       id: `player_${Date.now()}_${Math.random()}`,
@@ -55,7 +43,6 @@ export const usePlayersStore = defineStore('players', () => {
       wins: 0,
     }
     players.value.push(newPlayer)
-    saveToLocalStorage()
     return newPlayer
   }
 
@@ -63,7 +50,6 @@ export const usePlayersStore = defineStore('players', () => {
     const index = players.value.findIndex(p => p.id === id)
     if (index !== -1) {
       players.value[index] = { ...players.value[index], ...updates }
-      saveToLocalStorage()
     }
   }
 
@@ -71,7 +57,6 @@ export const usePlayersStore = defineStore('players', () => {
     const index = players.value.findIndex(p => p.id === id)
     if (index !== -1) {
       players.value.splice(index, 1)
-      saveToLocalStorage()
     }
   }
 
@@ -79,7 +64,6 @@ export const usePlayersStore = defineStore('players', () => {
     const player = players.value.find(p => p.id === id)
     if (player) {
       player.gamesPlayed++
-      saveToLocalStorage()
     }
   }
 
@@ -87,13 +71,11 @@ export const usePlayersStore = defineStore('players', () => {
     const player = players.value.find(p => p.id === id)
     if (player) {
       player.wins++
-      saveToLocalStorage()
     }
   }
 
   function importPlayers(newPlayers: Player[]) {
     players.value = newPlayers
-    saveToLocalStorage()
   }
 
   function exportPlayers() {
@@ -102,14 +84,19 @@ export const usePlayersStore = defineStore('players', () => {
 
   function clearAllPlayers() {
     players.value = []
-    saveToLocalStorage()
+  }
+
+  function setSelectedPlayerIds(ids: string[]) {
+    selectedPlayerIds.value = ids
   }
 
   return {
     players,
+    selectedPlayerIds,
     allPlayers,
     playerCount,
     getPlayerById,
+    selectedPlayers,
     addPlayer,
     updatePlayer,
     deletePlayer,
@@ -118,6 +105,7 @@ export const usePlayersStore = defineStore('players', () => {
     importPlayers,
     exportPlayers,
     clearAllPlayers,
+    setSelectedPlayerIds,
   }
 }, {
   persist: true,

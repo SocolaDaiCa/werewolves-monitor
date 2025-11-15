@@ -4,7 +4,7 @@
     <div class="space-y-2">
       <h2 class="text-2xl font-bold text-gray-800">{{ $t('gameSetup.selectPlayers') }}</h2>
       <p class="text-sm text-gray-600">
-        {{ selectedPlayerIds.length }} {{ $t('gameSetup.playersSelected') }}
+        {{ playersStore.selectedPlayerIds.length }} {{ $t('gameSetup.playersSelected') }}
       </p>
     </div>
 
@@ -29,14 +29,14 @@
         <div
           :class="[
             'relative h-40 rounded-2xl transition-all duration-300 border-3',
-            selectedPlayerIds.includes(player.id)
+            playersStore.selectedPlayerIds.includes(player.id)
               ? 'border-green-500 bg-green-50 shadow-lg scale-105'
               : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
           ]"
         >
           <!-- Checkmark Badge -->
           <div
-            v-if="selectedPlayerIds.includes(player.id)"
+            v-if="playersStore.selectedPlayerIds.includes(player.id)"
             class="absolute -top-2 -right-2 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center shadow-lg"
           >
             ✓
@@ -68,7 +68,7 @@
       <div class="grid grid-cols-2 gap-4">
         <div>
           <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider">{{ $t('gameSetup.playersSelected') }}</p>
-          <p class="text-3xl font-bold text-blue-600">{{ selectedPlayerIds.length }}</p>
+          <p class="text-3xl font-bold text-blue-600">{{ playersStore.selectedPlayerIds.length }}</p>
         </div>
         <div>
           <p class="text-xs text-gray-600 font-semibold uppercase tracking-wider">Total Players</p>
@@ -82,14 +82,14 @@
       <button
         @click="selectAllPlayers"
         class="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="selectedPlayerIds.length === playersStore.allPlayers.length"
+        :disabled="playersStore.selectedPlayerIds.length === playersStore.allPlayers.length"
       >
         {{ $t('common.add') }} All
       </button>
       <button
         @click="clearAllPlayers"
         class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-        :disabled="selectedPlayerIds.length === 0"
+        :disabled="playersStore.selectedPlayerIds.length === 0"
       >
         {{ $t('roles.clearAll') }}
       </button>
@@ -107,14 +107,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { watch, onMounted } from 'vue'
 import { usePlayersStore } from '~/stores/players'
 import { useGameStore } from '~/stores/game'
 
 const playersStore = usePlayersStore()
 const gameStore = useGameStore()
-
-const selectedPlayerIds = ref<string[]>([])
 
 // Get player initials for avatar
 function getInitials(name: string): string {
@@ -128,40 +126,26 @@ function getInitials(name: string): string {
 
 // Toggle player selection
 function togglePlayer(playerId: string) {
-  const index = selectedPlayerIds.value.indexOf(playerId)
+  const ids = [...playersStore.selectedPlayerIds]
+  const index = ids.indexOf(playerId)
   if (index > -1) {
-    selectedPlayerIds.value.splice(index, 1)
+    ids.splice(index, 1)
   } else {
-    selectedPlayerIds.value.push(playerId)
+    ids.push(playerId)
   }
-  gameStore.setPlayers(selectedPlayerIds.value)
+  playersStore.setSelectedPlayerIds(ids)
 }
 
 // Select all players
 function selectAllPlayers() {
-  selectedPlayerIds.value = playersStore.allPlayers.map(p => p.id)
-  gameStore.setPlayers(selectedPlayerIds.value)
+  const allIds = playersStore.allPlayers.map(p => p.id)
+  const ids = [...new Set([...playersStore.selectedPlayerIds, ...allIds])]
+  playersStore.setSelectedPlayerIds(ids)
 }
 
 // Clear all selections
 function clearAllPlayers() {
-  selectedPlayerIds.value = []
-  gameStore.setPlayers([])
+  playersStore.setSelectedPlayerIds([])
 }
-
-// Smart auto-select: Load from last game if available
-onMounted(() => {
-  if (gameStore.players.length > 0) {
-    selectedPlayerIds.value = gameStore.players
-  }
-})
-
-// Watch for external changes to gameStore
-watch(
-  () => gameStore.players,
-  (newPlayers) => {
-    selectedPlayerIds.value = newPlayers
-  }
-)
 </script>
 

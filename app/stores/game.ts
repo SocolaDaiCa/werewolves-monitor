@@ -12,6 +12,9 @@ export interface GameState {
   players: string[] // player IDs
   selectedRoles: { [roleId: string]: number } // role id -> count
   gameLog: GameEvent[]
+  roleAcknowledgments: { [playerId: string]: string } // playerId -> roleId
+  currentRoleRevealIndex: number
+  playerRoles: { [playerId: string]: string } // playerId -> roleId (assigned roles)
 }
 
 export interface GameEvent {
@@ -29,6 +32,9 @@ export const useGameStore = defineStore('game', () => {
   const players = ref<string[]>([])
   const selectedRoles = ref<{ [roleId: string]: number }>({})
   const gameLog = ref<GameEvent[]>([])
+  const roleAcknowledgments = ref<{ [playerId: string]: string }>({})
+  const currentRoleRevealIndex = ref(0)
+  const playerRoles = ref<{ [playerId: string]: string }>({})
 
   // Getters
   const totalRoleSlots = computed(() => {
@@ -46,6 +52,9 @@ export const useGameStore = defineStore('game', () => {
     players: players.value,
     selectedRoles: selectedRoles.value,
     gameLog: gameLog.value,
+    roleAcknowledgments: roleAcknowledgments.value,
+    currentRoleRevealIndex: currentRoleRevealIndex.value,
+    playerRoles: playerRoles.value,
   }))
 
   // Actions
@@ -59,10 +68,6 @@ export const useGameStore = defineStore('game', () => {
 
   function setStatus(newStatus: GameStatus) {
     status.value = newStatus
-  }
-
-  function setPlayers(playerIds: string[]) {
-    players.value = playerIds
   }
 
   function setSelectedRoles(roles: { [roleId: string]: number }) {
@@ -108,7 +113,54 @@ export const useGameStore = defineStore('game', () => {
     players.value = []
     selectedRoles.value = {}
     gameLog.value = []
+    roleAcknowledgments.value = {}
+    currentRoleRevealIndex.value = 0
+    playerRoles.value = {}
   }
+
+  function acknowledgeRole(playerId: string, roleId: string) {
+    roleAcknowledgments.value[playerId] = roleId
+  }
+
+  function setCurrentRoleRevealIndex(index: number) {
+    currentRoleRevealIndex.value = index
+  }
+
+  function resetRoleReveal() {
+    roleAcknowledgments.value = {}
+    currentRoleRevealIndex.value = 0
+  }
+
+  function assignRolesToPlayers(roles: { [roleId: string]: number }, playerIds: string[]) {
+    // Create role assignments from the selected roles
+    const roleAssignments: { [playerId: string]: string } = {}
+    const rolesList: string[] = []
+
+    // Build a list of roleIds repeated by their count
+    Object.entries(roles).forEach(([roleId, count]) => {
+      for (let i = 0; i < count; i++) {
+        rolesList.push(roleId)
+      }
+    })
+
+    // Shuffle the roles list
+    for (let i = rolesList.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      const temp = rolesList[i] as string
+      rolesList[i] = rolesList[j] as string
+      rolesList[j] = temp
+    }
+
+    // Assign roles to players
+    playerIds.forEach((playerId, index) => {
+      if (index < rolesList.length) {
+        roleAssignments[playerId] = rolesList[index] || ''
+      }
+    })
+
+    playerRoles.value = roleAssignments
+  }
+
 
   return {
     phase,
@@ -117,19 +169,25 @@ export const useGameStore = defineStore('game', () => {
     players,
     selectedRoles,
     gameLog,
+    roleAcknowledgments,
+    currentRoleRevealIndex,
+    playerRoles,
     totalRoleSlots,
     livingPlayersCount,
     gameState,
     setPhase,
     setRound,
     setStatus,
-    setPlayers,
     setSelectedRoles,
     initializeGame,
     addGameEvent,
     nextPhase,
     endGame,
     resetGame,
+    acknowledgeRole,
+    setCurrentRoleRevealIndex,
+    resetRoleReveal,
+    assignRolesToPlayers,
   }
 }, {
   persist: true,
