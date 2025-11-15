@@ -1,5 +1,5 @@
 ---
-globs: **/*.mdc
+globs: **/*.mdc,.cursor/commands/**/*.md
 alwaysApply: false
 ---
 Act as an expert prompt engineer. I need you to create a detailed prompt for [TASK].
