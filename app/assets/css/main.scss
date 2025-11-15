@@ -3,38 +3,24 @@
    ============================================ */
 
 :root {
+  /* Primary Colors - for game theme */
   --color-primary: #8b5a3c;
   --color-primary-light: #a87550;
   --color-primary-dark: #6d3f1e;
   
-  --color-village: #4a90e2;
-  --color-village-light: #7cb3f0;
-  --color-werewolf: #e74c3c;
-  --color-werewolf-light: #ec7063;
-  --color-cult: #9b59b6;
-  --color-vampire: #2c3e50;
+  /* Faction Colors */
+  --color-village: #3b82f6;
+  --color-village-light: #93c5fd;
+  --color-werewolf: #ef4444;
+  --color-werewolf-light: #fca5a5;
+  --color-cult: #8b5cf6;
+  --color-vampire: #1e1b4b;
   
-  --color-success: #27ae60;
-  --color-warning: #f39c12;
-  --color-error: #e74c3c;
-  --color-info: #3498db;
-  
-  --color-bg-light: #f8f7f5;
-  --color-bg-dark: #2c2c2c;
-  --color-text-light: #333333;
-  --color-text-dark: #f8f7f5;
-  
-  --spacing-unit: 0.5rem;
-  --border-radius: 0.5rem;
-  --transition-speed: 0.3s;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-bg-light: #1a1a1a;
-    --color-text-light: #e0e0e0;
-  }
+  /* Status Colors */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #3b82f6;
 }
 
 /* ============================================
@@ -52,29 +38,13 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   line-height: 1.6;
-  background-color: var(--color-bg-light);
-  color: var(--color-text-light);
-  transition: background-color var(--transition-speed), color var(--transition-speed);
-}
-
-/* ============================================
-   Layout
-   ============================================ */
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-unit);
-
-  @media (min-width: 640px) {
-    padding: 0 calc(var(--spacing-unit) * 2);
-  }
-}
-
-/* ============================================
-   Utilities
-   ============================================ */
-
-.bg-d0cfcd {
-  background-color: #d0cfcd;
+  background-color: #f8f7f5;
+  color: #333333;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }

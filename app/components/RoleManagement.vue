@@ -1,95 +1,131 @@
 <template>
-  <div class="role-management">
-    <!-- Header Section -->
-    <div class="header">
-      <h1>{{ $t('roles.title') }}</h1>
-      <p class="subtitle">{{ $t('roles.selectRoles') }}</p>
+  <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-8 rounded-b-3xl shadow-lg">
+      <h1 class="text-3xl font-bold mb-2">{{ $t('roles.title') }}</h1>
+      <p class="text-orange-100">{{ $t('roles.selectRoles') }}</p>
     </div>
 
     <!-- Balance Status Section -->
-    <div class="balance-section" :class="`balance-${balanceStatus}`">
-      <div class="balance-container">
-        <div class="balance-info">
-          <h3>{{ $t('roles.roleBalance') }}</h3>
-          <div class="balance-display">
-            <span class="balance-value">{{ balancePoints }}</span>
-            <span class="balance-points">{{ $t('roles.balancePoints') }}</span>
-          </div>
-        </div>
-        <div class="role-count-info">
-          <h3>{{ $t('roles.totalSlots') }}</h3>
-          <div class="role-count-display">
-            <span class="count-value">{{ totalRoleCount }}</span>
-            <span class="count-label">{{ $t('roles.roles') }}</span>
-          </div>
-        </div>
-      </div>
-      <div class="balance-status">
-        <p :class="`status-${balanceStatusLabel}`">
-          {{ getBalanceStatusText() }}
-        </p>
-      </div>
-
-      <!-- Selected Roles Summary -->
-      <div class="selected-roles-summary" v-if="hasSelectedRoles">
-        <div v-for="faction in factions" :key="faction" class="faction-group">
-          <div class="faction-header">{{ getFactionLabel(faction) }}</div>
-          <ul class="roles-list" v-if="getSelectedRolesByFaction(faction).length > 0">
-            <li v-for="role in getSelectedRolesByFaction(faction)" :key="role.id">
-              <span class="role-count">{{ role.quantity }}x</span>
-              <span class="role-name">{{ role.name }}</span>
-              <span
-                class="role-weight"
-                :class="{
-                  'text-green-600': role.balancePoints * role.quantity > 0,
-                  'text-red-600': role.balancePoints * role.quantity < 0
-                }"
-              >
-                ({{ role.balancePoints * role.quantity > 0 ? '+' : '' }}{{ role.balancePoints * role.quantity }})
+    <div class="px-6 py-6">
+      <div class="bg-white rounded-2xl p-6 shadow-md border-l-4" :class="getBorderColorClass()">
+        <!-- Balance Info Grid -->
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{{ $t('roles.roleBalance') }}</p>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-bold" :class="getBalanceTextColor()">
+                {{ balancePoints > 0 ? '+' : '' }}{{ balancePoints }}
               </span>
-            </li>
-          </ul>
+              <span class="text-sm text-gray-600">{{ $t('roles.balancePoints') }}</span>
+            </div>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{{ $t('roles.totalSlots') }}</p>
+            <div class="flex items-baseline gap-2">
+              <span class="text-3xl font-bold text-gray-800">{{ totalRoleCount }}</span>
+              <span class="text-sm text-gray-600">{{ $t('roles.roles') }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Balance Status Message -->
+        <div class="mb-6 pb-6 border-b border-gray-200">
+          <p class="text-sm font-semibold" :class="getStatusColorClass()">
+            {{ getBalanceStatusText() }}
+          </p>
+        </div>
+
+        <!-- Selected Roles Summary -->
+        <div v-if="hasSelectedRoles" class="space-y-4">
+          <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Selected Roles</h3>
+          <div v-for="faction in factions" :key="faction" class="space-y-2">
+            <div v-if="getSelectedRolesByFaction(faction).length > 0">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-semibold text-gray-600 mb-2">
+                  {{ getFactionLabel(faction) }}
+                  <span 
+                    class="text-xs font-semibold mb-2"
+                    :class="{
+                      'text-green-600': getFactionBalancePoints(faction) > 0,
+                      'text-red-600': getFactionBalancePoints(faction) < 0,
+                      'text-gray-500': getFactionBalancePoints(faction) === 0
+                    }"
+                  >
+                    ({{ getFactionBalancePoints(faction) > 0 ? '+' : '' }}{{ getFactionBalancePoints(faction) }})
+                  </span>
+                </p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <div 
+                  v-for="role in getSelectedRolesByFaction(faction)" 
+                  :key="role.id"
+                  class="bg-gray-100 rounded-lg px-3 py-2 text-xs font-medium text-gray-700 flex items-center gap-2"
+                >
+                  <span class="font-bold">{{ role.quantity }}×</span>
+                  <span>{{ role.name }}</span>
+                  <span 
+                    :class="{
+                      'text-green-600': role.balancePoints * role.quantity > 0,
+                      'text-red-600': role.balancePoints * role.quantity < 0,
+                      'text-gray-500': role.balancePoints * role.quantity === 0
+                    }"
+                  >
+                    ({{ role.balancePoints * role.quantity > 0 ? '+' : '' }}{{ role.balancePoints * role.quantity }})
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Faction Filter Section -->
-    <div class="filter-section">
-      <h3>{{ $t('roles.filterByFaction') }}</h3>
-      <div class="filter-buttons">
-        <button 
-          v-for="faction in factions"
-          :key="faction"
-          class="filter-btn"
-          :class="{ active: activeFaction === faction }"
-          @click="activeFaction = faction"
-        >
-          {{ getFactionLabel(faction) }}
-        </button>
+    <!-- Filter Section -->
+    <div class="px-6 py-4">
+      <div class="bg-white rounded-2xl p-4 shadow-md">
+        <p class="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">{{ $t('roles.filterByFaction') }}</p>
+        <div class="flex flex-wrap gap-2">
+          <button 
+            v-for="faction in factions"
+            :key="faction"
+            @click="activeFaction = faction"
+            :class="[
+              'px-4 py-2 rounded-xl font-semibold text-sm transition-all active:scale-95',
+              activeFaction === faction
+                ? 'bg-orange-500 text-white shadow-md'
+                : 'bg-gray-100 text-gray-700 border border-gray-200'
+            ]"
+          >
+            {{ getFactionLabel(faction) }}
+          </button>
+        </div>
       </div>
     </div>
 
     <!-- Roles Grid -->
-    <div class="roles-grid">
-      <RoleCard 
-        v-for="role in filteredRoles"
-        :key="role.id"
-        :role="role"
-        @quantity-change="onRoleQuantityChange"
-      />
+    <div class="flex-1 px-6 py-6 overflow-y-auto">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        <RoleCard 
+          v-for="role in filteredRoles"
+          :key="role.id"
+          :role="role"
+          @quantity-change="onRoleQuantityChange"
+        />
+      </div>
     </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
+    <!-- Action Buttons - Sticky Footer -->
+    <div class="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4 flex gap-3">
       <button 
-        class="btn btn-secondary"
         @click="clearAllRoles"
+        class="flex-1 py-3 px-4 bg-gray-200 text-gray-800 rounded-xl font-bold active:scale-95 transition-transform"
       >
         {{ $t('roles.clearAll') }}
       </button>
       <button 
-        class="btn btn-secondary"
         @click="saveConfiguration"
+        class="flex-1 py-3 px-4 bg-orange-500 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform"
       >
         {{ $t('roles.savePreset') }}
       </button>
@@ -115,14 +151,6 @@ const balancePoints = computed(() => rolesStore.totalBalancePoints)
 const balanceStatusLabel = computed(() => rolesStore.balanceStatus)
 const totalRoleCount = computed(() => rolesStore.totalRoleCount)
 
-const balanceStatus = computed(() => {
-  const status = rolesStore.balanceStatus
-  if (status === 'perfect') return 'perfect'
-  if (status === 'light-green') return 'light-green'
-  if (status === 'light-red') return 'light-red'
-  return 'red'
-})
-
 const filteredRoles = computed(() => {
   return rolesStore.rolesByFaction(activeFaction.value)
 })
@@ -139,6 +167,12 @@ const getSelectedRolesByFaction = (faction: Role['faction']) => {
     })
     .filter((role): role is (Role & { quantity: number }) => role !== undefined && role.faction === faction && role.quantity > 0)
     .sort((a, b) => b.quantity - a.quantity)
+}
+
+const getFactionBalancePoints = (faction: Role['faction']) => {
+  return getSelectedRolesByFaction(faction).reduce((total, role) => {
+    return total + (role.balancePoints * role.quantity)
+  }, 0)
 }
 
 // Methods
@@ -160,6 +194,30 @@ const getBalanceStatusText = () => {
   if (points < 0 && points >= -5) return t('roles.balanceLightRed')
   if (points > 5) return t('roles.balanceRed') + ` (${t('roles.favorVillage')})`
   return t('roles.balanceRed') + ` (${t('roles.favorWerewolves')})`
+}
+
+const getBorderColorClass = () => {
+  const status = rolesStore.balanceStatus
+  if (status === 'perfect') return 'border-green-500'
+  if (status === 'light-green') return 'border-emerald-500'
+  if (status === 'light-red') return 'border-rose-500'
+  return 'border-red-500'
+}
+
+const getBalanceTextColor = () => {
+  const status = rolesStore.balanceStatus
+  if (status === 'perfect') return 'text-green-600'
+  if (status === 'light-green') return 'text-emerald-600'
+  if (status === 'light-red') return 'text-rose-600'
+  return 'text-red-600'
+}
+
+const getStatusColorClass = () => {
+  const status = rolesStore.balanceStatus
+  if (status === 'perfect') return 'text-green-600'
+  if (status === 'light-green') return 'text-emerald-600'
+  if (status === 'light-red') return 'text-rose-600'
+  return 'text-red-600'
 }
 
 const clearAllRoles = () => {
@@ -184,332 +242,3 @@ const onRoleQuantityChange = () => {
   // Reactive update is handled by the store
 }
 </script>
-
-<style scoped lang="scss">
-.role-management {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  background: #f9fafb;
-  min-height: 100vh;
-
-  @media (max-width: 768px) {
-    padding: 1rem;
-  }
-}
-
-.header {
-  margin-bottom: 2rem;
-  text-align: center;
-
-  h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 0.5rem 0;
-
-    @media (max-width: 768px) {
-      font-size: 1.875rem;
-    }
-  }
-
-  .subtitle {
-    font-size: 1.125rem;
-    color: #6b7280;
-    margin: 0;
-  }
-}
-
-.balance-section {
-  background: white;
-  border-radius: 12px;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-left: 6px solid;
-
-  &.balance-perfect {
-    border-left-color: #10b981;
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
-  }
-
-  &.balance-light-green {
-    border-left-color: #34d399;
-    background: linear-gradient(135deg, rgba(52, 211, 153, 0.05) 0%, transparent 100%);
-  }
-
-  &.balance-light-red {
-    border-left-color: #fca5a5;
-    background: linear-gradient(135deg, rgba(252, 165, 165, 0.05) 0%, transparent 100%);
-  }
-
-  &.balance-red {
-    border-left-color: #ef4444;
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%);
-  }
-
-  .balance-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    margin-bottom: 1.5rem;
-
-    @media (max-width: 640px) {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    > div {
-      h3 {
-        font-size: 0.875rem;
-        font-weight: 600;
-        color: #6b7280;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        margin: 0 0 0.75rem 0;
-      }
-    }
-  }
-
-  .balance-info,
-  .role-count-info {
-    display: flex;
-    flex-direction: column;
-
-    h3 {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #6b7280;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin: 0 0 0.75rem 0;
-    }
-  }
-
-  .balance-display,
-  .role-count-display {
-    display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
-
-    .balance-value,
-    .count-value {
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: #1f2937;
-
-      @media (max-width: 640px) {
-        font-size: 2rem;
-      }
-    }
-
-    .balance-points,
-    .count-label {
-      font-size: 1rem;
-      color: #6b7280;
-      font-weight: 500;
-    }
-  }
-
-  .balance-status {
-    p {
-      margin: 0;
-      font-weight: 600;
-      font-size: 1.125rem;
-
-      &.status-perfect {
-        color: #10b981;
-      }
-
-      &.status-light-green {
-        color: #34d399;
-      }
-
-      &.status-light-red {
-        color: #f87171;
-      }
-
-      &.status-red {
-        color: #ef4444;
-      }
-    }
-  }
-
-  .selected-roles-summary {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
-
-    .faction-group {
-      margin-bottom: 1.5rem;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      .faction-header {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 0.75rem;
-      }
-
-      .roles-list {
-        list-style: none;
-        margin: 0;
-        padding-left: 0;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-
-        li {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.9375rem;
-          color: #374151;
-          background: #f3f4f6;
-          padding: 0.5rem 1rem;
-          border-radius: 6px;
-
-          .role-count {
-            font-weight: 600;
-            color: #1f2937;
-            min-width: 2.5rem;
-          }
-
-          .role-name {
-            font-weight: 500;
-          }
-
-          .role-weight {
-            font-size: 0.8125rem;
-            color: #6b7280;
-          }
-        }
-      }
-    }
-  }
-}
-
-.filter-section {
-  background: white;
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-
-  h3 {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #1f2937;
-    margin: 0 0 1rem 0;
-  }
-
-  .filter-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-
-    .filter-btn {
-      padding: 0.75rem 1.5rem;
-      border: 2px solid #e5e7eb;
-      background: white;
-      border-radius: 8px;
-      font-size: 0.9375rem;
-      font-weight: 500;
-      color: #6b7280;
-      cursor: pointer;
-      transition: all 0.2s ease;
-
-      &:hover {
-        border-color: #d1d5db;
-        color: #4b5563;
-      }
-
-      &.active {
-        background: #3b82f6;
-        border-color: #3b82f6;
-        color: white;
-      }
-
-      @media (max-width: 640px) {
-        padding: 0.625rem 1.125rem;
-        font-size: 0.875rem;
-      }
-    }
-  }
-}
-
-.roles-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 1.25rem;
-  }
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-  }
-
-  @media (max-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.75rem;
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr;
-  }
-}
-
-.action-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  padding: 2rem 0;
-  flex-wrap: wrap;
-
-  @media (max-width: 640px) {
-    padding: 1rem 0;
-  }
-
-  .btn {
-    padding: 0.75rem 2rem;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &.btn-secondary {
-      background: white;
-      color: #3b82f6;
-      border: 2px solid #3b82f6;
-
-      &:hover {
-        background: #f0f9ff;
-        border-color: #1d4ed8;
-        color: #1d4ed8;
-      }
-
-      &:active {
-        transform: scale(0.98);
-      }
-    }
-
-    @media (max-width: 640px) {
-      padding: 0.625rem 1.5rem;
-      font-size: 0.9375rem;
-      flex: 1;
-      min-width: 140px;
-    }
-  }
-}
-</style>
-

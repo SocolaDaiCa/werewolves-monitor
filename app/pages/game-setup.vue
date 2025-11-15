@@ -1,10 +1,18 @@
 <template>
-  <div class="page-game-setup">
-    <h1>{{ $t('gameSetup.title') }}</h1>
-    <p>{{ $t('gameSetup.selectPlayers') }}</p>
-    <!-- Game setup component will be implemented in Phase 4 -->
-    <div class="placeholder">
-      <p>✏️ {{ $t('common.loading') }}</p>
+  <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-8 rounded-b-3xl shadow-lg">
+      <h1 class="text-3xl font-bold mb-2">{{ $t('gameSetup.title') }}</h1>
+      <p class="text-green-100">{{ $t('gameSetup.selectPlayers') }}</p>
+    </div>
+
+    <!-- Content Area -->
+    <div class="flex-1 flex items-center justify-center px-6 py-12">
+      <div class="bg-white rounded-3xl border-2 border-dashed border-gray-300 p-12 text-center max-w-sm w-full shadow-md">
+        <p class="text-3xl mb-4">✏️</p>
+        <p class="text-lg font-semibold text-gray-600 mb-2">{{ $t('common.loading') }}</p>
+        <p class="text-sm text-gray-500">Phase 4 implementation coming soon...</p>
+      </div>
     </div>
   </div>
 </template>
@@ -12,30 +20,3 @@
 <script setup lang="ts">
 // Phase 4: Game Setup will implement player selection, role validation, smart auto-select, warning messages, etc.
 </script>
-
-<style scoped lang="scss">
-.page-game-setup {
-  padding: 2rem;
-
-  h1 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: var(--color-primary);
-  }
-
-  p {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 2rem;
-  }
-}
-
-.placeholder {
-  background-color: #f5f5f5;
-  border: 2px dashed #ccc;
-  padding: 3rem 2rem;
-  border-radius: var(--border-radius);
-  text-align: center;
-  color: #999;
-}
-</style>

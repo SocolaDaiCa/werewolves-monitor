@@ -1,0 +1,73 @@
+---
+alwaysApply: true
+description: Prevent automatic creation of summary documentation files
+---
+
+# No Auto-Generated Summary Documentation
+
+## Important Constraint
+
+**DO NOT** automatically create summary or documentation markdown files (*.md) unless explicitly requested by the user.
+
+## Files to Avoid Creating
+
+- `*_DOCUMENTATION.md`
+- `*_SUMMARY.md`
+- `*_QUICK_REFERENCE.md`
+- `*_IMPLEMENTATION_SUMMARY.md`
+- `*_API_DOCUMENTATION.md`
+- `*_FIX.md`
+- `*_CHANGELOG.md`
+- `*_GUIDE.md`
+- Any other auto-generated markdown documentation files
+
+## When This Applies
+
+1. **After code changes**: Never automatically create summary files to document what was changed
+2. **After feature implementation**: Do not create "how-to" or implementation summary docs
+3. **During troubleshooting**: Do not create reference guides or quick start guides
+4. **General development**: All summary/documentation creation must be user-initiated
+
+## What To Do Instead
+
+- Only create or update markdown files if the user **explicitly requests** them
+- Focus on implementing code functionality rather than documentation
+- Provide explanation and context in chat messages instead of separate markdown files
+- If documentation is needed, **ask the user** if they want it before creating
+
+## Exception
+
+Create markdown files ONLY when:
+- User explicitly says "create documentation", "write a README", etc.
+- The markdown file is part of the specification (e.g., specs in `.cursor/specs/`)
+- The markdown file is configuration/setup required by the project (e.g., Docker setup docs)
+
+## Example
+
+❌ **BAD**: After implementing a feature, automatically create `UMSD025_API_DOCUMENTATION.md`
+
+✅ **GOOD**: Implement the feature, then ask "Would you like me to create API documentation for this feature?"
+
+✅ **GOOD**: If user says "create API docs", then create the file
+
+## Implementation Check
+
+Before completing any task:
+- Review all files you're creating
+- If any are markdown documentation/summary files not explicitly requested, **do not create them**
+- Ask for permission first if unsure
+
+## Avoid Creating Markdown Guide Detail Changes
+
+**DO NOT** create, modify, or generate:
+- `CHANGELOG.md` updates with detailed change descriptions
+- `GUIDE.md` or similar guide files with implementation details
+- Change logs with detailed feature descriptions
+- Detailed modification guides unless explicitly requested
+- Version history files with change documentation
+
+**Instead:**
+- Focus on implementing the actual code changes
+- Provide change details in chat if user asks
+- Only create these files if user explicitly requests them
+- Let the user decide if they want change documentation

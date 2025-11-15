@@ -1,56 +1,62 @@
 <template>
-  <div class="role-card" :class="[`faction-${role.faction.toLowerCase()}`, { selected: quantity > 0 }]">
+  <div class="bg-white rounded-2xl overflow-hidden border-2 shadow-md transition-all duration-300 active:scale-95" :class="[
+    `border-${getFactionColor()}`,
+    quantity > 0 ? 'border-opacity-100 shadow-lg' : 'border-gray-200 border-opacity-50'
+  ]">
     <!-- Role Image -->
-    <div class="role-image">
+    <div class="relative aspect-square bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
       <img 
         :src="`/images/roles/en/dx-${roleImageName}_400x400.png`" 
         :alt="role.name"
+        class="w-full h-full object-cover object-left-top transition-transform duration-300"
         @error="handleImageError"
       />
-      <div class="balance-badge" :class="`balance-${getBalanceColor()}`">
+      <!-- Balance Badge -->
+      <div class="absolute bottom-2 left-2 px-2 py-1 rounded-lg text-xs font-bold text-white shadow-md"
+        :class="getBalanceBadgeColor()">
         {{ role.balancePoints > 0 ? '+' : '' }}{{ role.balancePoints }}
       </div>
     </div>
 
     <!-- Role Info -->
-    <div class="role-info">
-      <h3>{{ currentLanguage === 'vi' ? role.nameVi : role.name }}</h3>
-      <p class="faction-label">{{ getFactionLabel() }}</p>
-      <p class="description">
+    <div class="p-3 border-b-2" :class="`border-${getFactionColor()}-200`">
+      <h3 class="font-bold text-sm text-gray-800 line-clamp-2">
+        {{ currentLanguage === 'vi' ? role.nameVi : role.name }}
+      </h3>
+      <p class="text-xs font-semibold uppercase tracking-wide mb-1" :class="`text-${getFactionColor()}`">
+        {{ getFactionLabel() }}
+      </p>
+      <p class="text-xs text-gray-600 line-clamp-2">
         {{ currentLanguage === 'vi' ? role.descriptionVi : role.description }}
       </p>
     </div>
 
     <!-- Quantity Controls -->
-    <div class="quantity-controls">
+    <div class="flex items-center justify-between gap-1 p-2 bg-gray-50 min-w-0">
       <button 
-        class="btn-control btn-minus" 
         @click="decreaseQuantity"
         :disabled="quantity === 0"
+        class="flex-none py-1 px-3 bg-white border border-gray-300 rounded-lg font-bold text-gray-700 text-base sm:text-lg min-w-0  leading-none active:scale-90 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
         :aria-label="$t('common.decrease')"
       >
-        <span>−</span>
+        −
       </button>
       
       <input 
         v-model.number="localQuantity"
         type="text"
         disabled
-        class="quantity-input"
-        min="0"
-        :max="maxQuantity"
-        @blur="syncQuantity"
-        @keydown.enter="syncQuantity"
+        class="flex-1 py-2 px-0.5 text-center font-bold text-gray-800 bg-white border border-gray-300 rounded-lg text-xs sm:text-sm min-w-0"
         :aria-label="$t('roles.quantity')"
       />
       
       <button 
-        class="btn-control btn-plus" 
         @click="increaseQuantity"
         :disabled="quantity >= maxQuantity"
+        class="flex-none py-1 px-3 bg-white border border-gray-300 rounded-lg font-bold text-gray-700 text-base sm:text-lg min-w-0  leading-none active:scale-90 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
         :aria-label="$t('common.increase')"
       >
-        <span>+</span>
+        +
       </button>
     </div>
   </div>
@@ -95,7 +101,7 @@ const roleImageName = computed(() => {
     'diseased': 'diseased',
     'ghost': 'ghost',
     'idiot': 'village-idiot',
-    'martyr': 'blank', // placeholder
+    'martyr': 'blank',
     'mason': 'mason',
     'old-hag': 'old-hag',
     'old-man': 'old-hag',
@@ -110,11 +116,11 @@ const roleImageName = computed(() => {
     'sorceress': 'sorceress',
     'minion': 'minion',
     'wolf-cub': 'wolf-cub',
-    'dire-wolf': 'blank', // placeholder
+    'dire-wolf': 'blank',
     'lone-wolf': 'lone-wolf',
-    'fruit-brute': 'blank', // placeholder
-    'fang-face': 'blank', // placeholder
-    'wolverine': 'blank', // placeholder
+    'fruit-brute': 'blank',
+    'fang-face': 'blank',
+    'wolverine': 'blank',
     'cursed': 'cursed',
     'doppelganger': 'doppelganger',
     'drunk': 'drunk',
@@ -143,13 +149,6 @@ const decreaseQuantity = () => {
   }
 }
 
-const syncQuantity = () => {
-  const newQuantity = Math.max(0, Math.min(maxQuantity, localQuantity.value || 0))
-  rolesStore.setRoleQuantity(props.role.id, newQuantity)
-  localQuantity.value = newQuantity
-  emit('quantityChange', newQuantity)
-}
-
 const getFactionLabel = () => {
   const factionMap: { [key: string]: string } = {
     'VILLAGER': '🏘️ Village',
@@ -161,234 +160,26 @@ const getFactionLabel = () => {
   return factionMap[props.role.faction] || props.role.faction
 }
 
-const getBalanceColor = () => {
+const getFactionColor = () => {
+  const colorMap: { [key: string]: string } = {
+    'VILLAGER': 'blue',
+    'WEREWOLF': 'red',
+    'CULT': 'purple',
+    'VAMPIRE': 'slate',
+    'SPECIAL': 'amber',
+  }
+  return colorMap[props.role.faction] || 'gray'
+}
+
+const getBalanceBadgeColor = () => {
   const points = props.role.balancePoints
-  if (points > 0) return 'green'
-  if (points < 0) return 'red'
-  return 'neutral'
+  if (points > 0) return 'bg-green-500'
+  if (points < 0) return 'bg-red-500'
+  return 'bg-gray-500'
 }
 
 const handleImageError = (e: Event) => {
-  // Fallback to blank image if role image doesn't exist
   const img = e.target as HTMLImageElement
   img.src = '/images/roles/en/dx-blank_400x400.png'
 }
 </script>
-
-<style scoped lang="scss">
-.role-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  border: 2px solid transparent;
-
-  &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
-  }
-
-  &.selected {
-    border-color: #10b981;
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-  }
-
-  &.faction-villager {
-    --faction-color: #3b82f6;
-  }
-
-  &.faction-werewolf {
-    --faction-color: #ef4444;
-  }
-
-  &.faction-cult {
-    --faction-color: #8b5cf6;
-  }
-
-  &.faction-vampire {
-    --faction-color: #6b21a8;
-  }
-
-  &.faction-special {
-    --faction-color: #f59e0b;
-  }
-
-  .role-image {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.05) 0%, rgba(0, 0, 0, 0.1) 100%);
-    aspect-ratio: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    &:hover img {
-      transform: scale(1.05);
-    }
-
-    .balance-badge {
-      position: absolute;
-      bottom: 8px;
-      left: 8px;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 0.875rem;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-
-      &.balance-green {
-        background: #10b981;
-        color: white;
-      }
-
-      &.balance-red {
-        background: #ef4444;
-        color: white;
-      }
-
-      &.balance-neutral {
-        background: #6b7280;
-        color: white;
-      }
-    }
-  }
-
-  .role-info {
-    padding: 1rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    border-bottom: 2px solid var(--faction-color, #e5e7eb);
-
-    h3 {
-      margin: 0 0 0.25rem 0;
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: #1f2937;
-    }
-
-    .faction-label {
-      margin: 0 0 0.5rem 0;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--faction-color, #6b7280);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .description {
-      margin: 0;
-      font-size: 0.875rem;
-      color: #6b7280;
-      line-height: 1.4;
-      flex: 1;
-    }
-  }
-
-  .quantity-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem;
-    background: #f9fafb;
-
-    .btn-control {
-      width: 40px;
-      height: 40px;
-      padding: 0;
-      border: none;
-      border-radius: 6px;
-      background: white;
-      color: #1f2937;
-      font-size: 1.25rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 1px solid #d1d5db;
-
-      &:hover:not(:disabled) {
-        background: var(--faction-color, #e5e7eb);
-        color: white;
-        border-color: var(--faction-color, #d1d5db);
-      }
-
-      &:active:not(:disabled) {
-        transform: scale(0.95);
-      }
-
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-      }
-    }
-
-    .quantity-input {
-      width: 50px;
-      padding: 0.5rem;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      text-align: center;
-      font-size: 1rem;
-      font-weight: 600;
-
-      &:focus {
-        outline: none;
-        border-color: var(--faction-color, #3b82f6);
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-      }
-    }
-  }
-}
-
-/* Mobile optimization */
-@media (max-width: 640px) {
-  .role-card {
-    .role-image {
-      aspect-ratio: 1.2;
-    }
-
-    .role-info {
-      padding: 0.75rem;
-
-      h3 {
-        font-size: 1rem;
-      }
-
-      .description {
-        font-size: 0.8125rem;
-      }
-    }
-
-    .quantity-controls {
-      padding: 0.5rem;
-
-      .btn-control {
-        width: 36px;
-        height: 36px;
-        font-size: 1.125rem;
-      }
-
-      .quantity-input {
-        width: 44px;
-        font-size: 0.9rem;
-      }
-    }
-  }
-}
-</style>
-

@@ -1,9 +1,18 @@
 <template>
-  <div class="page-game">
-    <h1>{{ $t('game.phase') }}: {{ $t(`game.${currentPhase.toLowerCase()}`) }}</h1>
-    <!-- Game flow component will be implemented in Phase 5-6 -->
-    <div class="placeholder">
-      <p>✏️ {{ $t('common.loading') }}</p>
+  <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-red-500 to-red-600 text-white px-6 py-8 rounded-b-3xl shadow-lg">
+      <h1 class="text-3xl font-bold mb-2">{{ $t('game.phase') }}: {{ $t(`game.${currentPhase.toLowerCase()}`) }}</h1>
+      <p class="text-red-100">Game in progress...</p>
+    </div>
+
+    <!-- Content Area -->
+    <div class="flex-1 flex items-center justify-center px-6 py-12">
+      <div class="bg-white rounded-3xl border-2 border-dashed border-gray-300 p-12 text-center max-w-sm w-full shadow-md">
+        <p class="text-3xl mb-4">✏️</p>
+        <p class="text-lg font-semibold text-gray-600 mb-2">{{ $t('common.loading') }}</p>
+        <p class="text-sm text-gray-500">Phase 5-6 implementation coming soon...</p>
+      </div>
     </div>
   </div>
 </template>
@@ -17,24 +26,3 @@ const currentPhase = computed(() => gameStore.phase)
 
 // Phase 5-6: Game Flow will implement night/day phase logic, role actions, voting, narration, etc.
 </script>
-
-<style scoped lang="scss">
-.page-game {
-  padding: 2rem;
-
-  h1 {
-    font-size: 1.8rem;
-    margin-bottom: 1rem;
-    color: var(--color-primary);
-  }
-}
-
-.placeholder {
-  background-color: #f5f5f5;
-  border: 2px dashed #ccc;
-  padding: 3rem 2rem;
-  border-radius: var(--border-radius);
-  text-align: center;
-  color: #999;
-}
-</style>
