@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRolesStore, type Role } from '~/stores/roles'
 
@@ -85,6 +85,11 @@ const maxQuantity = 10
 const localQuantity = ref(rolesStore.getRoleQuantity(props.role.id))
 
 const quantity = computed(() => rolesStore.getRoleQuantity(props.role.id))
+
+// Watch for changes to quantity from store (e.g., from localStorage hydration)
+watch(quantity, (newQuantity) => {
+  localQuantity.value = newQuantity
+})
 
 // Map role IDs to image names
 const roleImageName = computed(() => {

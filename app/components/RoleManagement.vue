@@ -156,7 +156,7 @@ const filteredRoles = computed(() => {
 })
 
 const hasSelectedRoles = computed(() => {
-  return Object.keys(rolesStore.selectedRoles).length > 0
+  return Object.entries(rolesStore.selectedRoles).some(([, quantity]) => quantity > 0)
 })
 
 const getSelectedRolesByFaction = (faction: Role['faction']) => {

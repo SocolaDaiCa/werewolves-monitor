@@ -520,4 +520,8 @@ export const useRolesStore = defineStore('roles', () => {
     getRoleById,
     addCustomRole,
   }
+}, {
+  persist: {
+    storage: piniaPluginPersistedstate.sessionStorage(),
+  },
 })
