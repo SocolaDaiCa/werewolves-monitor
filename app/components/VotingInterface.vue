@@ -1,5 +1,21 @@
 <template>
   <div class="space-y-6">
+    <!-- Night Deaths Notification -->
+    <div v-if="lastNightDeaths.length > 0" class="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl p-6 shadow-lg border-2 border-red-800">
+      <h3 class="text-2xl font-bold mb-4 flex items-center gap-2">
+        <span class="text-3xl">🌙</span> Last Night's Deaths
+      </h3>
+      <div class="space-y-2">
+        <div v-for="death in lastNightDeaths" :key="death.playerId" class="flex items-center gap-3 bg-red-500 bg-opacity-30 rounded-lg p-3 border border-red-300">
+          <span class="text-2xl">☠️</span>
+          <div>
+            <p class="font-bold text-red-50">{{ getPlayerName(death.playerId) }}</p>
+            <p class="text-xs text-red-100">{{ death.description }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Voting Title -->
     <div class="bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl p-6 shadow-md">
       <h2 class="text-2xl font-bold text-center mb-2">☀️ {{ votingPhase ? '🗳️ Moderator Vote Control' : '💬 Discussion Time' }}</h2>
@@ -186,6 +202,25 @@ const getPlayerName = (playerId: string): string => {
 }
 
 /**
+ * Get last night's deaths for current round
+ */
+const lastNightDeaths = computed(() => {
+  const currentRound = gameStore.round
+  // Get eliminations from the current round that happened during night phase
+  // Show all deaths from night actions (werewolf kills, witch poison, etc.)
+  return gameStore.playerEliminations
+    .filter(elimination => {
+      // Show deaths from the current round that were caused by night phase actions
+      return elimination.round === currentRound && 
+             (elimination.method === 'WEREWOLF_KILL' || elimination.method === 'WITCH')
+    })
+    .map(elimination => ({
+      playerId: elimination.playerId,
+      description: elimination.description,
+    }))
+})
+
+/**
  * Increase votes for a player
  */
 const increaseVote = (playerId: string) => {
@@ -234,7 +269,14 @@ const submitVotes = () => {
   markedForKill.value.forEach(playerId => {
     if (alivePlayers.value.some(p => p.id === playerId)) {
       eliminated.push(playerId)
-      gameStore.eliminatePlayer(playerId, gameStore.round)
+      const playerName = getPlayerName(playerId)
+      const voteCount = playerVotes.value.get(playerId) || 0
+      gameStore.eliminatePlayer(
+        playerId, 
+        gameStore.round, 
+        'VOTE',
+        `${playerName} was eliminated by vote (${voteCount} vote${voteCount !== 1 ? 's' : ''})`
+      )
     }
   })
 

@@ -8,7 +8,8 @@
       <div class="max-w-6xl mx-auto">
         <!-- Night Phase -->
         <div v-if="currentPhase === 'NIGHT'">
-          <RoleActionPanel 
+          <RoleActionPanel
+            :readonly="false"
             @phase-complete="completeNightPhase"
           />
         </div>
@@ -18,7 +19,7 @@
           <!-- Day Discussion Timer -->
           <div class="bg-white rounded-2xl shadow-lg p-8">
             <h2 class="text-3xl font-bold text-center mb-6 text-amber-700">☀️ {{ $t('game.day') }} {{ currentRound }}</h2>
-            
+
             <!-- Timer -->
             <div class="text-center mb-8">
               <div class="text-6xl font-bold text-amber-600 font-mono mb-2">{{ formatTime(discussionTimeRemaining) }}</div>
@@ -35,7 +36,7 @@
           </div>
 
           <!-- Voting Interface -->
-          <VotingInterface 
+          <VotingInterface
             :voting-phase="discussionTimeRemaining <= 0"
             @vote="handleVote"
             @complete="completeDayPhase"
@@ -67,7 +68,7 @@
         >
           {{ $t('common.back') }}
         </button>
-        
+
         <button
           v-if="currentPhase === 'NIGHT'"
           @click="skipToDay"
@@ -166,7 +167,26 @@ const startDayPhaseTimer = () => {
 const completeNightPhase = () => {
   // Process all night actions
   const results = processNightActions(gameStore.nightPhaseActions)
-  
+
+  // Update alive players list (remove eliminated players)
+  gameStore.updateAlivePlayers()
+
+  // Check win conditions after night phase eliminations
+  const winCondition = gameStore.checkWinConditions()
+
+  console.log('winCondition', winCondition)
+
+  if (winCondition) {
+    // Game has ended
+    gameStore.endGame()
+    // Navigate to game end screen with winner info
+    router.push({
+      name: 'game-end___en',
+      params: { winner: winCondition.winner, reason: winCondition.reason },
+    })
+    return
+  }
+
   // Collect eliminated players
   nightResults.value = results
     .filter(r => r.action === 'kill')
@@ -178,33 +198,32 @@ const completeNightPhase = () => {
   showNightResults.value = true
 
   // Show results for 3 seconds then transition
-  setTimeout(() => {
-    showNightResults.value = false
-    gameStore.setPhase('DAY')
-    gameStore.clearDayVotes()
-    startDayPhaseTimer()
-  }, 3000)
+  showNightResults.value = false
+  gameStore.setPhase('DAY')
+  gameStore.clearDayVotes()
+  startDayPhaseTimer()
 }
 
 /**
  * Complete day phase and move to night
  */
 const completeDayPhase = () => {
+  // Update alive players list (remove eliminated players from day phase voting)
+  gameStore.updateAlivePlayers()
+
   // Check win conditions after day phase eliminations
   const winCondition = gameStore.checkWinConditions()
-  
+
   clearInterval(discussionTimer!)
-  
+
   if (winCondition) {
     // Game has ended
     gameStore.endGame()
     // Navigate to game end screen with winner info
-    setTimeout(() => {
-      router.push({
-        name: 'game-end',
-        params: { winner: winCondition.winner, reason: winCondition.reason },
-      })
-    }, 2000)
+    router.push({
+      name: 'game-end___en',
+      params: { winner: winCondition.winner, reason: winCondition.reason },
+    })
   } else {
     // Continue to next night
     gameStore.setPhase('NIGHT')

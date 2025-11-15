@@ -1,6 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { RoleAction, NightPhaseState, DayPhaseVote } from '~/types/game'
+import { useRolesStore } from './roles'
+
+// Store instances
+// const rolesStore = useRolesStore()
 
 // Types
 export type GamePhase = 'NIGHT' | 'DAY' | 'SETUP' | 'END'
@@ -25,7 +29,15 @@ export interface GameEvent {
   timestamp: number
 }
 
+export interface PlayerElimination {
+  playerId: string
+  round: number
+  method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER'
+  description: string
+}
+
 export const useGameStore = defineStore('game', () => {
+  const rolesStore = useRolesStore();
   // State
   const phase = ref<GamePhase>('SETUP')
   const round = ref(1)
@@ -45,6 +57,10 @@ export const useGameStore = defineStore('game', () => {
   // Day phase state
   const dayPhaseVotes = ref<DayPhaseVote[]>([])
   const eliminatedPlayers = ref<string[]>([])
+  
+  // Game end tracking
+  const playerEliminations = ref<PlayerElimination[]>([])
+  const gameWinner = ref<{ winner: string; reason: string } | null>(null)
 
   // Getters
   const totalRoleSlots = computed(() => {
@@ -85,12 +101,9 @@ export const useGameStore = defineStore('game', () => {
   }
 
   function initializeGame(playerIds: string[], roles: { [roleId: string]: number }) {
+    resetGame()
     players.value = playerIds
     selectedRoles.value = roles
-    round.value = 1
-    phase.value = 'NIGHT'
-    status.value = 'PLAYING'
-    gameLog.value = []
   }
 
   function addGameEvent(message: string) {
@@ -126,6 +139,13 @@ export const useGameStore = defineStore('game', () => {
     roleAcknowledgments.value = {}
     currentRoleRevealIndex.value = 0
     playerRoles.value = {}
+    nightPhaseActions.value = []
+    currentNightRoleIndex.value = 0
+    alivePlayers.value = []
+    dayPhaseVotes.value = []
+    eliminatedPlayers.value = []
+    playerEliminations.value = []
+    gameWinner.value = null
   }
 
   function acknowledgeRole(playerId: string, roleId: string) {
@@ -181,8 +201,12 @@ export const useGameStore = defineStore('game', () => {
     playerRoles.value = roleAssignments
   }
 
-  function startNightPhase() {
+  function updateAlivePlayers() {
     alivePlayers.value = players.value.filter(pid => !eliminatedPlayers.value.includes(pid))
+  }
+
+  function startNightPhase() {
+    updateAlivePlayers()
     nightPhaseActions.value = []
     currentNightRoleIndex.value = 0
   }
@@ -205,10 +229,16 @@ export const useGameStore = defineStore('game', () => {
     dayPhaseVotes.value = []
   }
 
-  function eliminatePlayer(playerId: string, round: number) {
+  function eliminatePlayer(playerId: string, round: number, method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER' = 'OTHER', description?: string) {
     if (!eliminatedPlayers.value.includes(playerId)) {
       eliminatedPlayers.value.push(playerId)
-      addGameEvent(`Player ${playerId} was eliminated in round ${round}`)
+      playerEliminations.value.push({
+        playerId,
+        round,
+        method,
+        description: description || `Player eliminated in round ${round}`,
+      })
+      addGameEvent(description || `Player ${playerId} was eliminated in round ${round}`)
     }
   }
 
@@ -218,24 +248,45 @@ export const useGameStore = defineStore('game', () => {
     
     alivePlayers.value.forEach(playerId => {
       const roleId = playerRoles.value[playerId]
-      // This is simplified - in full version, check role's actual faction
-      // For now, assume 'werewolf' in roleId means werewolf faction
-      const faction = roleId?.toLowerCase().includes('werewolf') ? 'WEREWOLF' : 'VILLAGER'
+      if (!roleId) return
+      
+      // Get the actual role from roles store to check faction
+      const role = rolesStore.getRoleById(roleId)
+      const faction = role?.faction || 'VILLAGER'
       alivePlayersByFaction.set(faction, (alivePlayersByFaction.get(faction) || 0) + 1)
     })
 
     const werewolvesAlive = alivePlayersByFaction.get('WEREWOLF') || 0
     const villagersAlive = alivePlayersByFaction.get('VILLAGER') || 0
 
+    console.log('werewolvesAlive', werewolvesAlive)
+    console.log('villagersAlive', villagersAlive)
+    console.log('alivePlayersByFaction', alivePlayersByFaction)
+
     // Check win conditions
+    // Condition 1: No werewolves left → Villagers win
     if (werewolvesAlive === 0) {
-      return { winner: 'VILLAGERS', reason: 'All werewolves eliminated' }
+      const result = { winner: 'VILLAGERS', reason: 'All werewolves eliminated' }
+      gameWinner.value = result
+      return result
     }
+    
+    // Condition 2: Werewolves >= Villagers → Werewolves win
     if (werewolvesAlive >= villagersAlive && villagersAlive > 0) {
-      return { winner: 'WEREWOLVES', reason: 'Werewolves equal or outnumber villagers' }
+      const result = { winner: 'WEREWOLVES', reason: 'Werewolves equal or outnumber villagers' }
+      gameWinner.value = result
+      return result
     }
     
     return null // Game continues
+  }
+
+  function setGameWinner(winner: string, reason: string) {
+    gameWinner.value = { winner, reason }
+  }
+
+  function getPlayerElimination(playerId: string) {
+    return playerEliminations.value.find(e => e.playerId === playerId)
   }
 
 
@@ -254,6 +305,8 @@ export const useGameStore = defineStore('game', () => {
     alivePlayers,
     dayPhaseVotes,
     eliminatedPlayers,
+    playerEliminations,
+    gameWinner,
     totalRoleSlots,
     livingPlayersCount,
     gameState,
@@ -272,6 +325,7 @@ export const useGameStore = defineStore('game', () => {
     resetRoleReveal,
     copyAcknowledgmentsToPlayerRoles,
     assignRolesToPlayers,
+    updateAlivePlayers,
     startNightPhase,
     addNightAction,
     setCurrentNightRoleIndex,
@@ -279,6 +333,8 @@ export const useGameStore = defineStore('game', () => {
     clearDayVotes,
     eliminatePlayer,
     checkWinConditions,
+    setGameWinner,
+    getPlayerElimination,
   }
 }, {
   persist: true,

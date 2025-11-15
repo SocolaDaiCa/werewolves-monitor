@@ -133,7 +133,6 @@ async function startGame() {
     console.log('playersStore.selectedPlayerIds', playersStore.selectedPlayerIds)
     console.log('rolesStore.selectedRoles', rolesStore.selectedRoles)
     gameStore.initializeGame(
-      // gameStore.players,
       playersStore.selectedPlayerIds,
       rolesStore.selectedRoles
     )

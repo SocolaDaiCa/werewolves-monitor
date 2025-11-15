@@ -52,7 +52,16 @@
 
     <!-- Current Role Action Component -->
     <div v-if="currentRole && activeRoles.length > 0">
+      <!-- Werewolf Role Action Panel -->
+      <RoleActionPanelWerewolf
+        v-if="isWerewolfRole"
+        @confirm="handleActionConfirm"
+        @skip="handleActionSkip"
+      />
+      
+      <!-- Other Roles (Generic) -->
       <RoleAction
+        v-else
         :role-id="currentRole.id"
         :player-id="currentRolePlayer?.id || ''"
         :action-type="getRoleActionType(currentRole.id)"
@@ -100,6 +109,7 @@ import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 import RoleAction from './RoleAction.vue'
+import RoleActionPanelWerewolf from './RoleActionPanelWerewolf.vue'
 
 interface Props {
   readonly: boolean
@@ -141,6 +151,10 @@ const currentRolePlayer = computed(() => {
     ([playerId, roleId]) => roleId === currentRole.value?.id && gameStore.alivePlayers.includes(playerId)
   )?.[0]
   return playerId ? playersStore.getPlayerById(playerId) : null
+})
+
+const isWerewolfRole = computed(() => {
+  return currentRole.value?.id.toLowerCase().includes('werewolf') || false
 })
 
 const getRoleName = (roleId: string): string => {

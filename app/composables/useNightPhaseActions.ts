@@ -229,7 +229,11 @@ export const useNightPhaseActions = () => {
     killTargets.value.forEach(targetId => {
       if (!protectedPlayers.value.has(targetId)) {
         actualDeaths.push(targetId)
-        gameStore.eliminatePlayer(targetId, gameStore.round)
+        // Determine the method of elimination based on who killed them
+        const killer = Array.from(results.value).find(r => r.affectedPlayer === targetId)
+        const method = killer?.action === 'vampire-kill' ? 'WEREWOLF_KILL' : 'WEREWOLF_KILL'
+        const playerName = playersStore.getPlayerById(targetId)?.name || 'Unknown'
+        gameStore.eliminatePlayer(targetId, gameStore.round, method, `${playerName} was killed during the night`)
       }
     })
 
