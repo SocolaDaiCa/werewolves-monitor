@@ -123,6 +123,29 @@
     "livingPlayers": "Người Chơi Còn Sống",
     "werewolves": "Sói"
   },
+  "nightPhase": {
+    "title": "Pha Đêm",
+    "subtitle": "Thời gian các chức năng hoạt động",
+    "roleAction": "Hành Động Chức Năng",
+    "selectTarget": "Chọn mục tiêu của bạn",
+    "confirmAction": "Xác Nhận Hành Động",
+    "skipAction": "Bỏ Qua",
+    "actionCompleted": "Hành động đã hoàn thành",
+    "waitingForRole": "Đợi {role}...",
+    "roleActionPanel": "Chức Năng Hoạt Động",
+    "noActiveRoles": "Không có chức năng hoạt động đêm này",
+    "proceedToDay": "Chuyển Sang Pha Ngày",
+    "nightResults": "Kết Quả Đêm",
+    "playerDied": "{player} đã bị giết",
+    "healedSuccessfully": "Chữa lành thành công",
+    "noElimination": "Không có ai bị loại bỏ",
+    "duelConflict": "Nhiều hành động nhắm vào cùng một người chơi"
+  },
+  "phaseHeader": {
+    "round": "Vòng {number}",
+    "alivePlayers": "{count} người chơi còn sống",
+    "phaseInfo": "{phase} {number}"
+  },
   "nightZero": {
     "title": "Đêm 0 - Nhận Diện Chức Năng",
     "subtitle": "Thời gian cho mỗi nhóm chức năng nhận diện chính mình",

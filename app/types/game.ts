@@ -27,3 +27,27 @@ export interface PlayerRole {
   eliminatedRound?: number
 }
 
+// Night Phase Action Types
+export type RoleActionType = 'SELECT_PLAYER' | 'SELECT_TARGET' | 'DUAL_SELECT' | 'SKIP' | 'NONE'
+
+export interface RoleAction {
+  roleId: string
+  playerId: string
+  actionType: RoleActionType
+  targetPlayerId?: string
+  secondaryTargetPlayerId?: string
+  timestamp: number
+}
+
+export interface NightPhaseState {
+  currentRoleIndex: number
+  completedActions: RoleAction[]
+  activePlayers: string[] // players still alive
+}
+
+export interface DayPhaseVote {
+  voterId: string
+  targetPlayerId?: string // null for 'vote none'
+  timestamp: number
+}
+

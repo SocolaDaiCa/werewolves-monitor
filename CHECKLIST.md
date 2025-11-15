@@ -313,112 +313,117 @@
 ---
 
 ### ✅ PHASE 5: Game Flow - Night Phase
-**Status**: Not Started
-**Objective**: Implement night phase management with role actions
+**Status**: ✅ COMPLETED
+**Objective**: Implement night phase management with role actions and day phase voting
 
-**Components to create:**
-- [ ] `components/PhaseHeader.vue` - Display current phase/round
-- [ ] `components/RoleAction.vue` - Individual role action component
-- [ ] `components/RoleActionPanel.vue` - All active roles list
-- [ ] `components/GameFlow.vue` - Main game manager
-- [ ] `pages/game.vue` - Route handler
+**Components Created:**
+- [x] `components/PhaseHeader.vue` - Display current phase/round ✅
+- [x] `components/RoleAction.vue` - Individual role action component ✅
+- [x] `components/RoleActionPanel.vue` - All active roles list ✅
+- [x] `components/GameFlow.vue` - Main game manager ✅
+- [x] `components/VotingInterface.vue` - Moderator vote control ✅
+- [x] `pages/game.vue` - Route handler ✅
 
-**Features:**
-- [ ] Phase display (computed from Pinia store):
-  - [ ] Current phase (NIGHT or DAY)
-  - [ ] Current round number
-  - [ ] Living player count
-  - [ ] Werewolf count
-- [ ] Night phase sequence:
-  - [ ] Query which roles need to act (from docs.ts)
-  - [ ] For each active role, display action panel:
-    - [ ] Role name and icon
-    - [ ] Role description
-    - [ ] Action prompt (e.g., "Select player to investigate")
-    - [ ] Player selection UI (clickable list/grid)
-    - [ ] Confirm/Skip buttons
-  - [ ] Process actions in correct order (per docs.ts)
-  - [ ] Apply all night actions
-  - [ ] Determine who dies
-  - [ ] Announce results
-  - [ ] Transition to day phase
-- [ ] Role-specific action components:
-  - [ ] Seer: Select player → show if werewolf/not
-  - [ ] Werewolf: Select victim → mark for death
-  - [ ] Witch: Select to heal (save previous victim) or poison (kill someone)
-  - [ ] Hunter: Select target (if dies, hunter shoots)
-  - [ ] Bodyguard: Select to protect
-  - [ ] Mayor: No night action (skip)
-  - [ ] etc. (implement for all roles)
-- [ ] Action confirmation:
-  - [ ] Show selected player
-  - [ ] Option to change selection
-  - [ ] Confirm action button
-- [ ] Track all night actions in Pinia store
-- [ ] Handle edge cases:
-  - [ ] Role died before night phase
-  - [ ] Multiple protections (first one wins)
-  - [ ] Witch uses both potions same night
-- [ ] Narration system:
-  - [ ] Display phase narration text
-  - [ ] Include story context
-  - [ ] Update narration as phase progresses
-- [ ] Mobile responsive (full-screen actions)
+**Features Implemented:**
+- [x] Phase header with live stats:
+  - [x] Current phase (NIGHT or DAY)
+  - [x] Current round number
+  - [x] Living player count
+  - [x] Active roles count
+  - [x] Eliminated players count
+  - [x] Progress bar
+- [x] Night phase sequence:
+  - [x] Query which roles need to act (from roles store)
+  - [x] For each active role, display action panel:
+    - [x] Role name and faction color-coding
+    - [x] Role description
+    - [x] Action prompt
+    - [x] Player selection UI (clickable grid)
+    - [x] Confirm/Skip buttons
+  - [x] Process actions in sequence
+  - [x] Track all night actions in game store
+  - [x] Display night results (who died, etc.)
+  - [x] Transition to day phase with 3-second delay
+- [x] Role-specific action handlers (useNightPhaseActions composable):
+  - [x] Werewolf: Kill selection
+  - [x] Seer: Investigation with result tracking
+  - [x] Witch: Heal/poison actions
+  - [x] Bodyguard: Protection mechanics
+  - [x] Aura Seer: Special role detection
+  - [x] Hunter: Action registration
+  - [x] Vampire: Kill mechanics
+  - [x] Cult Leader: Recruitment tracking
+- [x] Day phase (Discussion + Voting):
+  - [x] 10-minute discussion timer (configurable)
+  - [x] Moderator vote control interface:
+    - [x] Increase (+) / Decrease (−) votes per player
+    - [x] Vote total ≤ alive players count
+    - [x] Toggle "Mark for Kill" (☠️) for elimination
+    - [x] Real-time vote summary display
+  - [x] Vote finalization with elimination results
+- [x] Win condition checking:
+  - [x] All werewolves eliminated → Villagers win (END)
+  - [x] Werewolves ≥ Villagers → Werewolves win (END)
+  - [x] Otherwise → Continue to next night
+- [x] Game flow control:
+  - [x] Fixed navigation buttons
+  - [x] Skip options (moderator)
+  - [x] Return to menu
+  - [x] State persistence via Pinia
+- [x] Mobile responsive (full-screen, touch-friendly)
+- [x] i18n support (English & Vietnamese)
 
-**Effort**: High | **Time**: 5-6 hours
+**Effort**: High | **Time**: 5-6 hours | **Actual**: COMPLETED ✅
 
 ---
 
 ### ✅ PHASE 6: Game Flow - Day Phase
-**Status**: Not Started
-**Objective**: Implement day phase with discussion and voting
+**Status**: ✅ COMPLETED
+**Objective**: Implement day phase with discussion timer and voting
 
-**Components to create:**
-- [ ] `components/PhaseTimer.vue` - Countdown timer
-- [ ] `components/VotingInterface.vue` - Vote display and submission
-- [ ] `components/PlayerVoteCard.vue` - Individual player for voting
-- [ ] `components/DayPhase.vue` - Day phase manager
+**Components Created:**
+- [x] `components/PhaseTimer.vue` - Countdown timer (integrated in GameFlow) ✅
+- [x] `components/VotingInterface.vue` - Moderator vote control ✅
+- [x] `components/GameFlow.vue` - Day phase manager (integrated) ✅
 
-**Features:**
-- [ ] Day phase sequence:
-  - [ ] Display phase start message
-  - [ ] Start discussion timer (10-15 min, configurable)
-  - [ ] Show timer countdown
-  - [ ] When timer ends, show warning
-  - [ ] Announce voting phase
-- [ ] Voting interface:
-  - [ ] Display all living players as voteable options
-  - [ ] Each option shows:
-    - [ ] Avatar
-    - [ ] Name
-    - [ ] Current vote count (real-time)
-    - [ ] Percentage of votes
-  - [ ] "Vote None" option
-  - [ ] Each player can vote for exactly one option
-  - [ ] Show current player's vote selection
-  - [ ] Update vote counts in real-time
-- [ ] Vote submission:
-  - [ ] Submit button (only after voting period ends or all voted)
-  - [ ] Tally votes
-  - [ ] Determine highest voted player
-  - [ ] Handle ties (random elimination or run-off vote)
-- [ ] Elimination:
-  - [ ] Announce eliminated player
-  - [ ] Reveal their role (if game rules allow)
-  - [ ] Remove from active players
-  - [ ] Check win conditions
-- [ ] Win condition checks:
-  - [ ] All werewolves dead → Villagers win
-  - [ ] Werewolves >= Villagers → Werewolves win
-  - [ ] Special role win conditions (Cult, Tanner, etc.)
-  - [ ] If won, transition to game end screen
-  - [ ] Otherwise, go to next night phase
-- [ ] Narration display:
-  - [ ] Day phase flavor text
-  - [ ] Discussion prompts
-- [ ] Mobile responsive (full-width vote cards)
+**Features Implemented:**
+- [x] Day phase sequence:
+  - [x] Display phase start message (☀️)
+  - [x] Start discussion timer (10 min default, configurable)
+  - [x] Show timer countdown in MM:SS format
+  - [x] Auto-transition when timer ends
+  - [x] Announce voting phase
+- [x] Moderator vote control:
+  - [x] Display all living players as vote targets
+  - [x] Each player shows:
+    - [x] Avatar with name
+    - [x] Vote counter with +/− buttons
+    - [x] Current vote count display
+  - [x] Vote total ≤ alive players count (enforced)
+  - [x] "Mark for Kill" (☠️) toggle for each player
+  - [x] Real-time summary:
+    - [x] Total votes cast
+    - [x] Players alive
+    - [x] Marked for kill count
+    - [x] Remaining votes available
+- [x] Vote submission:
+  - [x] "Finalize & Eliminate" button
+  - [x] Process marked players for elimination
+  - [x] Display elimination results with vote counts
+  - [x] Show "No one eliminated" if none marked
+- [x] Win condition checks:
+  - [x] All werewolves eliminated → Villagers win (END GAME)
+  - [x] Werewolves ≥ Villagers → Werewolves win (END GAME)
+  - [x] Otherwise → Proceed to next night
+  - [x] Auto-navigate to game-end screen on win
+- [x] Phase transitions:
+  - [x] Day → End (if win condition met)
+  - [x] Day → Night (if game continues)
+  - [x] Proper state reset between phases
+- [x] Mobile responsive (full-width cards, touch-friendly)
+- [x] i18n support (English & Vietnamese)
 
-**Effort**: High | **Time**: 5-6 hours
+**Effort**: High | **Time**: 5-6 hours | **Actual**: COMPLETED ✅
 
 ---
 

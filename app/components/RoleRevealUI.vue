@@ -268,6 +268,8 @@ function goToRole(index: number) {
 async function startGame() {
   if (!canStartGame.value) return
 
+  gameStore.copyAcknowledgmentsToPlayerRoles();
+
   try {
     // Set game phase to first night
     gameStore.setPhase('NIGHT')

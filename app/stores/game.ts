@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import type { RoleAction, NightPhaseState, DayPhaseVote } from '~/types/game'
 
 // Types
 export type GamePhase = 'NIGHT' | 'DAY' | 'SETUP' | 'END'
@@ -35,6 +36,15 @@ export const useGameStore = defineStore('game', () => {
   const roleAcknowledgments = ref<{ [playerId: string]: string }>({})
   const currentRoleRevealIndex = ref(0)
   const playerRoles = ref<{ [playerId: string]: string }>({})
+  
+  // Night phase state
+  const nightPhaseActions = ref<RoleAction[]>([])
+  const currentNightRoleIndex = ref(0)
+  const alivePlayers = ref<string[]>([])
+  
+  // Day phase state
+  const dayPhaseVotes = ref<DayPhaseVote[]>([])
+  const eliminatedPlayers = ref<string[]>([])
 
   // Getters
   const totalRoleSlots = computed(() => {
@@ -135,6 +145,12 @@ export const useGameStore = defineStore('game', () => {
     currentRoleRevealIndex.value = 0
   }
 
+  function copyAcknowledgmentsToPlayerRoles() {
+    playerRoles.value = { ...roleAcknowledgments.value }
+  }
+
+  // 
+
   function assignRolesToPlayers(roles: { [roleId: string]: number }, playerIds: string[]) {
     // Create role assignments from the selected roles
     const roleAssignments: { [playerId: string]: string } = {}
@@ -165,6 +181,63 @@ export const useGameStore = defineStore('game', () => {
     playerRoles.value = roleAssignments
   }
 
+  function startNightPhase() {
+    alivePlayers.value = players.value.filter(pid => !eliminatedPlayers.value.includes(pid))
+    nightPhaseActions.value = []
+    currentNightRoleIndex.value = 0
+  }
+
+  function addNightAction(action: RoleAction) {
+    nightPhaseActions.value.push(action)
+  }
+
+  function setCurrentNightRoleIndex(index: number) {
+    currentNightRoleIndex.value = index
+  }
+
+  function addDayVote(vote: DayPhaseVote) {
+    // Remove previous vote from same voter if exists
+    dayPhaseVotes.value = dayPhaseVotes.value.filter(v => v.voterId !== vote.voterId)
+    dayPhaseVotes.value.push(vote)
+  }
+
+  function clearDayVotes() {
+    dayPhaseVotes.value = []
+  }
+
+  function eliminatePlayer(playerId: string, round: number) {
+    if (!eliminatedPlayers.value.includes(playerId)) {
+      eliminatedPlayers.value.push(playerId)
+      addGameEvent(`Player ${playerId} was eliminated in round ${round}`)
+    }
+  }
+
+  function checkWinConditions() {
+    // Count alive players by faction
+    const alivePlayersByFaction = new Map<string, number>()
+    
+    alivePlayers.value.forEach(playerId => {
+      const roleId = playerRoles.value[playerId]
+      // This is simplified - in full version, check role's actual faction
+      // For now, assume 'werewolf' in roleId means werewolf faction
+      const faction = roleId?.toLowerCase().includes('werewolf') ? 'WEREWOLF' : 'VILLAGER'
+      alivePlayersByFaction.set(faction, (alivePlayersByFaction.get(faction) || 0) + 1)
+    })
+
+    const werewolvesAlive = alivePlayersByFaction.get('WEREWOLF') || 0
+    const villagersAlive = alivePlayersByFaction.get('VILLAGER') || 0
+
+    // Check win conditions
+    if (werewolvesAlive === 0) {
+      return { winner: 'VILLAGERS', reason: 'All werewolves eliminated' }
+    }
+    if (werewolvesAlive >= villagersAlive && villagersAlive > 0) {
+      return { winner: 'WEREWOLVES', reason: 'Werewolves equal or outnumber villagers' }
+    }
+    
+    return null // Game continues
+  }
+
 
   return {
     phase,
@@ -176,6 +249,11 @@ export const useGameStore = defineStore('game', () => {
     roleAcknowledgments,
     currentRoleRevealIndex,
     playerRoles,
+    nightPhaseActions,
+    currentNightRoleIndex,
+    alivePlayers,
+    dayPhaseVotes,
+    eliminatedPlayers,
     totalRoleSlots,
     livingPlayersCount,
     gameState,
@@ -192,7 +270,15 @@ export const useGameStore = defineStore('game', () => {
     deacknowledgeRole,
     setCurrentRoleRevealIndex,
     resetRoleReveal,
+    copyAcknowledgmentsToPlayerRoles,
     assignRolesToPlayers,
+    startNightPhase,
+    addNightAction,
+    setCurrentNightRoleIndex,
+    addDayVote,
+    clearDayVotes,
+    eliminatePlayer,
+    checkWinConditions,
   }
 }, {
   persist: true,

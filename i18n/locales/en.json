@@ -123,6 +123,29 @@
     "livingPlayers": "Living Players",
     "werewolves": "Werewolves"
   },
+  "nightPhase": {
+    "title": "Night Phase",
+    "subtitle": "Time for roles to act",
+    "roleAction": "Role Action",
+    "selectTarget": "Select your target",
+    "confirmAction": "Confirm Action",
+    "skipAction": "Skip",
+    "actionCompleted": "Action completed",
+    "waitingForRole": "Waiting for {role}...",
+    "roleActionPanel": "Active Roles",
+    "noActiveRoles": "No active roles this night",
+    "proceedToDay": "Proceed to Day Phase",
+    "nightResults": "Night Results",
+    "playerDied": "{player} was killed",
+    "healedSuccessfully": "Healing was successful",
+    "noElimination": "No one was eliminated",
+    "duelConflict": "Multiple actions targeted the same player"
+  },
+  "phaseHeader": {
+    "round": "Round {number}",
+    "alivePlayers": "{count} players alive",
+    "phaseInfo": "{phase} {number}"
+  },
   "nightZero": {
     "title": "Night 0 - Role Recognition",
     "subtitle": "Time for each role group to identify themselves",

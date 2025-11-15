@@ -153,15 +153,22 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 
 #### 5.3 Day Phase
 - **Player Discussion**: Allow 10-15 minute timer (configurable)
-- **Vote to Eliminate**:
-  - Display all living players as voteable targets
-  - Show each player's:
-    - Avatar
-    - Name
-    - Current vote count (real-time)
-  - Option to "Vote None" (no elimination)
-  - Vote submission
-- **After voting**: Announce eliminated player and their role
+- **Moderator Vote Control**:
+  - Display all living players with vote counters
+  - Moderator can:
+    - Increase (+) or decrease (−) vote count for each player
+    - Vote total cannot exceed number of alive players
+    - Toggle "Mark for Kill" (☠️) for each player to eliminate
+  - Show real-time vote summary:
+    - Total votes cast
+    - Number of alive players
+    - Players marked for kill count
+    - Remaining votes available
+- **After voting**: Announce eliminated players and show vote count per player
+- **Win Condition Check**: After day phase, check if:
+  - Werewolves >= Villagers → Werewolves win (END GAME)
+  - All werewolves eliminated → Villagers win (END GAME)
+  - Otherwise → Proceed to next night
 
 #### 5.4 Narration Text Display
 - Display role-specific narration text (from story elements)
