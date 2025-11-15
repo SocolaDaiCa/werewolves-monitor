@@ -103,7 +103,16 @@
       "noPlayersSelected": "Please select at least 2 players",
       "noRolesSelected": "Please select at least 1 role"
     },
-    "startGameBtn": "Start Game"
+    "startGameBtn": "Start Game",
+    "smartAutoSelect": "Smart Auto-Select",
+    "autoSelectDescription": "Players from your last game are already selected",
+    "fixMismatches": "Fix Mismatches",
+    "readyToStart": "Ready to Start!",
+    "editRolesConfiguration": "Edit Roles Configuration",
+    "perfectMatch": "Perfect Match!",
+    "playersAndRolesAligned": "Players and roles are aligned. Ready to start the game!",
+    "roleDistribution": "Role Distribution",
+    "totalPlayers": "Total Players"
   },
   "game": {
     "phase": "Phase",

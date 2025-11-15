@@ -103,7 +103,16 @@
       "noPlayersSelected": "Vui lòng chọn ít nhất 2 người chơi",
       "noRolesSelected": "Vui lòng chọn ít nhất 1 chức năng"
     },
-    "startGameBtn": "Bắt Đầu Game"
+    "startGameBtn": "Bắt Đầu Game",
+    "smartAutoSelect": "Tự Động Chọn Thông Minh",
+    "autoSelectDescription": "Những người chơi từ game cuối cùng của bạn đã được chọn",
+    "fixMismatches": "Sửa Những Mismatch",
+    "readyToStart": "Sẵn Sàng Bắt Đầu!",
+    "editRolesConfiguration": "Chỉnh Sửa Cấu Hình Chức Năng",
+    "perfectMatch": "Phù Hợp Hoàn Hảo!",
+    "playersAndRolesAligned": "Người chơi và chức năng được liên kết. Sẵn sàng bắt đầu game!",
+    "roleDistribution": "Phân Phối Chức Năng",
+    "totalPlayers": "Tổng Người Chơi"
   },
   "game": {
     "phase": "Pha",

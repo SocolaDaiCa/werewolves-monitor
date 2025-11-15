@@ -131,5 +131,7 @@ export const useGameStore = defineStore('game', () => {
     endGame,
     resetGame,
   }
+}, {
+  persist: true,
 })
 
