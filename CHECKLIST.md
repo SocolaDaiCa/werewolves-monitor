@@ -241,6 +241,59 @@
 
 ---
 
+### ✅ PHASE 4.1: Night 0 - Role Reveal
+**Status**: Not Started
+**Objective**: Allow players to recognize their role group before game starts
+
+**Components to create:**
+- [ ] `components/RoleRevealUI.vue` - Role reveal interface
+- [ ] `components/RoleCallout.vue` - Individual role callout display
+- [ ] `components/RoleRecognition.vue` - Main role recognition manager
+- [ ] `pages/night-zero.vue` - Route handler
+
+**Features:**
+- [ ] Display all selected players as neutral list initially
+- [ ] Moderator controls:
+  - [ ] "Call Next Role" button
+  - [ ] Display current role being called (large, prominent)
+  - [ ] Show role description
+  - [ ] Show how many players have this role
+- [ ] Call each role in order (from docs.ts role order):
+  - [ ] Role name displayed in current language
+  - [ ] Players with that role can acknowledge (self-identify)
+  - [ ] Show indicator when role players open their eyes/acknowledge
+- [ ] Player identification process:
+  - [ ] When role is called, matching players see indicator "This is your role"
+  - [ ] Players can click "I'm in!" or similar acknowledgment
+  - [ ] Moderator can see acknowledgment count vs expected count
+  - [ ] Show visual feedback (checkmark, highlight, color change)
+- [ ] Navigation:
+  - [ ] "Previous Role" button (go back to previous role)
+  - [ ] "Next Role" button (move to next role)
+  - [ ] Skip to role by clicking role list
+  - [ ] "Start Game" button (only active when all roles acknowledged or moderator confirms)
+- [ ] Role acknowledgment tracking:
+  - [ ] Track which players have acknowledged their role
+  - [ ] Verify count matches expected number
+  - [ ] Show summary of acknowledged vs expected for each role
+- [ ] Safety check:
+  - [ ] Confirm all roles acknowledged before allowing "Start Game"
+  - [ ] Warning if mismatch between players and acknowledged
+  - [ ] Option to force start (for moderator override)
+- [ ] Multi-language support (i18n):
+  - [ ] English translations
+  - [ ] Vietnamese translations
+- [ ] Beautiful UI with Tailwind CSS:
+  - [ ] Large role name display
+  - [ ] Clear acknowledgment indicators
+  - [ ] Role progress tracker
+  - [ ] Player acknowledgment status
+  - [ ] Mobile responsive layout
+
+**Effort**: Medium | **Time**: 3-4 hours
+
+---
+
 ### ✅ PHASE 5: Game Flow - Night Phase
 **Status**: Not Started
 **Objective**: Implement night phase management with role actions
@@ -645,20 +698,21 @@
 
 ## 📊 SUMMARY
 
-| Phase | Status | Est. Time | Difficulty |
-|-------|--------|-----------|-----------|
-| 1. Setup & Structure | ✅ COMPLETED | 2-3h | Medium |
-| 2. Role Management | ✅ COMPLETED | 3-4h | Medium |
-| 3. Player Management | ✅ COMPLETED | 3-4h | Medium |
-| 4. Game Setup | ✅ COMPLETED | 3-4h | Medium |
-| 5. Game Flow (Night) | ⏳ Pending | 5-6h | High |
-| 6. Game Flow (Day) | ⏳ Pending | 5-6h | High |
-| 7. Text-to-Speech | ⏳ Pending | 2-3h | Medium |
-| 8. Game End | ⏳ Pending | 3-4h | Medium |
-| 9. Mobile Optimization | ⏳ Pending | 3-4h | Medium |
-| 10. Testing & Polish | ⏳ Pending | 4-5h | High |
-| **COMPLETED: 4/10** | **~12-15h** | **40% Done** |
-| **REMAINING: 6/10** | **~26-33h** | **60% Remaining** |
+|| Phase | Status | Est. Time | Difficulty |
+||-------|--------|-----------|-----------|
+|| 1. Setup & Structure | ✅ COMPLETED | 2-3h | Medium |
+|| 2. Role Management | ✅ COMPLETED | 3-4h | Medium |
+|| 3. Player Management | ✅ COMPLETED | 3-4h | Medium |
+|| 4. Game Setup | ✅ COMPLETED | 3-4h | Medium |
+|| 4.1. Night 0 - Role Reveal | ⏳ Pending | 3-4h | Medium |
+|| 5. Game Flow (Night) | ⏳ Pending | 5-6h | High |
+|| 6. Game Flow (Day) | ⏳ Pending | 5-6h | High |
+|| 7. Text-to-Speech | ⏳ Pending | 2-3h | Medium |
+|| 8. Game End | ⏳ Pending | 3-4h | Medium |
+|| 9. Mobile Optimization | ⏳ Pending | 3-4h | Medium |
+|| 10. Testing & Polish | ⏳ Pending | 4-5h | High |
+|| **COMPLETED: 4/11** | **~12-15h** | **36% Done** |
+|| **REMAINING: 7/11** | **~29-37h** | **64% Remaining** |
 
 ---
 
@@ -683,5 +737,4 @@
 - Get user feedback on Phase 2-4 early
 - Leave Phase 10 for final polish
 - Document any blockers/decisions made
-
 

@@ -92,15 +92,49 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 
 ---
 
-### 4. GAME FLOW SCREEN (During Game)
+### 4.1 NIGHT 0 - ROLE REVEAL SCREEN (Pre-Game)
+**Purpose**: Allow players to identify their role group before game starts
+
+#### 4.1.1 Role Reveal Flow
+- **Moderator controls**:
+  - "Call Next Role" and "Previous Role" buttons to navigate through roles
+  - Display current role name prominently (large text)
+  - Show role description and expected player count
+  - Show progress indicator (e.g., "Role 3 of 8")
+
+#### 4.1.2 Player Acknowledgment
+- **When role is called**:
+  - Players with that role see a notification: "This is your role!"
+  - Players can click "I'm in!" to acknowledge
+  - Moderator sees count: "Werewolves: 2/2 acknowledged" or similar
+- **Visual feedback**:
+  - Players who acknowledged show checkmark or highlight
+  - Color change or animation for acknowledgment
+  - Running total of acknowledged vs expected
+
+#### 4.1.3 Safety Validation
+- **Before allowing "Start Game"**:
+  - Verify all roles have correct acknowledgment count
+  - Show warning if mismatch: "Werewolves: 1 acknowledged, but 2 expected"
+  - Option for moderator to "Force Start" if needed (for edge cases)
+
+#### 4.1.4 End Condition
+- After all roles acknowledged → "Start Game" button enabled (bright, ready)
+- Click "Start Game" → Save role acknowledgments to store → Navigate to game page
+
+**Tech**: Vue component with game state management, Pinia store
+
+---
+
+### 5. GAME FLOW SCREEN (During Game)
 **Purpose**: Manage day/night phases and track game state
 
-#### 4.1 Phase Manager
+#### 5.1 Phase Manager
 - Display current phase: **NIGHT** or **DAY**
 - Display round number (Night 1, Day 1, Night 2, etc.)
 - Elapsed time for current phase
 
-#### 4.2 Night Phase
+#### 5.2 Night Phase
 - **Role Activation Flow**:
   1. List all active roles (those still alive)
   2. Display roles to wake up in order (per docs)
@@ -117,7 +151,7 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
   5. Process all actions after all roles acted
   6. Display results (who died, etc.)
 
-#### 4.3 Day Phase
+#### 5.3 Day Phase
 - **Player Discussion**: Allow 10-15 minute timer (configurable)
 - **Vote to Eliminate**:
   - Display all living players as voteable targets
@@ -129,12 +163,12 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
   - Vote submission
 - **After voting**: Announce eliminated player and their role
 
-#### 4.4 Narration Text Display
+#### 5.4 Narration Text Display
 - Display role-specific narration text (from story elements)
 - Include Speaker icon button next to text
 - Text-to-Speech feature: Click button to read narration aloud
 
-#### 4.5 Dialogue Text to Speech
+#### 5.5 Dialogue Text to Speech
 - Use Web Speech API (browser-native)
 - Support languages: Vietnamese and English
 - Features:
@@ -146,10 +180,10 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 
 ---
 
-### 5. GAME END SCREEN
+### 6. GAME END SCREEN
 **Purpose**: Display game result and end condition
 
-#### 5.1 End Screen Components
+#### 6.1 End Screen Components
 - **Result Message**:
   - "VILLAGERS WIN!" (if all werewolves eliminated)
   - "WEREWOLVES WIN!" (if werewolves >= villagers)
@@ -163,7 +197,7 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 - **Summary Table**:
   - Player name | Role | Status (alive/dead) | Killed by | Round eliminated
 
-#### 5.2 Action Buttons
+#### 6.2 Action Buttons
 - "Play Again" (return to setup)
 - "View Game Log" (detailed game timeline)
 - "Back to Menu"
@@ -172,10 +206,10 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 
 ---
 
-### 6. MOBILE RESPONSIVENESS
+### 7. MOBILE RESPONSIVENESS
 **Purpose**: Ensure excellent UX on smartphones
 
-#### 6.1 Fixed UI Elements
+#### 7.1 Fixed UI Elements
 - **Fixed buttons** for critical actions (position: fixed):
   - Start Game button
   - Next Phase button
@@ -183,7 +217,7 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
   - Positioned at bottom with safe area padding
   - Large touch targets (44px+ minimum)
 
-#### 6.2 Responsive Layout
+#### 7.2 Responsive Layout
 - Mobile-first design
 - Breakpoints:
   - sm: 640px (phone)
@@ -193,7 +227,7 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 - Single column for player/role selection
 - Cards should be full-width or near-full on mobile
 
-#### 6.3 Touch Optimization
+#### 7.3 Touch Optimization
 - Large buttons (48-64px)
 - Adequate spacing between interactive elements
 - Swipe gestures for navigation (optional)
@@ -203,15 +237,15 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 
 ---
 
-### 7. INTERNATIONALIZATION (i18n)
+### 8. INTERNATIONALIZATION (i18n)
 **Purpose**: Support Vietnamese and English languages
 
-#### 7.1 Language Support
+#### 8.1 Language Support
 - Vietnamese (vi)
 - English (en)
 - Language selector in app header
 
-#### 7.2 Translations Required
+#### 8.2 Translations Required
 - All UI text
 - Role names and descriptions
 - Narration text
@@ -219,7 +253,7 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 - Result messages
 - Button labels
 
-#### 7.3 Implementation
+#### 8.3 Implementation
 - Use vue-i18n plugin
 - Store translations in `/locales` directory
 - Support both languages for text-to-speech
@@ -259,6 +293,14 @@ A game management web app for "Ultimate Werewolf" designed to help moderators ma
 - [ ] Add player-to-role validation
 - [ ] Disable/enable Start button based on validation
 - [ ] Show warning messages
+
+### Phase 4.1: Night 0 - Role Reveal
+- [ ] Create RoleRevealUI.vue component
+- [ ] Build role calling interface with role progression
+- [ ] Implement player acknowledgment system
+- [ ] Add role acknowledgment tracking
+- [ ] Create validation logic before game start
+- [ ] Add "Start Game" button (enabled after all roles acknowledged)
 
 ### Phase 5: Game Flow - Night Phase
 - [ ] Create GameFlow.vue component
