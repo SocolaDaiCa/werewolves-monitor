@@ -36,7 +36,7 @@
       <button 
         @click="decreaseQuantity"
         :disabled="quantity === 0"
-        class="flex-none py-1 px-3 bg-white border border-gray-300 rounded-lg font-bold text-gray-700 text-base sm:text-lg min-w-0  leading-none active:scale-90 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+        class="flex-none h-10 w-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg font-bold text-gray-700 text-base sm:text-lg leading-none active:scale-90 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
         :aria-label="$t('common.decrease')"
       >
         −
@@ -46,14 +46,14 @@
         v-model.number="localQuantity"
         type="text"
         disabled
-        class="flex-1 py-2 px-0.5 text-center font-bold text-gray-800 bg-white border border-gray-300 rounded-lg text-xs sm:text-sm min-w-0"
+        class="flex-1 h-10 px-0.5 text-center font-bold text-gray-800 bg-white border border-gray-300 rounded-lg text-xs sm:text-sm min-w-0 leading-none"
         :aria-label="$t('roles.quantity')"
       />
       
       <button 
         @click="increaseQuantity"
         :disabled="quantity >= maxQuantity"
-        class="flex-none py-1 px-3 bg-white border border-gray-300 rounded-lg font-bold text-gray-700 text-base sm:text-lg min-w-0  leading-none active:scale-90 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
+        class="flex-none h-10 w-10 flex items-center justify-center bg-white border border-gray-300 rounded-lg font-bold text-gray-700 text-base sm:text-lg leading-none active:scale-90 transition-transform disabled:opacity-50 disabled:cursor-not-allowed"
         :aria-label="$t('common.increase')"
       >
         +
