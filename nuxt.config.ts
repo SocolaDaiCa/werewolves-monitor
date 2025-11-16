@@ -11,8 +11,8 @@ export default defineNuxtConfig({
     '@nuxtjs/ionic',
   ],
   css: [
-    '~/assets/css/main.scss',
     '@ionic/vue/css/ionic.bundle.css',
+    '~/assets/css/main.scss',
   ],
   nitro: {
     prerender: {
@@ -40,12 +40,18 @@ export default defineNuxtConfig({
     storage: 'localStorage',
     // key: 'werewolves-monitor',
     // storageKey: 'werewolves-monitor',
-    storageType: 'localStorage',
     // storageOptions: {
     //   key: 'werewolves-monitor',
     // },
   },
   ionic: {
-    mode: 'ios', // Force iOS style
+    css: {
+      core: true,
+      basic: true,
+      utilities: true,
+    },
+    config: {
+      mode: 'ios',
+    },
   },
 })
