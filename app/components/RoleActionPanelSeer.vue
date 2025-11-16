@@ -1,9 +1,15 @@
 <template>
-  <div class="space-y-6">
+  <div class="space-y-6" :class="{ 'opacity-60': isDisabled }">
     <!-- Seer Header -->
-    <div class="bg-gradient-to-r from-purple-600 to-purple-800 text-white rounded-xl p-6 shadow-lg">
-      <h2 class="text-3xl font-bold mb-2">🔮 Seer Night Investigation</h2>
+    <div class="bg-gradient-to-r from-purple-600 to-purple-800 text-white rounded-xl p-6 shadow-lg" :class="{ 'opacity-75': isDisabled }">
+      <div class="flex items-center gap-2 mb-2">
+        <h2 class="text-3xl font-bold">🔮 Seer Night Investigation</h2>
+        <span v-if="isDisabled" class="text-2xl">☠️</span>
+      </div>
       <p class="text-purple-50">Choose a player to investigate - are they a werewolf or a villager?</p>
+      <p v-if="isDisabled" class="text-sm mt-2 font-semibold bg-red-700 bg-opacity-50 inline-block px-2 py-1 rounded">
+        (Player is dead - actions disabled)
+      </p>
     </div>
 
     <!-- Current Status -->
@@ -31,9 +37,12 @@
           v-for="player in alivePlayers"
           :key="player.id"
           @click="selectPlayer(player.id)"
+          :disabled="isDisabled"
           :class="[
             'p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-3',
-            selectedTarget === player.id
+            isDisabled
+              ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
+              : selectedTarget === player.id
               ? 'border-purple-600 bg-purple-50 shadow-lg'
               : 'border-gray-300 bg-white hover:border-purple-400'
           ]"
@@ -88,18 +97,24 @@
     <div class="flex gap-3">
       <button
         @click="skipAction"
-        class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"
+        :disabled="isDisabled"
+        :class="[
+          'flex-1 py-3 px-4 rounded-lg font-medium transition-colors',
+          isDisabled
+            ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+            : 'bg-gray-500 text-white hover:bg-gray-600'
+        ]"
       >
         Skip
       </button>
       <button
         @click="confirmAction"
-        :disabled="!selectedTarget"
+        :disabled="!selectedTarget || isDisabled"
         :class="[
           'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-          selectedTarget
-            ? 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 active:scale-95'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          (!selectedTarget || isDisabled)
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 active:scale-95'
         ]"
       >
         Investigate
@@ -114,10 +129,18 @@ import { useGameStore } from '~/stores/game'
 import { usePlayersStore } from '~/stores/players'
 import { useRolesStore } from '~/stores/roles'
 
+interface Props {
+  isDisabled?: boolean
+}
+
 interface Emits {
   (e: 'confirm', action: { targetPlayerId: string }): void
   (e: 'skip'): void
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  isDisabled: false,
+})
 
 const emit = defineEmits<Emits>()
 

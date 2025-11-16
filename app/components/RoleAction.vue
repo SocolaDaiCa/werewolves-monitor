@@ -1,9 +1,15 @@
 <template>
-  <div class="bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden">
+  <div :class="['bg-white rounded-2xl shadow-lg border-2 border-gray-200 overflow-hidden', isDisabled && 'opacity-60']">
     <!-- Header -->
-    <div :class="`${roleColor} text-white px-6 py-6`">
-      <h3 class="text-2xl font-bold mb-2">{{ roleName }}</h3>
+    <div :class="[`${roleColor} text-white px-6 py-6`, isDisabled && 'opacity-75']">
+      <div class="flex items-center gap-2 mb-2">
+        <h3 class="text-2xl font-bold">{{ roleName }}</h3>
+        <span v-if="isDisabled" class="text-lg">☠️</span>
+      </div>
       <p class="text-sm opacity-90">{{ roleDescription }}</p>
+      <p v-if="isDisabled" class="text-sm mt-2 font-semibold bg-red-700 bg-opacity-50 inline-block px-2 py-1 rounded">
+        (Player is dead - actions disabled)
+      </p>
     </div>
 
     <!-- Action Content -->
@@ -20,9 +26,12 @@
             v-for="player in selectablePlayers"
             :key="player.id"
             @click="selectPlayer(player.id)"
+            :disabled="isDisabled"
             :class="[
               'p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2',
-              selectedPlayerId === player.id
+              isDisabled
+                ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
+                : selectedPlayerId === player.id
                 ? 'border-green-500 bg-green-50'
                 : 'border-gray-300 bg-gray-50 hover:border-gray-400'
             ]"
@@ -45,9 +54,12 @@
             v-for="player in selectablePlayers"
             :key="player.id"
             @click="toggleSecondarySelect(player.id)"
+            :disabled="isDisabled"
             :class="[
               'p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2',
-              isSecondarySelected(player.id)
+              isDisabled
+                ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
+                : isSecondarySelected(player.id)
                 ? 'border-blue-500 bg-blue-50'
                 : 'border-gray-300 bg-gray-50 hover:border-gray-400'
             ]"
@@ -68,7 +80,13 @@
       <div v-if="canSkip" class="mt-4 pt-4 border-t border-gray-200">
         <button
           @click="skipAction"
-          class="w-full py-2 px-4 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+          :disabled="isDisabled"
+          :class="[
+            'w-full py-2 px-4 text-sm font-medium rounded-lg transition-colors',
+            isDisabled
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+          ]"
         >
           {{ $t('nightPhase.skipAction') }}
         </button>
@@ -79,12 +97,12 @@
     <div class="flex gap-3 px-6 py-4 bg-gray-50 border-t border-gray-200">
       <button
         @click="confirmAction"
-        :disabled="!isActionValid"
+        :disabled="!isActionValid || isDisabled"
         :class="[
           'flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200',
-          isActionValid
-            ? 'bg-green-500 text-white hover:bg-green-600 active:scale-95'
-            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+          (!isActionValid || isDisabled)
+            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            : 'bg-green-500 text-white hover:bg-green-600 active:scale-95'
         ]"
       >
         {{ $t('nightPhase.confirmAction') }}
@@ -105,6 +123,7 @@ interface Props {
   playerId: string
   actionType: RoleActionType
   canSkip?: boolean
+  isDisabled?: boolean
 }
 
 interface Emits {
@@ -114,6 +133,7 @@ interface Emits {
 
 const props = withDefaults(defineProps<Props>(), {
   canSkip: true,
+  isDisabled: false,
 })
 
 const emit = defineEmits<Emits>()

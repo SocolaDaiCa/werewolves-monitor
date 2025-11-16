@@ -8,15 +8,15 @@
       <div class="mb-4">
         <div class="flex justify-between items-center mb-2">
           <span class="text-sm font-medium text-gray-700">
-            {{ $t('nightPhase.roleAction') }} {{ currentRoleIndex + 1 }}/{{ activeRoles.length }}
+            {{ $t('nightPhase.roleAction') }} {{ currentRoleIndex + 1 }}/{{ allRoles.length }}
           </span>
           <span class="text-xs font-medium text-gray-500">
-            {{ Math.round((currentRoleIndex / Math.max(activeRoles.length, 1)) * 100) }}%
+            {{ Math.round((currentRoleIndex / Math.max(allRoles.length, 1)) * 100) }}%
           </span>
         </div>
         <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
           <div
-            :style="{ width: ((currentRoleIndex + 1) / Math.max(activeRoles.length, 1)) * 100 + '%' }"
+            :style="{ width: ((currentRoleIndex + 1) / Math.max(allRoles.length, 1)) * 100 + '%' }"
             class="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-300"
           />
         </div>
@@ -25,36 +25,44 @@
       <!-- Role List -->
       <div class="space-y-2 max-h-64 overflow-y-auto">
         <button
-          v-for="(role, index) in activeRoles"
+          v-for="(role, index) in allRoles"
           :key="role.id"
           @click="selectRole(index)"
           :class="[
             'w-full px-4 py-3 rounded-lg text-left transition-all duration-200 flex items-center justify-between',
-            index === currentRoleIndex
+            index === currentRoleIndex && !isRoleDisabled.has(role.id)
               ? 'bg-blue-600 text-white shadow-md'
+              : index === currentRoleIndex && isRoleDisabled.has(role.id)
+              ? 'bg-red-400 text-white shadow-md opacity-60'
               : completedRoles.includes(index)
               ? 'bg-green-100 text-green-900 border border-green-300'
+              : isRoleDisabled.has(role.id)
+              ? 'bg-gray-300 text-gray-600 border border-gray-400 opacity-50'
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           ]"
         >
-          <span class="font-medium">{{ getRoleName(role.id) }}</span>
+          <span class="font-medium flex items-center gap-2">
+            <span v-if="isRoleDisabled.has(role.id)" class="text-xs">☠️</span>
+            {{ getRoleName(role.id) }}
+          </span>
           <span v-if="completedRoles.includes(index)" class="text-sm">✓</span>
           <span v-else-if="index === currentRoleIndex" class="text-sm animate-pulse">◆</span>
         </button>
       </div>
 
       <!-- No Active Roles Message -->
-      <div v-if="activeRoles.length === 0" class="text-center py-8 text-gray-500">
+      <div v-if="allRoles.length === 0" class="text-center py-8 text-gray-500">
         <p class="text-lg font-medium">{{ $t('nightPhase.noActiveRoles') }}</p>
         <p class="text-sm mt-2">{{ $t('nightPhase.proceedToDay') }}</p>
       </div>
     </div>
 
     <!-- Current Role Action Component -->
-    <div v-if="currentRole && activeRoles.length > 0">
+    <div v-if="currentRole && allRoles.length > 0">
       <!-- Werewolf Role Action Panel -->
       <RoleActionPanelWerewolf
         v-if="isWerewolfRole"
+        :is-disabled="isRoleDisabled.has(currentRole.id)"
         @confirm="handleActionConfirm"
         @skip="handleActionSkip"
       />
@@ -62,6 +70,7 @@
       <!-- Seer Role Action Panel -->
       <RoleActionPanelSeer
         v-else-if="isSeerRole"
+        :is-disabled="isRoleDisabled.has(currentRole.id)"
         @confirm="handleActionConfirm"
         @skip="handleActionSkip"
       />
@@ -73,13 +82,14 @@
         :player-id="currentRolePlayer?.id || ''"
         :action-type="getRoleActionType(currentRole.id)"
         :can-skip="true"
+        :is-disabled="isRoleDisabled.has(currentRole.id)"
         @confirm="handleActionConfirm"
         @skip="handleActionSkip"
       />
     </div>
 
     <!-- Navigation Buttons -->
-    <div v-if="activeRoles.length > 0" class="flex gap-3">
+    <div v-if="allRoles.length > 0" class="flex gap-3">
       <button
         @click="previousRole"
         :disabled="currentRoleIndex === 0"
@@ -89,7 +99,7 @@
       </button>
       <button
         @click="nextRole"
-        :disabled="currentRoleIndex === activeRoles.length - 1"
+        :disabled="currentRoleIndex === allRoles.length - 1"
         class="flex-1 py-3 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
         {{ $t('common.next') }} →
@@ -97,7 +107,7 @@
     </div>
 
     <!-- Phase Complete Action -->
-    <div v-if="isNightPhaseComplete && activeRoles.length > 0" class="bg-green-50 border-2 border-green-300 rounded-xl p-6 text-center">
+    <div v-if="isNightPhaseComplete && allRoles.length > 0" class="bg-green-50 border-2 border-green-300 rounded-xl p-6 text-center">
       <p class="text-lg font-bold text-green-900 mb-4">✓ {{ $t('nightPhase.actionCompleted') }}</p>
       <button
         @click="proceedToDay"
@@ -137,7 +147,7 @@ const playersStore = usePlayersStore()
 
 const completedRoles = ref<number[]>([])
 
-// Get all roles that need to act this night
+// Get all roles that need to act this night (alive players only)
 const activeRoles = computed(() => {
   return rolesStore.roles
     .filter(role => {
@@ -151,14 +161,49 @@ const activeRoles = computed(() => {
     .sort((a, b) => (a.nightOrder || 999) - (b.nightOrder || 999))
 })
 
+// Get all roles (including dead players for appearance)
+const allRoles = computed(() => {
+  return rolesStore.roles
+    .filter(role => {
+      if (role.nightly === 'NEVER') return false
+      if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
+      // Check if any player (alive or dead) has this role
+      return Object.entries(gameStore.playerRoles).some(
+        ([playerId, roleId]) => roleId === role.id
+      )
+    })
+    .sort((a, b) => (a.nightOrder || 999) - (b.nightOrder || 999))
+})
+
+// Check if a role is disabled (all players with this role are dead)
+const isRoleDisabled = computed(() => {
+  const disabled = new Set<string>()
+  
+  allRoles.value.forEach(role => {
+    // Check if there's at least one alive player with this role
+    const hasAlivePlayers = Object.entries(gameStore.playerRoles).some(
+      ([playerId, roleId]) => 
+        roleId === role.id && gameStore.alivePlayers.includes(playerId)
+    )
+    
+    // If no alive players have this role, it's disabled
+    if (!hasAlivePlayers) {
+      disabled.add(role.id)
+    }
+  })
+  
+  return disabled
+})
+
 const currentRoleIndex = computed(() => gameStore.currentNightRoleIndex)
 
-const currentRole = computed(() => activeRoles.value[currentRoleIndex.value])
+const currentRole = computed(() => allRoles.value[currentRoleIndex.value])
 
 const currentRolePlayer = computed(() => {
   if (!currentRole.value) return null
+  // Get player with this role (alive or dead)
   const playerId = Object.entries(gameStore.playerRoles).find(
-    ([playerId, roleId]) => roleId === currentRole.value?.id && gameStore.alivePlayers.includes(playerId)
+    ([playerId, roleId]) => roleId === currentRole.value?.id
   )?.[0]
   return playerId ? playersStore.getPlayerById(playerId) : null
 })
@@ -215,7 +260,7 @@ const previousRole = () => {
 }
 
 const nextRole = () => {
-  if (currentRoleIndex.value < activeRoles.value.length - 1) {
+  if (currentRoleIndex.value < allRoles.value.length - 1) {
     gameStore.setCurrentNightRoleIndex(currentRoleIndex.value + 1)
   }
 }
@@ -318,7 +363,7 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
     }
     
     // Move to next role
-    if (currentRoleIndex.value < activeRoles.value.length - 1) {
+    if (currentRoleIndex.value < allRoles.value.length - 1) {
       nextRole()
     }
   }
@@ -339,14 +384,14 @@ const handleActionSkip = () => {
     }
     
     // Move to next
-    if (currentRoleIndex.value < activeRoles.value.length - 1) {
+    if (currentRoleIndex.value < allRoles.value.length - 1) {
       nextRole()
     }
   }
 }
 
 const isNightPhaseComplete = computed(() => {
-  return activeRoles.value.length > 0 && completedRoles.value.length === activeRoles.value.length
+  return allRoles.value.length > 0 && completedRoles.value.length === allRoles.value.length
 })
 
 const proceedToDay = () => {
