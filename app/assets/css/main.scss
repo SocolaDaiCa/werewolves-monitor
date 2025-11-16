@@ -12,7 +12,7 @@
   --color-village: #3b82f6;
   --color-village-light: #93c5fd;
   --color-werewolf: #ef4444;
-  --color-werewolf-light: #fca5a5;
+--color-werewolf-light: #fca5a5;
   --color-cult: #8b5cf6;
   --color-vampire: #1e1b4b;
   
@@ -21,6 +21,23 @@
   --color-warning: #f59e0b;
   --color-error: #ef4444;
   --color-info: #3b82f6;
+
+  /* Ionic iOS Theme */
+  --ion-color-primary: #8b5a3c;
+  --ion-color-primary-rgb: 139, 90, 60;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #6d3f1e;
+  --ion-color-primary-tint: #a87550;
+
+  --ion-color-secondary: #3b82f6;
+  --ion-color-tertiary: #ef4444;
+
+  /* iOS Safe Area */
+  --ion-safe-area-top: 20px;
+  --ion-safe-area-bottom: 0;
+  --ion-safe-area-left: 0;
+  --ion-safe-area-right: 0;
 }
 
 /* ============================================
@@ -47,4 +64,48 @@ body {
   -webkit-touch-callout: none;
   // -webkit-user-select: none;
   // user-select: none;
+}
+
+/* ============================================
+   Ionic iOS Custom Styles
+   ============================================ */
+
+ion-app {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+ion-content {
+  --background: #f8f7f5;
+}
+
+ion-toolbar {
+  --background: #ffffff;
+  --border-color: #e5e5e5;
+}
+
+ion-button {
+  --border-radius: 8px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+}
+
+ion-card {
+  --border-radius: 12px;
+  --box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+ion-item {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+/* iOS Style: Rounded corners for inputs */
+ion-input,
+ion-select,
+ion-textarea {
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --border-radius: 8px;
 }

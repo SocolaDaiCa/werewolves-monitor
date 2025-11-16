@@ -8,10 +8,17 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'pinia-plugin-persistedstate/nuxt',
     '@nuxtjs/i18n',
+    '@nuxtjs/ionic',
   ],
   css: [
     '~/assets/css/main.scss',
+    '@ionic/vue/css/ionic.bundle.css',
   ],
+  nitro: {
+    prerender: {
+      crawlLinks: false,
+    },
+  },
   app: {
     head: {
       viewport: 'width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1',
@@ -37,5 +44,8 @@ export default defineNuxtConfig({
     // storageOptions: {
     //   key: 'werewolves-monitor',
     // },
+  },
+  ionic: {
+    mode: 'ios', // Force iOS style
   },
 })

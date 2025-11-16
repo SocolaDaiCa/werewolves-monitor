@@ -1,10 +1,14 @@
 <template>
-  <!-- Full width on all devices - Mobile first -->
-  <div class="w-full min-h-screen bg-white">
-    <!-- Page Content -->
-    <slot />
-  </div>
+  <IonPage>
+    <IonContent class="ion-padding">
+      <slot />
+    </IonContent>
+  </IonPage>
 </template>
+
+<script setup lang="ts">
+import { IonPage, IonContent } from '@ionic/vue'
+</script>
 
 <style>
 html {
