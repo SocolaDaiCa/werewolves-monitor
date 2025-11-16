@@ -1,120 +1,111 @@
 <template>
-  <div class="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto border border-gray-200">
-    <!-- Title -->
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">
-      {{ isEditing ? $t('players.editPlayer') : $t('players.addNewPlayer') }}
-    </h2>
+  <ion-modal ref="modal" trigger="modal-players-create">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button @click="cancel">{{ $t('common.cancel') }}</ion-button>
+        </ion-buttons>
+        <ion-title>{{ player ? $t('players.editPlayer') : $t('players.addNewPlayer') }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button
+            :strong="true"
+            @click="submitForm"
+            type="submit"
+            :disabled="isSubmitting"
+          >
+            {{ isSubmitting ? $t('common.loading') : $t('common.save') }}
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <!-- Form -->
+      <form @submit.prevent="submitForm" class="space-y-6">
+        <!-- Avatar Section -->
+        <div class="space-y-3">
+          <!-- Avatar Preview -->
+          <div class="flex justify-center mb-4">
+            <img
+              :src="previewAvatar"
+              alt="Preview"
+              class="w-32 h-32 rounded-full object-cover border-4 border-blue-300"
+            />
+          </div>
 
-    <!-- Form -->
-    <form @submit.prevent="submitForm" class="space-y-6">
-      <!-- Avatar Section -->
-      <div class="space-y-3">
-        <label class="block text-sm font-semibold text-gray-700">
-          {{ $t('players.avatar') }}
-        </label>
+          <!-- Avatar Upload Input -->
+          <div class="relative">
+            <input
+              type="file"
+              ref="fileInput"
+              @change="handleFileUpload"
+              accept="image/*"
+              class="hidden"
+            />
 
-        <!-- Avatar Preview -->
-        <div class="flex justify-center mb-4">
-          <img
-            :src="previewAvatar"
-            alt="Preview"
-            class="w-32 h-32 rounded-full object-cover border-4 border-blue-300"
-          />
-        </div>
+            <button
+              type="button"
+              @click="$refs.fileInput.click()"
+              class="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-lg transition-colors border-2 border-blue-300 border-dashed"
+            >
+              📷 {{ $t('players.uploadAvatar') }}
+            </button>
+          </div>
 
-        <!-- Avatar Upload Input -->
-        <div class="relative">
-          <input
-            type="file"
-            ref="fileInput"
-            @change="handleFileUpload"
-            accept="image/*"
-            class="hidden"
-          />
-
+          <!-- Or Generate -->
           <button
             type="button"
-            @click="$refs.fileInput.click()"
-            class="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold py-3 px-4 rounded-lg transition-colors border-2 border-blue-300 border-dashed"
+            @click="generateDefaultAvatar"
+            class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors"
           >
-            📷 {{ $t('players.uploadAvatar') }}
+            🎨 {{ $t('players.generateAvatar') }}
           </button>
+
+          <!-- Error Message -->
+          <p v-if="avatarError" class="text-red-500 text-sm mt-2">
+            ⚠️ {{ avatarError }}
+          </p>
         </div>
 
-        <!-- Or Generate -->
-        <button
-          type="button"
-          @click="generateDefaultAvatar"
-          class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-4 rounded-lg transition-colors"
-        >
-          🎨 {{ $t('players.generateAvatar') }}
-        </button>
-
-        <!-- Error Message -->
-        <p v-if="avatarError" class="text-red-500 text-sm mt-2">
-          ⚠️ {{ avatarError }}
-        </p>
-      </div>
-
-      <!-- Player Name -->
-      <div class="space-y-2">
-        <label for="playerName" class="block text-sm font-semibold text-gray-700">
-          {{ $t('players.name') }} <span class="text-red-500">*</span>
-        </label>
-
-        <input
-          id="playerName"
-          v-model="formData.name"
-          type="text"
-          :placeholder="$t('players.namePlaceholder')"
-          class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
-          minlength="2"
-          maxlength="50"
-          required
-        />
-
+        <ion-list>
+          <!-- Player Name -->
+          <ion-item>
+            <ion-input
+              label-placement="stacked"
+              v-model="formData.name"
+              type="text"
+              :placeholder="$t('players.namePlaceholder')"
+              :minlength="2"
+              :maxlength="50"
+              required
+            >
+              <div slot="label">{{ $t('players.name') }} <ion-text color="danger">*</ion-text></div>
+            </ion-input>
+          </ion-item>
+        </ion-list>
         <p v-if="nameError" class="text-red-500 text-sm">
           ⚠️ {{ nameError }}
         </p>
-      </div>
+      </form>
 
-      <!-- Buttons -->
-      <div class="flex gap-4 pt-4">
-        <!-- Submit -->
-        <button
-          type="submit"
-          :disabled="isSubmitting"
-          class="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+      <!-- Success Message -->
+      <Transition name="fade">
+        <div
+          v-if="showSuccessMessage"
+          class="mt-4 bg-green-100 border-2 border-green-500 text-green-700 px-4 py-3 rounded-lg"
         >
-          {{ isSubmitting ? $t('common.loading') : $t('common.save') }}
-        </button>
-
-        <!-- Cancel -->
-        <button
-          type="button"
-          @click="$emit('cancel')"
-          class="flex-1 bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
-        >
-          {{ $t('common.cancel') }}
-        </button>
-      </div>
-    </form>
-
-    <!-- Success Message -->
-    <Transition name="fade">
-      <div
-        v-if="showSuccessMessage"
-        class="mt-4 bg-green-100 border-2 border-green-500 text-green-700 px-4 py-3 rounded-lg"
-      >
-        ✅ {{ successMessage }}
-      </div>
-    </Transition>
-  </div>
+          ✅ {{ successMessage }}
+        </div>
+      </Transition>
+    </ion-content>
+  </ion-modal>
 </template>
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { Player } from '~/stores/players'
+
+const modal = ref()
+const cancel = () => modal.value?.$el.dismiss(null, 'cancel');
 
 const useAvatarGenerator = () => {
   // Color palette for avatars
@@ -173,13 +164,21 @@ const useAvatarGenerator = () => {
 }
 
 const props = defineProps<{
-  player?: Player
+  player?: Player,
 }>()
 
 const emit = defineEmits<{
   submit: [playerData: { name: string; avatar: string }]
   cancel: []
 }>()
+
+const open = async () => {
+  await modal.value.$el.present()
+}
+
+const close = async () => {
+  await modal.value.$el.dismiss()
+}
 
 // Composables
 const { generateAvatarFromName, fileToBase64, isValidImageFile } = useAvatarGenerator()
@@ -277,7 +276,8 @@ async function submitForm() {
     // Hide success message after 2 seconds
     setTimeout(() => {
       showSuccessMessage.value = false
-    }, 2000)
+      modal.value.$el.dismiss(null, 'confirm');
+    }, 1000)
 
     // Reset form if adding new player
     if (!isEditing.value) {
@@ -290,6 +290,8 @@ async function submitForm() {
     isSubmitting.value = false
   }
 }
+
+defineExpose({ open, close })
 </script>
 
 <style scoped>

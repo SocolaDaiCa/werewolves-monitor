@@ -54,4 +54,7 @@ export default defineNuxtConfig({
       mode: 'ios',
     },
   },
+  tailwindcss: {
+    cssPath: '~/assets/css/tailwind.css',
+  }
 })

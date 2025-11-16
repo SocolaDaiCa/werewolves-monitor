@@ -47,22 +47,14 @@
       <!-- Action Buttons -->
       <div class="flex gap-3">
         <!-- Edit Button -->
-        <button
+        <ion-button
           @click="$emit('edit', player)"
-          class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
+          id="modal-players-create"
         >
+        <!-- class="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2" -->
           <span>✏️</span>
           <span>{{ $t('common.edit') }}</span>
-        </button>
-
-        <!-- Delete Button -->
-        <button
-          @click="$emit('delete', player.id)"
-          class="flex-1 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
-        >
-          <span>🗑️</span>
-          <span>{{ $t('common.delete') }}</span>
-        </button>
+        </ion-button>
       </div>
     </div>
   </div>
