@@ -49,7 +49,7 @@
                   <div class="flex items-center justify-between mb-3">
                     <p class="text-xs font-semibold text-gray-600">
                       {{ getFactionLabel(faction) }}
-                      <span 
+                      <span
                         class="text-xs font-semibold ml-2"
                         :class="{
                           'text-green-600': getFactionBalancePoints(faction) > 0,
@@ -62,15 +62,15 @@
                     </p>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <span 
-                      v-for="role in getSelectedRolesByFaction(faction)" 
+                    <span
+                      v-for="role in getSelectedRolesByFaction(faction)"
                       :key="role.id"
                     >
                       <ion-badge class="ion-badge-primary">
                         {{ role.quantity }}×
                       </ion-badge>
                       {{ role.name }}
-                      <span 
+                      <span
                         class="ml-1"
                         :class="{
                           'text-green-300': role.balancePoints * role.quantity > 0,
@@ -88,43 +88,46 @@
           </ion-card-content>
         </ion-card>
 
-        <!-- Filter Section -->
-        <ion-card class="m-0 rounded-none">
-          <ion-card-content class="ion-padding">
-            <p class="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">{{ $t('roles.filterByFaction') }}</p>
-            <div class="flex flex-wrap gap-2">
-              <ion-button 
+        <ion-card>
+          <ion-card-content>
+            <ion-segment value="VILLAGER">
+              <ion-segment-button
                 v-for="faction in factions"
-                :key="faction"
-                @click="activeFaction = faction"
-                :color="activeFaction === faction ? 'primary' : ''"
-                :fill="activeFaction === faction ? 'solid' : 'outline'"
-                size="small"
+                :value="faction"
+                :content-id="faction"
               >
-                {{ getFactionLabel(faction) }}
-              </ion-button>
-            </div>
+                <ion-label>
+                  {{ getFactionLabel(faction) }}
+                </ion-label>
+              </ion-segment-button>
+            </ion-segment>
           </ion-card-content>
+          <ion-segment-view>
+            <ion-segment-content
+              v-for="faction in factions"
+              :id="faction"
+            >
+              <!-- Roles Grid -->
+              <div class="flex-1 overflow-y-auto ion-padding">
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  <RoleCard
+                    v-for="role in rolesStore.rolesByFaction(faction)"
+                    :key="role.id"
+                    :role="role"
+                    @quantity-change="onRoleQuantityChange"
+                  />
+                </div>
+              </div>
+            </ion-segment-content>
+          </ion-segment-view>
         </ion-card>
-
-        <!-- Roles Grid -->
-        <div class="flex-1 overflow-y-auto ion-padding">
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pb-24">
-            <RoleCard 
-              v-for="role in filteredRoles"
-              :key="role.id"
-              :role="role"
-              @quantity-change="onRoleQuantityChange"
-            />
-          </div>
-        </div>
       </div>
     </ion-content>
     <!-- Action Buttons - Fixed Footer -->
     <ion-footer class="ion-no-border">
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button 
+          <ion-button
             @click="clearAllRoles"
             fill="outline"
             expand="block"
@@ -134,7 +137,7 @@
           </ion-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button 
+          <ion-button
             @click="saveConfiguration"
             color="primary"
             expand="block"
@@ -248,7 +251,7 @@ const saveConfiguration = () => {
     roles: rolesStore.selectedRoles,
     balancePoints: balancePoints.value,
   }
-  
+
   localStorage.setItem('role-preset', JSON.stringify(preset))
   alert(t('roles.presetSaved'))
 }
