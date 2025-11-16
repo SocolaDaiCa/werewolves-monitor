@@ -13,14 +13,14 @@ Status: `NOT_STARTED` | Priority: 🔥🔥🔥
   - [x] Implement investigation logic (werewolf vs villager)
   - [x] Add translations (en.json, vi.json)
 
-- [ ] **Witch (Phù thủy)**
-  - [ ] Add to roles.ts with nightOrder=13, actionType='DUAL_OPTION'
-  - [ ] Add handler in useNightPhaseActions.ts
-  - [ ] Create RoleActionPanelWitch.vue (dedicated component with heal/poison buttons)
-  - [ ] Update RoleActionPanel.vue to use RoleActionPanelWitch
-  - [ ] Track potion usage (heal uses, poison uses)
-  - [ ] Implement heal priority over kill resolution
-  - [ ] Add translations
+- [x] **Witch (Phù thủy)**
+  - [x] Add to roles.ts with nightOrder=13, actionType='DUAL_OPTION'
+  - [x] Add handler in useNightPhaseActions.ts
+  - [x] Create RoleActionPanelWitch.vue (dedicated component with heal/poison buttons)
+  - [x] Update RoleActionPanel.vue to use RoleActionPanelWitch
+  - [x] Track potion usage (heal uses, poison uses)
+  - [x] Implement heal priority over kill resolution
+  - [x] Add translations
 
 - [ ] **Body Guard (Bảo vệ)**
   - [ ] Add to roles.ts with nightOrder=12, actionType='SELECT_PLAYER'

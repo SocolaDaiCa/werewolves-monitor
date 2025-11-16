@@ -29,7 +29,7 @@
     "confirmDelete": "Are you sure you want to delete this?"
   },
   "home": {
-    "welcome": "Welcome to Werewolves Monitor",
+    "welcome": "Werewolves Monitor",
     "description": "Manage your Ultimate Werewolf game with ease",
     "startGame": "Start New Game",
     "manageRoles": "Manage Roles",
