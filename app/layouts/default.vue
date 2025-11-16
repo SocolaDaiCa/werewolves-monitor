@@ -1,13 +1,10 @@
 <template>
-  <IonPage>
-    <IonContent class="ion-padding">
-      <slot />
-    </IonContent>
-  </IonPage>
+  <div class="w-full min-h-screen">
+    <slot />
+  </div>
 </template>
 
 <script setup lang="ts">
-import { IonPage, IonContent } from '@ionic/vue'
 </script>
 
 <style>

@@ -60,7 +60,8 @@
     "werewolves": "Werewolves",
     "cult": "Cult",
     "vampire": "Vampire",
-    "special": "Special"
+    "special": "Special",
+    "selectedRoles": "Selected Roles"
   },
   "players": {
     "title": "Player Management",

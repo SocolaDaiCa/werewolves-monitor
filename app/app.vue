@@ -1,13 +1,11 @@
 <template>
   <IonApp>
-    <IonRouterOutlet>
-      <NuxtLayout>
-        <NuxtPage />
-      </NuxtLayout>
-    </IonRouterOutlet>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </IonApp>
 </template>
 
 <script setup lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue'
+import { IonApp } from '@ionic/vue'
 </script>

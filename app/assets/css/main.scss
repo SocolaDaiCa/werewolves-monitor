@@ -12,7 +12,7 @@
   --color-village: #3b82f6;
   --color-village-light: #93c5fd;
   --color-werewolf: #ef4444;
---color-werewolf-light: #fca5a5;
+  --color-werewolf-light: #fca5a5;
   --color-cult: #8b5cf6;
   --color-vampire: #1e1b4b;
   
@@ -44,27 +44,27 @@
    Base Styles
    ============================================ */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+// * {
+//   margin: 0;
+//   padding: 0;
+//   box-sizing: border-box;
+// }
 
-html,
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  font-size: 16px;
-  line-height: 1.6;
-  background-color: #f8f7f5;
-  color: #333333;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  -webkit-touch-callout: none;
-  // -webkit-user-select: none;
-  // user-select: none;
-}
+// html,
+// body {
+//   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+//   font-size: 16px;
+//   line-height: 1.6;
+//   background-color: #f8f7f5;
+//   color: #333333;
+//   margin: 0;
+//   padding: 0;
+//   width: 100%;
+//   height: 100%;
+//   -webkit-touch-callout: none;
+//   // -webkit-user-select: none;
+//   // user-select: none;
+// }
 
 /* ============================================
    Ionic iOS Custom Styles

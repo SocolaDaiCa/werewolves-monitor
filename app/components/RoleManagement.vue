@@ -1,142 +1,151 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
-    <!-- Header -->
-    <div class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-8 rounded-b-3xl shadow-lg">
-      <h1 class="text-3xl font-bold mb-2">
-        <!-- back button -->
-        <button @click="$router.go(-1)" class="text-white">
-          <span class="text-2xl">←</span>
-        </button>
-        {{ $t('roles.title') }}
-      </h1>
-      <p class="text-orange-100">{{ $t('roles.selectRoles') }}</p>
-    </div>
-
-    <!-- Balance Status Section -->
-    <div class="px-6 py-6">
-      <div class="bg-white rounded-2xl p-6 shadow-md border-l-4" :class="getBorderColorClass()">
-        <!-- Balance Info Grid -->
-        <div class="grid grid-cols-2 gap-4 mb-6">
-          <div>
-            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{{ $t('roles.roleBalance') }}</p>
-            <div class="flex items-baseline gap-2">
-              <span class="text-3xl font-bold" :class="getBalanceTextColor()">
-                {{ balancePoints > 0 ? '+' : '' }}{{ balancePoints }}
-              </span>
-              <span class="text-sm text-gray-600">{{ $t('roles.balancePoints') }}</span>
-            </div>
-          </div>
-          <div>
-            <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{{ $t('roles.totalSlots') }}</p>
-            <div class="flex items-baseline gap-2">
-              <span class="text-3xl font-bold text-gray-800">{{ totalRoleCount }}</span>
-              <span class="text-sm text-gray-600">{{ $t('roles.roles') }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Balance Status Message -->
-        <div class="mb-6 pb-6 border-b border-gray-200">
-          <p class="text-sm font-semibold" :class="getStatusColorClass()">
-            {{ getBalanceStatusText() }}
-          </p>
-        </div>
-
-        <!-- Selected Roles Summary -->
-        <div v-if="hasSelectedRoles" class="space-y-4">
-          <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">Selected Roles</h3>
-          <div v-for="faction in factions" :key="faction" class="space-y-2">
-            <div v-if="getSelectedRolesByFaction(faction).length > 0">
-              <div class="flex items-center justify-between">
-                <p class="text-xs font-semibold text-gray-600 mb-2">
-                  {{ getFactionLabel(faction) }}
-                  <span 
-                    class="text-xs font-semibold mb-2"
-                    :class="{
-                      'text-green-600': getFactionBalancePoints(faction) > 0,
-                      'text-red-600': getFactionBalancePoints(faction) < 0,
-                      'text-gray-500': getFactionBalancePoints(faction) === 0
-                    }"
-                  >
-                    ({{ getFactionBalancePoints(faction) > 0 ? '+' : '' }}{{ getFactionBalancePoints(faction) }})
+  <ion-page>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-back-button default-href="/"></ion-back-button>
+        </ion-buttons>
+        <ion-title>{{ $t('roles.title') }}</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div class="h-full">
+        <!-- flex flex-col  -->
+        <!-- Balance Status Section -->
+        <ion-card class="m-0 rounded-none">
+          <ion-card-content class="ion-padding">
+            <!-- Balance Info Grid -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{{ $t('roles.roleBalance') }}</p>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-3xl font-bold" :class="getBalanceTextColor()">
+                    {{ balancePoints > 0 ? '+' : '' }}{{ balancePoints }}
                   </span>
-                </p>
+                  <span class="text-sm text-gray-600">{{ $t('roles.balancePoints') }}</span>
+                </div>
               </div>
-              <div class="flex flex-wrap gap-2">
-                <div 
-                  v-for="role in getSelectedRolesByFaction(faction)" 
-                  :key="role.id"
-                  class="bg-gray-100 rounded-lg px-3 py-2 text-xs font-medium text-gray-700 flex items-center gap-2"
-                >
-                  <span class="font-bold">{{ role.quantity }}×</span>
-                  <span>{{ role.name }}</span>
-                  <span 
-                    :class="{
-                      'text-green-600': role.balancePoints * role.quantity > 0,
-                      'text-red-600': role.balancePoints * role.quantity < 0,
-                      'text-gray-500': role.balancePoints * role.quantity === 0
-                    }"
-                  >
-                    ({{ role.balancePoints * role.quantity > 0 ? '+' : '' }}{{ role.balancePoints * role.quantity }})
-                  </span>
+              <div>
+                <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{{ $t('roles.totalSlots') }}</p>
+                <div class="flex items-baseline gap-2">
+                  <span class="text-3xl font-bold text-gray-800">{{ totalRoleCount }}</span>
+                  <span class="text-sm text-gray-600">{{ $t('roles.roles') }}</span>
                 </div>
               </div>
             </div>
+
+            <!-- Balance Status Message -->
+            <ion-item lines="none" class="px-0 mb-4">
+              <p class="text-sm font-semibold" :class="getStatusColorClass()">
+                {{ getBalanceStatusText() }}
+              </p>
+            </ion-item>
+
+            <!-- Selected Roles Summary -->
+            <div v-if="hasSelectedRoles" class="space-y-4">
+              <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wide">{{ $t('roles.selectedRoles') }}</h3>
+              <div v-for="faction in factions" :key="faction">
+                <div v-if="getSelectedRolesByFaction(faction).length > 0" class="mb-4">
+                  <div class="flex items-center justify-between mb-3">
+                    <p class="text-xs font-semibold text-gray-600">
+                      {{ getFactionLabel(faction) }}
+                      <span 
+                        class="text-xs font-semibold ml-2"
+                        :class="{
+                          'text-green-600': getFactionBalancePoints(faction) > 0,
+                          'text-red-600': getFactionBalancePoints(faction) < 0,
+                          'text-gray-500': getFactionBalancePoints(faction) === 0
+                        }"
+                      >
+                        ({{ getFactionBalancePoints(faction) > 0 ? '+' : '' }}{{ getFactionBalancePoints(faction) }})
+                      </span>
+                    </p>
+                  </div>
+                  <div class="flex flex-wrap gap-2">
+                    <span 
+                      v-for="role in getSelectedRolesByFaction(faction)" 
+                      :key="role.id"
+                    >
+                      <ion-badge class="ion-badge-primary">
+                        {{ role.quantity }}×
+                      </ion-badge>
+                      {{ role.name }}
+                      <span 
+                        class="ml-1"
+                        :class="{
+                          'text-green-300': role.balancePoints * role.quantity > 0,
+                          'text-red-300': role.balancePoints * role.quantity < 0,
+                          'text-gray-300': role.balancePoints * role.quantity === 0
+                        }"
+                      >
+                        ({{ role.balancePoints * role.quantity > 0 ? '+' : '' }}{{ role.balancePoints * role.quantity }})
+                      </span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Filter Section -->
+        <ion-card class="m-0 rounded-none">
+          <ion-card-content class="ion-padding">
+            <p class="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">{{ $t('roles.filterByFaction') }}</p>
+            <div class="flex flex-wrap gap-2">
+              <ion-button 
+                v-for="faction in factions"
+                :key="faction"
+                @click="activeFaction = faction"
+                :color="activeFaction === faction ? 'primary' : ''"
+                :fill="activeFaction === faction ? 'solid' : 'outline'"
+                size="small"
+              >
+                {{ getFactionLabel(faction) }}
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Roles Grid -->
+        <div class="flex-1 overflow-y-auto ion-padding">
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 pb-24">
+            <RoleCard 
+              v-for="role in filteredRoles"
+              :key="role.id"
+              :role="role"
+              @quantity-change="onRoleQuantityChange"
+            />
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Filter Section -->
-    <div class="px-6 py-4">
-      <div class="bg-white rounded-2xl p-4 shadow-md">
-        <p class="text-sm font-bold text-gray-700 uppercase tracking-wide mb-3">{{ $t('roles.filterByFaction') }}</p>
-        <div class="flex flex-wrap gap-2">
-          <button 
-            v-for="faction in factions"
-            :key="faction"
-            @click="activeFaction = faction"
-            :class="[
-              'px-4 py-2 rounded-xl font-semibold text-sm transition-all active:scale-95',
-              activeFaction === faction
-                ? 'bg-orange-500 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 border border-gray-200'
-            ]"
+    </ion-content>
+    <!-- Action Buttons - Fixed Footer -->
+    <ion-footer class="ion-no-border">
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button 
+            @click="clearAllRoles"
+            fill="outline"
+            expand="block"
+            class="mr-2"
           >
-            {{ getFactionLabel(faction) }}
-          </button>
-        </div>
-      </div>
-    </div>
+            {{ $t('roles.clearAll') }}
+          </ion-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button 
+            @click="saveConfiguration"
+            color="primary"
+            expand="block"
+          >
+            {{ $t('roles.savePreset') }}
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-page>
 
-    <!-- Roles Grid -->
-    <div class="flex-1 px-6 py-6 overflow-y-auto">
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        <RoleCard 
-          v-for="role in filteredRoles"
-          :key="role.id"
-          :role="role"
-          @quantity-change="onRoleQuantityChange"
-        />
-      </div>
-    </div>
-
-    <!-- Action Buttons - Sticky Footer -->
-    <div class="sticky bottom-0 bg-white border-t border-gray-200 px-6 py-4 flex gap-3">
-      <button 
-        @click="clearAllRoles"
-        class="flex-1 py-3 px-4 bg-gray-200 text-gray-800 rounded-xl font-bold active:scale-95 transition-transform"
-      >
-        {{ $t('roles.clearAll') }}
-      </button>
-      <button 
-        @click="saveConfiguration"
-        class="flex-1 py-3 px-4 bg-orange-500 text-white rounded-xl font-bold shadow-lg active:scale-95 transition-transform"
-      >
-        {{ $t('roles.savePreset') }}
-      </button>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">

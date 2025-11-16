@@ -60,7 +60,8 @@
     "werewolves": "Sói",
     "cult": "Giáo Phái",
     "vampire": "Ma Cà Rồng",
-    "special": "Đặc Biệt"
+    "special": "Đặc Biệt",
+    "selectedRoles": "Chức Năng Đã Chọn"
   },
   "players": {
     "title": "Quản Lý Người Chơi",
