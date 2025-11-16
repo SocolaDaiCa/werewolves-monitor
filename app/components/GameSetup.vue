@@ -100,7 +100,7 @@ const playersStore = usePlayersStore()
 const router = useRouter()
 
 // Computed properties
-const playerCount = computed(() => gameStore.players.length)
+computed(() => gameStore.players.length);
 const totalRoles = computed(() => rolesStore.totalRoleCount)
 
 const isValid = computed<boolean>(() => {

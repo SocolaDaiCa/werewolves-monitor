@@ -75,6 +75,14 @@
         @skip="handleActionSkip"
       />
       
+      <!-- Witch Role Action Panel -->
+      <RoleActionPanelWitch
+        v-else-if="isWitchRole"
+        :is-disabled="isRoleDisabled.has(currentRole.id)"
+        @confirm="handleActionConfirm"
+        @skip="handleActionSkip"
+      />
+      
       <!-- Other Roles (Generic) -->
       <RoleAction
         v-else
@@ -128,6 +136,7 @@ import { usePlayersStore } from '~/stores/players'
 import RoleAction from './RoleAction.vue'
 import RoleActionPanelWerewolf from './RoleActionPanelWerewolf.vue'
 import RoleActionPanelSeer from './RoleActionPanelSeer.vue'
+import RoleActionPanelWitch from './RoleActionPanelWitch.vue'
 
 interface Props {
   readonly: boolean
@@ -216,6 +225,10 @@ const isSeerRole = computed(() => {
   return currentRole.value?.id.toLowerCase() === 'seer'
 })
 
+const isWitchRole = computed(() => {
+  return currentRole.value?.id.toLowerCase() === 'witch'
+})
+
 const getRoleName = (roleId: string): string => {
   return rolesStore.getRoleById(roleId)?.name || 'Unknown'
 }
@@ -295,12 +308,33 @@ const formatActionLog = (
     case 'dire-wolf':
       return `🐺 ${roleName} (${playerName}) đã cắn ${targetName}`
 
-    case 'witch':
-      // Nếu có secondary target, là poison, nếu không là heal
-      const message = action.secondaryTargetPlayerId ? 'đã độc' : 'đã chữa'
-      const targetForWitch = action.secondaryTargetPlayerId || action.targetPlayerId
-      const targetPlayerWitch = playersStore.getPlayerById(targetForWitch)
-      return `🧙 ${roleName} (${playerName}) ${message} ${targetPlayerWitch?.name || 'Unknown'}`
+    case 'witch': {
+      // targetPlayerId = heal target, secondaryTargetPlayerId = poison target
+      const actions: string[] = []
+      
+      // Handle HEAL
+      if (action.targetPlayerId) {
+        const healPlayer = playersStore.getPlayerById(action.targetPlayerId)
+        const healRoleId = gameStore.playerRoles[action.targetPlayerId]
+        const healRoleObj = rolesStore.getRoleById(healRoleId || '')
+        const healRoleName = healRoleObj?.name || 'Unknown'
+        const healName = healPlayer?.name || 'Unknown'
+        actions.push(`chữa ${healName} (${healRoleName})`)
+      }
+      
+      // Handle POISON
+      if (action.secondaryTargetPlayerId) {
+        const poisonPlayer = playersStore.getPlayerById(action.secondaryTargetPlayerId)
+        const poisonRoleId = gameStore.playerRoles[action.secondaryTargetPlayerId]
+        const poisonRoleObj = rolesStore.getRoleById(poisonRoleId || '')
+        const poisonRoleName = poisonRoleObj?.name || 'Unknown'
+        const poisonName = poisonPlayer?.name || 'Unknown'
+        actions.push(`độc ${poisonName} (${poisonRoleName})`)
+      }
+      
+      if (actions.length === 0) return ''
+      return `🧙 ${roleName} (${playerName}) đã ${actions.join(' và ')}`
+    }
 
     case 'bodyguard':
     case 'priest':

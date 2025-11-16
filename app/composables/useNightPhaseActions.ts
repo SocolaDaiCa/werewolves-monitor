@@ -101,20 +101,37 @@ export const useNightPhaseActions = () => {
 
   /**
    * Handle witch's heal/poison
+   * Witch can use both potions in the same night:
+   * - targetPlayerId = heal target (person killed by werewolves)
+   * - secondaryTargetPlayerId = poison target (any alive player)
    */
   const handleWitchAction = (action: RoleAction) => {
-    // Note: Witch can heal (save a target) or poison (kill a target)
-    // This is typically done once per game for each potion
-    if (action.targetPlayerId) {
-      if (action.actionType === 'SELECT_PLAYER') {
-        // Assuming heal action
+    // Handle HEAL
+    if (action.targetPlayerId && !gameStore.witchHealUsed) {
+      if (gameStore.alivePlayers.includes(action.targetPlayerId)) {
         healTargets.value.add(action.targetPlayerId)
+        gameStore.witchHealUsed = true
         results.value.push({
           playerId: action.playerId,
           action: 'heal',
           success: true,
           message: 'Used healing potion',
           affectedPlayer: action.targetPlayerId,
+        })
+      }
+    }
+
+    // Handle POISON
+    if (action.secondaryTargetPlayerId && !gameStore.witchPoisonUsed) {
+      if (gameStore.alivePlayers.includes(action.secondaryTargetPlayerId)) {
+        killTargets.value.add(action.secondaryTargetPlayerId)
+        gameStore.witchPoisonUsed = true
+        results.value.push({
+          playerId: action.playerId,
+          action: 'poison',
+          success: true,
+          message: 'Used poison potion',
+          affectedPlayer: action.secondaryTargetPlayerId,
         })
       }
     }
@@ -221,13 +238,17 @@ export const useNightPhaseActions = () => {
 
   /**
    * Resolve kill targets after all actions processed
-   * Killed players who are protected survive
+   * Killed players who are protected OR healed by Witch survive
    */
   const resolveKills = () => {
     const actualDeaths: string[] = []
 
     killTargets.value.forEach(targetId => {
-      if (!protectedPlayers.value.has(targetId)) {
+      // Check if player is protected (Bodyguard/Priest) OR healed by Witch
+      const isProtected = protectedPlayers.value.has(targetId)
+      const isHealed = healTargets.value.has(targetId)
+      
+      if (!isProtected && !isHealed) {
         actualDeaths.push(targetId)
         // Determine the method of elimination based on who killed them
         const killer = Array.from(results.value).find(r => r.affectedPlayer === targetId)

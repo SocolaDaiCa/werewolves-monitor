@@ -36,6 +36,7 @@ export interface RoleAction {
   actionType: RoleActionType
   targetPlayerId?: string
   secondaryTargetPlayerId?: string
+  tertiaryTargetPlayerId?: string // For roles that need 3 targets (e.g., Witch: heal + poison)
   timestamp: number
 }
 

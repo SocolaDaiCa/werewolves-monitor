@@ -62,6 +62,10 @@ export const useGameStore = defineStore('game', () => {
   const playerEliminations = ref<PlayerElimination[]>([])
   const gameWinner = ref<{ winner: string; reason: string } | null>(null)
 
+  // Witch state tracking
+  const witchHealUsed = ref(false)
+  const witchPoisonUsed = ref(false)
+
   // Getters
   const totalRoleSlots = computed(() => {
     return Object.values(selectedRoles.value).reduce((sum, count) => sum + count, 0)
@@ -146,6 +150,8 @@ export const useGameStore = defineStore('game', () => {
     eliminatedPlayers.value = []
     playerEliminations.value = []
     gameWinner.value = null
+    witchHealUsed.value = false
+    witchPoisonUsed.value = false
   }
 
   function acknowledgeRole(playerId: string, roleId: string) {
@@ -306,6 +312,8 @@ export const useGameStore = defineStore('game', () => {
     eliminatedPlayers,
     playerEliminations,
     gameWinner,
+    witchHealUsed,
+    witchPoisonUsed,
     totalRoleSlots,
     livingPlayersCount,
     gameState,
