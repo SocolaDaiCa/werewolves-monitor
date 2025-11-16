@@ -31,7 +31,7 @@
     <!-- Player Selection Grid -->
     <div class="bg-white rounded-xl p-6 shadow-md border-2 border-gray-200">
       <h3 class="text-lg font-bold text-gray-800 mb-4">Select a player to investigate:</h3>
-      
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <button
           v-for="player in alivePlayers"
@@ -47,7 +47,7 @@
               : 'border-gray-300 bg-white hover:border-purple-400'
           ]"
         >
-          <!-- Player Avatar -->
+          <!-- Player Avatar -->xxxx
           <img
             v-if="player.avatar"
             :src="player.avatar"
@@ -138,7 +138,7 @@ interface Emits {
   (e: 'skip'): void
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isDisabled: false,
 })
 
@@ -170,13 +170,13 @@ const getPlayerName = (playerId: string): string => {
  */
 const selectPlayer = (playerId: string) => {
   selectedTarget.value = selectedTarget.value === playerId ? '' : playerId
-  
+
   // Simulate investigation result
   if (selectedTarget.value) {
-    const targetRole = gameStore.playerRoles[selectedTarget.value]
+    const targetRole = gameStore.playerRoles[selectedTarget.value] || ''
     const targetRoleObj = rolesStore.getRoleById(targetRole)
     const isWerewolf = targetRoleObj?.faction === 'WEREWOLF'
-    
+
     investigationResult.value = { isWerewolf }
   } else {
     investigationResult.value = null

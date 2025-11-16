@@ -56,7 +56,7 @@
       <p class="text-sm text-gray-600 mb-4">
         {{ gameStore.witchHealUsed ? '❌ Already used' : '✓ Available' }}
       </p>
-      
+
       <div v-if="!gameStore.witchHealUsed && killedPlayer" class="flex justify-center">
         <button
           @click="selectedHealTarget = selectedHealTarget === killedPlayer.id ? '' : killedPlayer.id"
@@ -87,7 +87,7 @@
           <div v-if="selectedHealTarget === killedPlayer.id" class="text-2xl animate-pulse">💚</div>
         </button>
       </div>
-      
+
       <div v-else-if="!killedPlayer" class="text-center p-4 bg-blue-50 rounded-lg">
         <p class="text-sm text-blue-700">No player was killed tonight</p>
       </div>
@@ -99,7 +99,7 @@
       <p class="text-sm text-gray-600 mb-4">
         {{ gameStore.witchPoisonUsed ? '❌ Already used' : '✓ Available' }}
       </p>
-      
+
       <div v-if="!gameStore.witchPoisonUsed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <button
           v-for="player in alivePlayers"
@@ -141,7 +141,7 @@
     <!-- Action Confirmation Display -->
     <div class="bg-gradient-to-r from-amber-100 to-orange-50 rounded-xl p-6 shadow-md border-2 border-amber-400">
       <h3 class="text-2xl font-bold mb-4 text-amber-900">📋 Action Summary</h3>
-      
+
       <div class="space-y-3">
         <!-- Heal Summary -->
         <div v-if="selectedHealTarget" class="p-3 rounded-lg bg-green-50 border border-green-300">
@@ -172,7 +172,7 @@
     <!-- Action Buttons -->
     <div class="flex gap-3">
       <button
-        @click="cancelSelection"
+        @click="skipAction"
         :disabled="isDisabled"
         :class="[
           'flex-1 py-3 px-4 rounded-lg font-medium transition-colors',
@@ -181,7 +181,7 @@
             : 'bg-gray-500 text-white hover:bg-gray-600'
         ]"
       >
-        Clear All
+        Skip Action
       </button>
       <button
         @click="confirmAction"
@@ -213,7 +213,7 @@ interface Emits {
   (e: 'skip'): void
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isDisabled: false,
 })
 
@@ -224,7 +224,6 @@ const playersStore = usePlayersStore()
 
 const selectedHealTarget = ref<string>('')
 const selectedPoisonTarget = ref<string>('')
-const wantToSkip = ref(false)
 
 // Get all alive players
 const alivePlayers = computed(() => {
@@ -236,14 +235,14 @@ const alivePlayers = computed(() => {
 // Get the player killed by werewolves (determined from kill targets)
 const killedPlayer = computed(() => {
   // Look for werewolf kill targets in the night actions
-  const killAction = gameStore.nightPhaseActions.find(action => 
+  const killAction = gameStore.nightPhaseActions.find(action =>
     action.roleId.toLowerCase().includes('werewolf') && action.targetPlayerId
   )
-  
+
   if (killAction && killAction.targetPlayerId) {
     return playersStore.getPlayerById(killAction.targetPlayerId)
   }
-  
+
   return null
 })
 
@@ -255,11 +254,12 @@ const getPlayerName = (playerId: string): string => {
 }
 
 /**
- * Clear all selections
+ * Skip the action - emit skip event
  */
-const cancelSelection = () => {
+const skipAction = () => {
   selectedHealTarget.value = ''
   selectedPoisonTarget.value = ''
+  emit('skip')
 }
 
 /**
@@ -271,7 +271,7 @@ const confirmAction = () => {
       targetPlayerId: selectedHealTarget.value, // heal target
       secondaryTargetPlayerId: selectedPoisonTarget.value, // poison target
     })
-    
+
     selectedHealTarget.value = ''
     selectedPoisonTarget.value = ''
   }

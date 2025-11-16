@@ -265,7 +265,6 @@ Status: `NOT_STARTED` | Priority: 🔸
   - [ ] Proper player filtering (can't select self, can't select dead, etc.)
 
 - [ ] **RoleActionPanel.vue**
-  - [ ] Sort activeRoles by `nightOrder`
   - [ ] Filter by `nightly` type (ALWAYS, FIRST_NIGHT, NEVER)
   - [ ] Properly handle role ordering
 

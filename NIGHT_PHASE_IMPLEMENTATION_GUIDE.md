@@ -257,27 +257,6 @@ const isWitchRole = computed(() => currentRole.value?.id.toLowerCase() === 'witc
 <RoleActionPanelWitch v-else-if="isWitchRole" @confirm="handleActionConfirm" @skip="handleActionSkip" />
 ```
 
-### Step 6: Update RoleActionPanel.vue
-
-**Sort roles by nightOrder:**
-
-```typescript
-const activeRoles = computed(() => {
-  return rolesStore.roles
-    .filter(role => {
-      if (role.nightly === 'NEVER') return false
-      if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
-      // Check if any alive player has this role
-      return Object.entries(gameStore.playerRoles).some(
-        ([playerId, roleId]) => roleId === role.id && gameStore.alivePlayers.includes(playerId)
-      )
-    })
-    .sort((a, b) => (a.nightOrder || 999) - (b.nightOrder || 999)) // NEW - Sort by nightOrder
-})
-```
-
----
-
 ## Key Implementation Details
 
 ### 1. Kill Resolution Logic

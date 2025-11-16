@@ -3,7 +3,7 @@
     <!-- Role Progress Navigation -->
     <div class="bg-white rounded-xl p-6 shadow-md">
       <h2 class="text-lg font-bold text-gray-800 mb-4">{{ $t('nightPhase.roleActionPanel') }}</h2>
-      
+
       <!-- Progress Indicator -->
       <div class="mb-4">
         <div class="flex justify-between items-center mb-2">
@@ -66,7 +66,7 @@
         @confirm="handleActionConfirm"
         @skip="handleActionSkip"
       />
-      
+
       <!-- Seer Role Action Panel -->
       <RoleActionPanelSeer
         v-else-if="isSeerRole"
@@ -74,7 +74,7 @@
         @confirm="handleActionConfirm"
         @skip="handleActionSkip"
       />
-      
+
       <!-- Witch Role Action Panel -->
       <RoleActionPanelWitch
         v-else-if="isWitchRole"
@@ -82,7 +82,7 @@
         @confirm="handleActionConfirm"
         @skip="handleActionSkip"
       />
-      
+
       <!-- Other Roles (Generic) -->
       <RoleAction
         v-else
@@ -156,20 +156,6 @@ const playersStore = usePlayersStore()
 
 const completedRoles = ref<number[]>([])
 
-// Get all roles that need to act this night (alive players only)
-const activeRoles = computed(() => {
-  return rolesStore.roles
-    .filter(role => {
-      if (role.nightly === 'NEVER') return false
-      if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
-      // Check if any alive player has this role
-      return Object.entries(gameStore.playerRoles).some(
-        ([playerId, roleId]) => roleId === role.id && gameStore.alivePlayers.includes(playerId)
-      )
-    })
-    .sort((a, b) => (a.nightOrder || 999) - (b.nightOrder || 999))
-})
-
 // Get all roles (including dead players for appearance)
 const allRoles = computed(() => {
   return rolesStore.roles
@@ -178,7 +164,7 @@ const allRoles = computed(() => {
       if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
       // Check if any player (alive or dead) has this role
       return Object.entries(gameStore.playerRoles).some(
-        ([playerId, roleId]) => roleId === role.id
+        ([, roleId]) => roleId === role.id
       )
     })
     .sort((a, b) => (a.nightOrder || 999) - (b.nightOrder || 999))
@@ -187,20 +173,20 @@ const allRoles = computed(() => {
 // Check if a role is disabled (all players with this role are dead)
 const isRoleDisabled = computed(() => {
   const disabled = new Set<string>()
-  
+
   allRoles.value.forEach(role => {
     // Check if there's at least one alive player with this role
     const hasAlivePlayers = Object.entries(gameStore.playerRoles).some(
-      ([playerId, roleId]) => 
+      ([playerId, roleId]) =>
         roleId === role.id && gameStore.alivePlayers.includes(playerId)
     )
-    
+
     // If no alive players have this role, it's disabled
     if (!hasAlivePlayers) {
       disabled.add(role.id)
     }
   })
-  
+
   return disabled
 })
 
@@ -212,7 +198,7 @@ const currentRolePlayer = computed(() => {
   if (!currentRole.value) return null
   // Get player with this role (alive or dead)
   const playerId = Object.entries(gameStore.playerRoles).find(
-    ([playerId, roleId]) => roleId === currentRole.value?.id
+    ([, roleId]) => roleId === currentRole.value?.id
   )?.[0]
   return playerId ? playersStore.getPlayerById(playerId) : null
 })
@@ -235,30 +221,30 @@ const getRoleName = (roleId: string): string => {
 
 const getRoleActionType = (roleId: string): RoleActionType => {
   const role = rolesStore.getRoleById(roleId)
-  
+
   // If role has actionType defined, use it
   if (role?.actionType) {
     return role.actionType
   }
-  
+
   // Fallback for roles without actionType (backward compatibility)
   const roleName = roleId.toLowerCase()
-  
+
   // Roles with single target selection
   if (['werewolf', 'seer', 'hunter', 'bodyguard', 'witch', 'aura-seer', 'priest'].includes(roleName)) {
     return 'SELECT_PLAYER'
   }
-  
+
   // Roles with dual selection
   if (['cupid', 'dire-wolf', 'hoodlum'].includes(roleName)) {
     return 'DUAL_SELECT'
   }
-  
+
   // Special cases
   if (['mayor', 'villager'].includes(roleName)) {
     return 'NONE'
   }
-  
+
   return 'SELECT_PLAYER'
 }
 
@@ -311,7 +297,7 @@ const formatActionLog = (
     case 'witch': {
       // targetPlayerId = heal target, secondaryTargetPlayerId = poison target
       const actions: string[] = []
-      
+
       // Handle HEAL
       if (action.targetPlayerId) {
         const healPlayer = playersStore.getPlayerById(action.targetPlayerId)
@@ -321,7 +307,7 @@ const formatActionLog = (
         const healName = healPlayer?.name || 'Unknown'
         actions.push(`chữa ${healName} (${healRoleName})`)
       }
-      
+
       // Handle POISON
       if (action.secondaryTargetPlayerId) {
         const poisonPlayer = playersStore.getPlayerById(action.secondaryTargetPlayerId)
@@ -331,7 +317,7 @@ const formatActionLog = (
         const poisonName = poisonPlayer?.name || 'Unknown'
         actions.push(`độc ${poisonName} (${poisonRoleName})`)
       }
-      
+
       if (actions.length === 0) return ''
       return `🧙 ${roleName} (${playerName}) đã ${actions.join(' và ')}`
     }
@@ -363,7 +349,7 @@ const formatActionLog = (
     case 'aura-seer':
       if (!action.targetPlayerId) return ''
       const targetRole2 = gameStore.playerRoles[action.targetPlayerId]
-      const targetRoleObj2 = rolesStore.getRoleById(targetRole2 || '')
+      rolesStore.getRoleById(targetRole2 || '');
       const isSpecial = targetRole2 && !['villager', 'werewolf'].includes(targetRole2)
       return `✨ ${roleName} (${playerName}) cảm nhận ${targetName} có vai trò đặc biệt: ${isSpecial ? 'Có' : 'Không'}`
 
@@ -374,7 +360,7 @@ const formatActionLog = (
 
 const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetPlayerId?: string }) => {
   console.log('action', action);
-  
+
   if (currentRole.value && currentRolePlayer.value) {
     gameStore.addNightAction({
       roleId: currentRole.value.id,
@@ -390,12 +376,12 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
     if (logMessage) {
       gameStore.addGameEvent(logMessage)
     }
-    
+
     // Mark this role as completed
     if (!completedRoles.value.includes(currentRoleIndex.value)) {
       completedRoles.value.push(currentRoleIndex.value)
     }
-    
+
     // Move to next role
     if (currentRoleIndex.value < allRoles.value.length - 1) {
       nextRole()
@@ -411,12 +397,12 @@ const handleActionSkip = () => {
       actionType: 'SKIP',
       timestamp: Date.now(),
     })
-    
+
     // Mark as completed
     if (!completedRoles.value.includes(currentRoleIndex.value)) {
       completedRoles.value.push(currentRoleIndex.value)
     }
-    
+
     // Move to next
     if (currentRoleIndex.value < allRoles.value.length - 1) {
       nextRole()

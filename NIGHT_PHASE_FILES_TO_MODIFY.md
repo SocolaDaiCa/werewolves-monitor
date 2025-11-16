@@ -174,21 +174,6 @@
 **Status**: Currently 256 lines
 
 **What to do**:
-- [ ] Update `activeRoles` computed property (line 133):
-  ```typescript
-  const activeRoles = computed(() => {
-    return rolesStore.roles
-      .filter(role => {
-        if (role.nightly === 'NEVER') return false
-        if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
-        return Object.entries(gameStore.playerRoles).some(
-          ([playerId, roleId]) => roleId === role.id && gameStore.alivePlayers.includes(playerId)
-        )
-      })
-      .sort((a, b) => (a.nightOrder || 999) - (b.nightOrder || 999)) // NEW
-  })
-  ```
-
 - [ ] Update role display to show `nightOrder` info
 
 **Line Count Impact**: Minimal, ~10 lines added

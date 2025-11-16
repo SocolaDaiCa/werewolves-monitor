@@ -29,7 +29,7 @@
     <!-- Player Selection Grid -->
     <div class="bg-white rounded-xl p-6 shadow-md border-2 border-gray-200">
       <h3 class="text-lg font-bold text-gray-800 mb-4">Select a player to kill:</h3>
-      
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <button
           v-for="player in alivePlayers"
@@ -119,7 +119,7 @@ interface Emits {
   (e: 'skip'): void
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   isDisabled: false,
 })
 
