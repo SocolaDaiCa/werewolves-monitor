@@ -27,8 +27,8 @@
 </template>
 
 <script setup lang="ts">
-import GameEndResult from './GameEndResult.vue'
-import GameSummary from './GameSummary.vue'
+import GameEndResult from '~/components/GameEndResult.vue'
+import GameSummary from '~/components/GameSummary.vue'
 
 const emit = defineEmits<{
   (e: 'play-again'): void

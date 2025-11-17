@@ -1,4 +1,4 @@
-import Doc from "./Doc";
+import Doc from "~/Doc";
 
 export default [
     new Doc("", "ULTIMATE WEREWOLF là một game tương tác nhập vai suy luận gồm 2 phe chính: Dân làng và sói. Và Quản trò người sẽ điều khiển game.\nThành Phần\n78 lá bài chức năng, 1 quyển luật, 1 quyển note cho Quản Trò\nGame kết thúc khi người dân chết hết hoặc số sói chết hết."),

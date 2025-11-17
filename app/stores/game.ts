@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { RoleAction, NightPhaseState, DayPhaseVote } from '~/types/game'
-import { useRolesStore } from './roles'
+import { useRolesStore } from '~/stores/roles'
 
 // Store instances
 // const rolesStore = useRolesStore()
@@ -48,16 +48,16 @@ export const useGameStore = defineStore('game', () => {
   const roleAcknowledgments = ref<{ [playerId: string]: string }>({})
   const currentRoleRevealIndex = ref(0)
   const playerRoles = ref<{ [playerId: string]: string }>({})
-  
+
   // Night phase state
   const nightPhaseActions = ref<RoleAction[]>([])
   const currentNightRoleIndex = ref(0)
   const alivePlayers = ref<string[]>([])
-  
+
   // Day phase state
   const dayPhaseVotes = ref<DayPhaseVote[]>([])
   const eliminatedPlayers = ref<string[]>([])
-  
+
   // Game end tracking
   const playerEliminations = ref<PlayerElimination[]>([])
   const gameWinner = ref<{ winner: string; reason: string } | null>(null)
@@ -175,7 +175,7 @@ export const useGameStore = defineStore('game', () => {
     playerRoles.value = { ...roleAcknowledgments.value }
   }
 
-  // 
+  //
 
   function assignRolesToPlayers(roles: { [roleId: string]: number }, playerIds: string[]) {
     // Create role assignments from the selected roles
@@ -251,11 +251,11 @@ export const useGameStore = defineStore('game', () => {
   function checkWinConditions() {
     // Count alive players by faction
     const alivePlayersByFaction = new Map<string, number>()
-    
+
     alivePlayers.value.forEach(playerId => {
       const roleId = playerRoles.value[playerId]
       if (!roleId) return
-      
+
       // Get the actual role from roles store to check faction
       const role = rolesStore.getRoleById(roleId)
       const faction = role?.faction || 'VILLAGER'
@@ -276,14 +276,14 @@ export const useGameStore = defineStore('game', () => {
       gameWinner.value = result
       return result
     }
-    
+
     // Condition 2: Werewolves >= Villagers → Werewolves win
     if (werewolvesAlive >= villagersAlive && villagersAlive > 0) {
       const result = { winner: 'WEREWOLVES', reason: 'Werewolves equal or outnumber villagers' }
       gameWinner.value = result
       return result
     }
-    
+
     return null // Game continues
   }
 

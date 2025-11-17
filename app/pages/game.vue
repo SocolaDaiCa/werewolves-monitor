@@ -100,9 +100,9 @@ import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 import { useNightPhaseActions } from '~/composables/useNightPhaseActions'
 import type { DayPhaseVote } from '~/types/game'
-import PhaseHeader from './PhaseHeader.vue'
-import RoleActionPanel from './RoleActionPanel.vue'
-import VotingInterface from './VotingInterface.vue'
+import PhaseHeader from '~/components/PhaseHeader.vue'
+import RoleActionPanel from '~/components/RoleActionPanel.vue'
+import VotingInterface from '~/components/VotingInterface.vue'
 
 const router = useRouter()
 const gameStore = useGameStore()

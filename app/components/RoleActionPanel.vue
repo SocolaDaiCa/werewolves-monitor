@@ -133,10 +133,10 @@ import type { RoleActionType } from '~/types/game'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
-import RoleAction from './RoleAction.vue'
-import RoleActionPanelWerewolf from './RoleActionPanelWerewolf.vue'
-import RoleActionPanelSeer from './RoleActionPanelSeer.vue'
-import RoleActionPanelWitch from './RoleActionPanelWitch.vue'
+import RoleAction from '~/components/RoleAction.vue'
+import RoleActionPanelWerewolf from '~/components/RoleActionPanelWerewolf.vue'
+import RoleActionPanelSeer from '~/components/RoleActionPanelSeer.vue'
+import RoleActionPanelWitch from '~/components/RoleActionPanelWitch.vue'
 
 interface Props {
   readonly: boolean

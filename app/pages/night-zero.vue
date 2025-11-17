@@ -5,17 +5,13 @@
                 <ion-buttons slot="start">
                     <ion-back-button default-href="/"></ion-back-button>
                 </ion-buttons>
-                <ion-title>{{ $t('roles.title') }}</ion-title>
+                <ion-title>{{ $t('nightZero.title') }}</ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white pb-24">
+            <div class="min-h-screen pb-24">
                 <!-- Header -->
-                <div class="bg-gradient-to-r from-purple-600 to-purple-800 text-white px-6 py-8 rounded-b-3xl shadow-lg sticky top-0 z-10">
-                    <h1 class="text-3xl md:text-4xl font-bold mb-2">{{ $t('nightZero.title') }}</h1>
-                    <p class="text-purple-100">{{ $t('nightZero.subtitle') }}</p>
-                </div>
-
+                <p>{{ $t('nightZero.subtitle') }}</p>
                 <!-- Main Content -->
                 <div class="px-6 py-8 max-w-7xl mx-auto">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -126,13 +122,13 @@
                             @click="previousRole"
                             :disabled="currentRoleIndex === 0"
                             :class="[
-        'px-4 py-3 font-semibold rounded-lg transition text-center',
-        currentRoleIndex === 0
-          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          : 'bg-gray-400 hover:bg-gray-500 text-white'
-      ]"
+                                'px-4 py-3 font-semibold rounded-lg transition text-center',
+                                currentRoleIndex === 0
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-gray-400 hover:bg-gray-500 text-white'
+                                ]"
                         >
-                            ← {{ $t('nightZero.callPreviousRole') }}
+                            ←
                         </button>
 
                         <!-- Next Role -->
@@ -140,13 +136,13 @@
                             @click="nextRole"
                             :disabled="currentRoleIndex === sortedRoles.length - 1"
                             :class="[
-        'px-4 py-3 font-semibold rounded-lg transition text-center',
-        currentRoleIndex === sortedRoles.length - 1
-          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-          : 'bg-blue-500 hover:bg-blue-600 text-white'
-      ]"
+                                'px-4 py-3 font-semibold rounded-lg transition text-center',
+                                currentRoleIndex === sortedRoles.length - 1
+                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                    : 'bg-blue-500 hover:bg-blue-600 text-white'
+                            ]"
                         >
-                            {{ $t('nightZero.callNextRole') }} →
+                            →
                         </button>
 
                         <!-- Back to Setup -->
@@ -171,11 +167,11 @@
                             @click="startGame"
                             :disabled="!canStartGame"
                             :class="[
-        'flex-1 px-4 py-3 font-semibold rounded-lg transition text-center',
-        canStartGame
-          ? 'bg-green-500 hover:bg-green-600 text-white cursor-pointer'
-          : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-      ]"
+                                'flex-1 px-4 py-3 font-semibold rounded-lg transition text-center',
+                                canStartGame
+                                    ? 'bg-green-500 hover:bg-green-600 text-white cursor-pointer'
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                ]"
                         >
                             {{ $t('nightZero.startGameBtn') }}
                         </button>
