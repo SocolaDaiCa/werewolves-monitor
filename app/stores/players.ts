@@ -89,6 +89,11 @@ export const usePlayersStore = defineStore('players', {
         setSelectedPlayerIds(ids: string[]) {
             this.selectedPlayerIds = ids
         },
+
+        getPlayerAvatar(playerId: string): string | undefined {
+            const player = this.players.find(p => p.id === playerId)
+            return player?.avatar
+        },
     },
 
     persist: true,

@@ -491,6 +491,10 @@ export const useRolesStore = defineStore('roles', {
             return this.roles.find(r => r.id === roleId)
         },
 
+        getRoleName(roleId: string): string {
+            return this.getRoleById(roleId)?.name || 'Unknown'
+        },
+
         addCustomRole(role: Role) {
             const index = this.roles.findIndex(r => r.id === role.id)
             if (index === -1) {

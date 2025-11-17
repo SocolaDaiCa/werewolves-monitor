@@ -88,8 +88,8 @@
               <td class="py-3 px-3">
                 <div class="flex items-center gap-2">
                   <img
-                    v-if="getPlayerAvatar(player.playerId)"
-                    :src="getPlayerAvatar(player.playerId)"
+                    v-if="playersStore.getPlayerAvatar(player.playerId)"
+                    :src="playersStore.getPlayerAvatar(player.playerId)"
                     :alt="player.playerName"
                     class="w-8 h-8 rounded-full"
                   />
@@ -104,7 +104,7 @@
                     factionColorClass(player.faction),
                   ]"
                 >
-                  {{ getRoleName(player.roleId) }}
+                  {{ rolesStore.getRoleName(player.roleId) }}
                 </span>
               </td>
               <td class="py-3 px-3 text-center">
@@ -257,14 +257,6 @@ const winnerClass = computed(() => {
   if (winner === 'CULT') return 'bg-gradient-to-r from-purple-600 to-indigo-700'
   return 'bg-gray-600'
 })
-
-function getRoleName(roleId: string): string {
-  return rolesStore.getRoleById(roleId)?.name || 'Unknown'
-}
-
-function getPlayerAvatar(playerId: string): string | undefined {
-  return playersStore.getPlayerById(playerId)?.avatar
-}
 
 function factionColorClass(faction: Faction): string {
   switch (faction) {
