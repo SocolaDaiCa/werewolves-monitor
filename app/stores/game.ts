@@ -11,339 +11,259 @@ export type GamePhase = 'NIGHT' | 'DAY' | 'SETUP' | 'END'
 export type GameStatus = 'SETUP' | 'PLAYING' | 'FINISHED'
 
 export interface GameState {
-  phase: GamePhase
-  round: number
-  status: GameStatus
-  players: string[] // player IDs
-  selectedRoles: { [roleId: string]: number } // role id -> count
-  gameLog: GameEvent[]
-  roleAcknowledgments: { [playerId: string]: string } // playerId -> roleId
-  currentRoleRevealIndex: number
-  playerRoles: { [playerId: string]: string } // playerId -> roleId (assigned roles)
+    phase: GamePhase
+    round: number
+    status: GameStatus
+    players: string[] // player IDs
+    selectedRoles: { [roleId: string]: number } // role id -> count
+    gameLog: GameEvent[]
+    roleAcknowledgments: { [playerId: string]: string } // playerId -> roleId
+    currentRoleRevealIndex: number
+    playerRoles: { [playerId: string]: string } // playerId -> roleId (assigned roles)
 }
 
 export interface GameEvent {
-  round: number
-  phase: GamePhase
-  message: string
-  timestamp: number
+    round: number
+    phase: GamePhase
+    message: string
+    timestamp: number
 }
 
 export interface PlayerElimination {
-  playerId: string
-  round: number
-  method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER'
-  description: string
+    playerId: string
+    round: number
+    method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER'
+    description: string
 }
 
-export const useGameStore = defineStore('game', () => {
-  const rolesStore = useRolesStore();
-  // State
-  const phase = ref<GamePhase>('SETUP')
-  const round = ref(1)
-  const status = ref<GameStatus>('SETUP')
-  const players = ref<string[]>([])
-  const selectedRoles = ref<{ [roleId: string]: number }>({})
-  const gameLog = ref<GameEvent[]>([])
-  const roleAcknowledgments = ref<{ [playerId: string]: string }>({})
-  const currentRoleRevealIndex = ref(0)
-  const playerRoles = ref<{ [playerId: string]: string }>({})
+export const useGameStore = defineStore('game', {
+    state: () => ({
+        phase: 'SETUP' as GamePhase,
+        round: 1,
+        status: 'SETUP' as GameStatus,
+        players: [] as string[],
+        selectedRoles: {} as { [roleId: string]: number },
+        gameLog: [] as GameEvent[],
+        roleAcknowledgments: {} as { [playerId: string]: string },
+        currentRoleRevealIndex: 0,
+        playerRoles: {} as { [playerId: string]: string },
+        // Night phase state
+        nightPhaseActions: [] as RoleAction[],
+        currentNightRoleIndex: 0,
+        alivePlayers: [] as string[],
+        // Day phase state
+        dayPhaseVotes: [] as DayPhaseVote[],
+        eliminatedPlayers: [] as string[],
 
-  // Night phase state
-  const nightPhaseActions = ref<RoleAction[]>([])
-  const currentNightRoleIndex = ref(0)
-  const alivePlayers = ref<string[]>([])
+        // Game end tracking
+        playerEliminations: [] as PlayerElimination[],
+        gameWinner: null as { winner: string; reason: string } | null,
 
-  // Day phase state
-  const dayPhaseVotes = ref<DayPhaseVote[]>([])
-  const eliminatedPlayers = ref<string[]>([])
+        // Witch state tracking
+        witchHealUsed: false,
+        witchPoisonUsed: false,
+    }),
+    getters: {
+        totalRoleSlots: (state: any) => {
+            return Object.values(state.selectedRoles).reduce((sum, count) => sum + count, 0)
+        },
+        livingPlayersCount: (state: any) => {
+            return state.players.length
+        },
+        gameState: (state: any): GameState => ({
+            phase: state.phase.value,
+            round: state.round.value,
+            status: state.status.value,
+            players: state.players.value,
+            selectedRoles: state.selectedRoles.value,
+            gameLog: state.gameLog.value,
+            roleAcknowledgments: state.roleAcknowledgments.value,
+            currentRoleRevealIndex: state.currentRoleRevealIndex.value,
+            playerRoles: state.playerRoles.value,
+        }),
+    },
+    actions: {
+        resetGame() {
+            this.phase = 'SETUP'
+            this.round = 1
+            this.status = 'SETUP'
+            this.players = []
+            this.selectedRoles = {}
+            this.gameLog = []
+            this.roleAcknowledgments = {}
+            this.currentRoleRevealIndex = 0
+            this.playerRoles = {}
+            this.nightPhaseActions = []
+            this.currentNightRoleIndex = 0
+            this.alivePlayers = []
+            this.dayPhaseVotes = []
+            this.eliminatedPlayers = []
+            this.playerEliminations = []
+            this.gameWinner = null
+            this.witchHealUsed = false
+            this.witchPoisonUsed = false
+        },
+        setPhase(newPhase: GamePhase) {
+            this.phase = newPhase
+        },
+        setRound(newRound: number) {
+            this.round = newRound
+        },
+        setStatus(newStatus: GameStatus) {
+            this.status = newStatus
+        },
+        setSelectedRoles(roles: { [roleId: string]: number }) {
+            this.selectedRoles = roles
+        },
+        initializeGame(playerIds: string[], roles: { [roleId: string]: number }) {
+            this.resetGame()
+            this.players = playerIds
+            this.selectedRoles = roles
+        },
+        addGameEvent(message: string) {
+            this.gameLog.push({
+                round: this.round,
+                phase: this.phase,
+                message,
+                timestamp: Date.now(),
+            })
+        },
+        nextPhase() {
+            if (this.phase === 'NIGHT') {
+                this.phase = 'DAY'
+            } else if (this.phase === 'DAY') {
+                this.phase = 'NIGHT'
+                this.round++
+            }
+        },
+        endGame() {
+            this.status = 'FINISHED'
+            this.phase = 'END'
+        },
+        acknowledgeRole(playerId: string, roleId: string) {
+            this.roleAcknowledgments[playerId] = roleId
+        },
+        deacknowledgeRole(playerId: string) {
+            delete this.roleAcknowledgments[playerId]
+        },
+        setCurrentRoleRevealIndex(index: number) {
+            this.currentRoleRevealIndex = index
+        },
+        resetRoleReveal() {
+            this.roleAcknowledgments = {}
+            this.currentRoleRevealIndex = 0
+        },
+        copyAcknowledgmentsToPlayerRoles() {
+            this.playerRoles = { ...this.roleAcknowledgments }
+        },
+        assignRolesToPlayers(roles: { [roleId: string]: number }, playerIds: string[]) {
+            // Create role assignments from the selected roles
+            const roleAssignments: { [playerId: string]: string } = {}
+            const rolesList: string[] = []
 
-  // Game end tracking
-  const playerEliminations = ref<PlayerElimination[]>([])
-  const gameWinner = ref<{ winner: string; reason: string } | null>(null)
+            // Build a list of roleIds repeated by their count
+            Object.entries(roles).forEach(([roleId, count]) => {
+                for (let i = 0; i < count; i++) {
+                    rolesList.push(roleId)
+                }
+            })
 
-  // Witch state tracking
-  const witchHealUsed = ref(false)
-  const witchPoisonUsed = ref(false)
+            // Shuffle the roles list
+            for (let i = rolesList.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1))
+                const temp = rolesList[i] as string
+                rolesList[i] = rolesList[j] as string
+                rolesList[j] = temp
+            }
 
-  // Getters
-  const totalRoleSlots = computed(() => {
-    return Object.values(selectedRoles.value).reduce((sum, count) => sum + count, 0)
-  })
+            // Assign roles to players
+            playerIds.forEach((playerId, index) => {
+                if (index < rolesList.length) {
+                    roleAssignments[playerId] = rolesList[index] || ''
+                }
+            })
 
-  const livingPlayersCount = computed(() => {
-    return players.value.length
-  })
+            this.playerRoles = roleAssignments
+        },
+        updateAlivePlayers() {
+            this.alivePlayers = this.players.filter(pid => !this.eliminatedPlayers.includes(pid))
+        },
+        startNightPhase() {
+            this.updateAlivePlayers()
+            this.nightPhaseActions = []
+            this.currentNightRoleIndex = 0
+        },
+        addNightAction(action: RoleAction) {
+            this.nightPhaseActions.push(action)
+        },
+        setCurrentNightRoleIndex(index: number) {
+            this.currentNightRoleIndex = index
+        },
+        addDayVote(vote: DayPhaseVote) {
+            // Remove previous vote from same voter if exists
+            this.dayPhaseVotes = this.dayPhaseVotes.filter(v => v.voterId !== vote.voterId)
+            this.dayPhaseVotes.push(vote)
+        },
+        clearDayVotes() {
+            this.dayPhaseVotes = []
+        },
+        eliminatePlayer(playerId: string, round: number, method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER' = 'OTHER', description?: string) {
+            if (!this.eliminatedPlayers.includes(playerId)) {
+                this.eliminatedPlayers.push(playerId)
+                this.playerEliminations.push({
+                    playerId,
+                    round,
+                    method,
+                    description: description || `Player eliminated in round ${round}`,
+                })
+                this.addGameEvent(description || `Player ${playerId} was eliminated in round ${round}`)
+            }
+        },
+        checkWinConditions() {
+            const rolesStore = useRolesStore();
+            // Count alive players by faction
+            const alivePlayersByFaction = new Map<string, number>()
 
-  const gameState = computed((): GameState => ({
-    phase: phase.value,
-    round: round.value,
-    status: status.value,
-    players: players.value,
-    selectedRoles: selectedRoles.value,
-    gameLog: gameLog.value,
-    roleAcknowledgments: roleAcknowledgments.value,
-    currentRoleRevealIndex: currentRoleRevealIndex.value,
-    playerRoles: playerRoles.value,
-  }))
+            this.alivePlayers.forEach(playerId => {
+                const roleId = this.playerRoles[playerId]
+                if (!roleId) return
 
-  // Actions
-  function setPhase(newPhase: GamePhase) {
-    phase.value = newPhase
-  }
+                // Get the actual role from roles store to check faction
+                const role = rolesStore.getRoleById(roleId)
+                const faction = role?.faction || 'VILLAGER'
+                alivePlayersByFaction.set(faction, (alivePlayersByFaction.get(faction) || 0) + 1)
+            })
 
-  function setRound(newRound: number) {
-    round.value = newRound
-  }
+            const werewolvesAlive = alivePlayersByFaction.get('WEREWOLF') || 0
+            const villagersAlive = alivePlayersByFaction.get('VILLAGER') || 0
 
-  function setStatus(newStatus: GameStatus) {
-    status.value = newStatus
-  }
+            console.log('werewolvesAlive', werewolvesAlive)
+            console.log('villagersAlive', villagersAlive)
+            console.log('alivePlayersByFaction', alivePlayersByFaction)
 
-  function setSelectedRoles(roles: { [roleId: string]: number }) {
-    selectedRoles.value = roles
-  }
+            // Check win conditions
+            // Condition 1: No werewolves left → Villagers win
+            if (werewolvesAlive === 0) {
+                const result = { winner: 'VILLAGERS', reason: 'All werewolves eliminated' }
+                this.gameWinner = result
+                return result
+            }
 
-  function initializeGame(playerIds: string[], roles: { [roleId: string]: number }) {
-    resetGame()
-    players.value = playerIds
-    selectedRoles.value = roles
-  }
+            // Condition 2: Werewolves >= Villagers → Werewolves win
+            if (werewolvesAlive >= villagersAlive && villagersAlive > 0) {
+                const result = { winner: 'WEREWOLVES', reason: 'Werewolves equal or outnumber villagers' }
+                this.gameWinner = result
+                return result
+            }
 
-  function addGameEvent(message: string) {
-    gameLog.value.push({
-      round: round.value,
-      phase: phase.value,
-      message,
-      timestamp: Date.now(),
-    })
-  }
-
-  function nextPhase() {
-    if (phase.value === 'NIGHT') {
-      phase.value = 'DAY'
-    } else if (phase.value === 'DAY') {
-      phase.value = 'NIGHT'
-      round.value++
-    }
-  }
-
-  function endGame() {
-    status.value = 'FINISHED'
-    phase.value = 'END'
-  }
-
-  function resetGame() {
-    phase.value = 'SETUP'
-    round.value = 1
-    status.value = 'SETUP'
-    players.value = []
-    selectedRoles.value = {}
-    gameLog.value = []
-    roleAcknowledgments.value = {}
-    currentRoleRevealIndex.value = 0
-    playerRoles.value = {}
-    nightPhaseActions.value = []
-    currentNightRoleIndex.value = 0
-    alivePlayers.value = []
-    dayPhaseVotes.value = []
-    eliminatedPlayers.value = []
-    playerEliminations.value = []
-    gameWinner.value = null
-    witchHealUsed.value = false
-    witchPoisonUsed.value = false
-  }
-
-  function acknowledgeRole(playerId: string, roleId: string) {
-    roleAcknowledgments.value[playerId] = roleId
-  }
-
-  function deacknowledgeRole(playerId: string) {
-    delete roleAcknowledgments.value[playerId]
-  }
-
-  function setCurrentRoleRevealIndex(index: number) {
-    currentRoleRevealIndex.value = index
-  }
-
-  function resetRoleReveal() {
-    roleAcknowledgments.value = {}
-    currentRoleRevealIndex.value = 0
-  }
-
-  function copyAcknowledgmentsToPlayerRoles() {
-    playerRoles.value = { ...roleAcknowledgments.value }
-  }
-
-  //
-
-  function assignRolesToPlayers(roles: { [roleId: string]: number }, playerIds: string[]) {
-    // Create role assignments from the selected roles
-    const roleAssignments: { [playerId: string]: string } = {}
-    const rolesList: string[] = []
-
-    // Build a list of roleIds repeated by their count
-    Object.entries(roles).forEach(([roleId, count]) => {
-      for (let i = 0; i < count; i++) {
-        rolesList.push(roleId)
-      }
-    })
-
-    // Shuffle the roles list
-    for (let i = rolesList.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      const temp = rolesList[i] as string
-      rolesList[i] = rolesList[j] as string
-      rolesList[j] = temp
-    }
-
-    // Assign roles to players
-    playerIds.forEach((playerId, index) => {
-      if (index < rolesList.length) {
-        roleAssignments[playerId] = rolesList[index] || ''
-      }
-    })
-
-    playerRoles.value = roleAssignments
-  }
-
-  function updateAlivePlayers() {
-    alivePlayers.value = players.value.filter(pid => !eliminatedPlayers.value.includes(pid))
-  }
-
-  function startNightPhase() {
-    updateAlivePlayers()
-    nightPhaseActions.value = []
-    currentNightRoleIndex.value = 0
-  }
-
-  function addNightAction(action: RoleAction) {
-    nightPhaseActions.value.push(action)
-  }
-
-  function setCurrentNightRoleIndex(index: number) {
-    currentNightRoleIndex.value = index
-  }
-
-  function addDayVote(vote: DayPhaseVote) {
-    // Remove previous vote from same voter if exists
-    dayPhaseVotes.value = dayPhaseVotes.value.filter(v => v.voterId !== vote.voterId)
-    dayPhaseVotes.value.push(vote)
-  }
-
-  function clearDayVotes() {
-    dayPhaseVotes.value = []
-  }
-
-  function eliminatePlayer(playerId: string, round: number, method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER' = 'OTHER', description?: string) {
-    if (!eliminatedPlayers.value.includes(playerId)) {
-      eliminatedPlayers.value.push(playerId)
-      playerEliminations.value.push({
-        playerId,
-        round,
-        method,
-        description: description || `Player eliminated in round ${round}`,
-      })
-      addGameEvent(description || `Player ${playerId} was eliminated in round ${round}`)
-    }
-  }
-
-  function checkWinConditions() {
-    // Count alive players by faction
-    const alivePlayersByFaction = new Map<string, number>()
-
-    alivePlayers.value.forEach(playerId => {
-      const roleId = playerRoles.value[playerId]
-      if (!roleId) return
-
-      // Get the actual role from roles store to check faction
-      const role = rolesStore.getRoleById(roleId)
-      const faction = role?.faction || 'VILLAGER'
-      alivePlayersByFaction.set(faction, (alivePlayersByFaction.get(faction) || 0) + 1)
-    })
-
-    const werewolvesAlive = alivePlayersByFaction.get('WEREWOLF') || 0
-    const villagersAlive = alivePlayersByFaction.get('VILLAGER') || 0
-
-    console.log('werewolvesAlive', werewolvesAlive)
-    console.log('villagersAlive', villagersAlive)
-    console.log('alivePlayersByFaction', alivePlayersByFaction)
-
-    // Check win conditions
-    // Condition 1: No werewolves left → Villagers win
-    if (werewolvesAlive === 0) {
-      const result = { winner: 'VILLAGERS', reason: 'All werewolves eliminated' }
-      gameWinner.value = result
-      return result
-    }
-
-    // Condition 2: Werewolves >= Villagers → Werewolves win
-    if (werewolvesAlive >= villagersAlive && villagersAlive > 0) {
-      const result = { winner: 'WEREWOLVES', reason: 'Werewolves equal or outnumber villagers' }
-      gameWinner.value = result
-      return result
-    }
-
-    return null // Game continues
-  }
-
-  function setGameWinner(winner: string, reason: string) {
-    gameWinner.value = { winner, reason }
-  }
-
-  function getPlayerElimination(playerId: string) {
-    return playerEliminations.value.find(e => e.playerId === playerId)
-  }
-
-  return {
-    phase,
-    round,
-    status,
-    players,
-    selectedRoles,
-    gameLog,
-    roleAcknowledgments,
-    currentRoleRevealIndex,
-    playerRoles,
-    nightPhaseActions,
-    currentNightRoleIndex,
-    alivePlayers,
-    dayPhaseVotes,
-    eliminatedPlayers,
-    playerEliminations,
-    gameWinner,
-    witchHealUsed,
-    witchPoisonUsed,
-    totalRoleSlots,
-    livingPlayersCount,
-    gameState,
-    setPhase,
-    setRound,
-    setStatus,
-    setSelectedRoles,
-    initializeGame,
-    addGameEvent,
-    nextPhase,
-    endGame,
-    resetGame,
-    acknowledgeRole,
-    deacknowledgeRole,
-    setCurrentRoleRevealIndex,
-    resetRoleReveal,
-    copyAcknowledgmentsToPlayerRoles,
-    assignRolesToPlayers,
-    updateAlivePlayers,
-    startNightPhase,
-    addNightAction,
-    setCurrentNightRoleIndex,
-    addDayVote,
-    clearDayVotes,
-    eliminatePlayer,
-    checkWinConditions,
-    setGameWinner,
-    getPlayerElimination,
-  }
-}, {
-  persist: true,
-})
-
+            return null // Game continues
+        },
+        setGameWinner(winner: string, reason: string) {
+            this.gameWinner = { winner, reason }
+        },
+        getPlayerElimination(playerId: string) {
+            return this.playerEliminations.find(e => e.playerId === playerId)
+        }
+    },
+    persist: true,
+});
