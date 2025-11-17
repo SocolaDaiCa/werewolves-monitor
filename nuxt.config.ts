@@ -11,7 +11,6 @@ export default defineNuxtConfig({
     '@nuxtjs/ionic',
   ],
   css: [
-    '@ionic/vue/css/ionic.bundle.css',
     '~/assets/css/main.scss',
   ],
   nitro: {
@@ -54,7 +53,4 @@ export default defineNuxtConfig({
       mode: 'ios',
     },
   },
-  tailwindcss: {
-    cssPath: '~/assets/css/tailwind.css',
-  }
 })

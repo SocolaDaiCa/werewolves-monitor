@@ -43,7 +43,7 @@
             fill="outline"
             size="large"
           >
-            <ion-icon slot="start" name="people"></ion-icon>
+            <ion-icon name="person-outline"></ion-icon>
             {{ $t('home.managePlayers') }}
             <span slot="end" class="text-xl">👥</span>
           </ion-button>
