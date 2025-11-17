@@ -40,6 +40,15 @@ export const useGameStore = defineStore('game', {
         livingPlayersCount: (state: any) => {
             return state.players.length
         },
+        nightPhaseCount: (state: any) => {
+            return state.gameLog.filter((e: GameEvent) => e.phase === 'NIGHT').length
+        },
+        dayPhaseCount: (state: any) => {
+            return state.gameLog.filter((e: GameEvent) => e.phase === 'DAY').length
+        },
+        totalActions: (state: any) => {
+            return state.nightPhaseActions.length
+        },
         gameState: (state: any): GameState => ({
             phase: state.phase.value,
             round: state.round.value,

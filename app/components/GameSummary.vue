@@ -71,15 +71,9 @@ const gameStore = useGameStore()
 
 const gameEvents = computed(() => gameStore.gameLog)
 
-const nightPhaseCount = computed(
-  () => gameEvents.value.filter(e => e.phase === 'NIGHT').length
-)
-
-const dayPhaseCount = computed(
-  () => gameEvents.value.filter(e => e.phase === 'DAY').length
-)
-
-const totalActions = computed(() => gameStore.nightPhaseActions.length)
+const nightPhaseCount = computed(() => gameStore.nightPhaseCount)
+const dayPhaseCount = computed(() => gameStore.dayPhaseCount)
+const totalActions = computed(() => gameStore.totalActions)
 
 const avgRoundTime = computed(() => {
   if (gameEvents.value.length === 0) return 0
