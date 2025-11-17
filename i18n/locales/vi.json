@@ -104,7 +104,7 @@
       "noPlayersSelected": "Vui lòng chọn ít nhất 2 người chơi",
       "noRolesSelected": "Vui lòng chọn ít nhất 1 chức năng"
     },
-    "startGameBtn": "Bắt Đầu Game",
+    "startGameBtn": "Bắt Đầu",
     "smartAutoSelect": "Tự Động Chọn Thông Minh",
     "autoSelectDescription": "Những người chơi từ game cuối cùng của bạn đã được chọn",
     "fixMismatches": "Sửa Những Mismatch",
@@ -199,7 +199,7 @@
     "progressLabel": "Chức Năng {current} của {total}",
     "noMatchingRole": "Chức năng này không phải của bạn",
     "waitForYourRole": "Tiếp tục theo dõi - chưa đến chức năng của bạn",
-    "startGameBtn": "Bắt Đầu Game",
+    "startGameBtn": "Bắt Đầu",
     "forceStart": "Bắt Đầu Bắt Buộc (Quyết Định Của Người Điều Hành)",
     "validationWarning": "Cảnh Báo: Không phải tất cả chức năng đều được xác nhận chính xác",
     "validationSuccess": "Tất cả chức năng đã được xác nhận chính xác!",

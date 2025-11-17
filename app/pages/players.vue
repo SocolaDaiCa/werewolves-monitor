@@ -180,16 +180,14 @@
                     <div
                         v-if="showToast"
                         :class="[
-          'fixed bottom-6 right-6 px-6 py-4 rounded-lg text-white font-semibold shadow-lg',
-          toastType === 'success' ? 'bg-green-500' : 'bg-red-500',
-        ]"
+                            'fixed bottom-6 right-6 px-6 py-4 rounded-lg text-white font-semibold shadow-lg',
+                            toastType === 'success' ? 'bg-green-500' : 'bg-red-500',
+                        ]"
                     >
                         {{ toastMessage }}
                     </div>
                 </Transition>
             </div>
-
-
         </ion-content>
     </ion-page>
 
