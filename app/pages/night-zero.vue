@@ -35,24 +35,24 @@
                                         :key="role.id"
                                         @click="goToRole(index)"
                                         :class="[
-              'w-full text-left px-4 py-3 rounded-lg transition font-semibold',
-              index === currentRoleIndex
-                ? 'bg-purple-500 text-white shadow-md'
-                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
-            ]"
+                                            'w-full text-left px-4 py-3 rounded-lg transition font-semibold',
+                                            index === currentRoleIndex
+                                                ? 'bg-purple-500 text-white shadow-md'
+                                                : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                                        ]"
                                     >
                                         <div class="flex items-center justify-between">
                                             <span>{{ getRoleName(role) }}</span>
                                             <span
                                                 :class="[
-                  'text-sm font-bold px-2 py-1 rounded',
-                  isRoleFullyAcknowledged(role.id)
-                    ? 'bg-green-200 text-green-800'
-                    : 'bg-orange-200 text-orange-800'
-                ]"
+                                                    'text-sm font-bold px-2 py-1 rounded',
+                                                    isRoleFullyAcknowledged(role.id)
+                                                        ? 'bg-green-200 text-green-800'
+                                                        : 'bg-orange-200 text-orange-800'
+                                                ]"
                                             >
-                {{ getAcknowledgedCountForRole(role.id) }}/{{ gameStore.selectedRoles[role.id] || 0 }}
-              </span>
+                                                {{ getAcknowledgedCountForRole(role.id) }}/{{ gameStore.selectedRoles[role.id] || 0 }}
+                                            </span>
                                         </div>
                                     </button>
                                 </div>
@@ -61,11 +61,11 @@
                             <!-- Validation Status -->
                             <div
                                 :class="[
-          'bg-white rounded-2xl p-6 shadow-md',
-          allRolesAcknowledged
-            ? 'border-2 border-green-400'
-            : 'border-2 border-orange-400'
-        ]"
+                                    'bg-white rounded-2xl p-6 shadow-md',
+                                    allRolesAcknowledged
+                                        ? 'border-2 border-green-400'
+                                        : 'border-2 border-orange-400'
+                                ]"
                             >
                                 <div class="text-center mb-4">
                                     <div class="text-4xl mb-2">
@@ -73,13 +73,13 @@
                                     </div>
                                     <h4
                                         :class="[
-              'font-bold text-lg',
-              allRolesAcknowledged ? 'text-green-700' : 'text-orange-700'
-            ]"
+                                            'font-bold text-lg',
+                                            allRolesAcknowledged ? 'text-green-700' : 'text-orange-700'
+                                        ]"
                                     >
                                         {{ allRolesAcknowledged
-                                        ? $t('nightZero.validationSuccess')
-                                        : $t('nightZero.validationWarning')
+                                            ? $t('nightZero.validationSuccess')
+                                            : $t('nightZero.validationWarning')
                                         }}
                                     </h4>
                                 </div>
