@@ -1,40 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { RoleAction, NightPhaseState, DayPhaseVote } from '~/types/game'
+import type { RoleAction, NightPhaseState, DayPhaseVote, GamePhase, GameStatus, GameState, GameEvent, PlayerElimination } from '~/types/game'
 import { useRolesStore } from '~/stores/roles'
 
 // Store instances
 // const rolesStore = useRolesStore()
-
-// Types
-export type GamePhase = 'NIGHT' | 'DAY' | 'SETUP' | 'END'
-export type GameStatus = 'SETUP' | 'PLAYING' | 'FINISHED'
-
-export interface GameState {
-    phase: GamePhase
-    round: number
-    status: GameStatus
-    players: string[] // player IDs
-    selectedRoles: { [roleId: string]: number } // role id -> count
-    gameLog: GameEvent[]
-    roleAcknowledgments: { [playerId: string]: string } // playerId -> roleId
-    currentRoleRevealIndex: number
-    playerRoles: { [playerId: string]: string } // playerId -> roleId (assigned roles)
-}
-
-export interface GameEvent {
-    round: number
-    phase: GamePhase
-    message: string
-    timestamp: number
-}
-
-export interface PlayerElimination {
-    playerId: string
-    round: number
-    method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER'
-    description: string
-}
 
 export const useGameStore = defineStore('game', {
     state: () => ({

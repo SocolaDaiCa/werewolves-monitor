@@ -62,7 +62,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Player } from '~/stores/players'
+import type { Player } from '~/types/player'
 
 const props = defineProps<{
   player: Player

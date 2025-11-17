@@ -1,112 +1,95 @@
 import { defineStore } from 'pinia'
-import { ref, computed, watch } from 'vue'
+import type { Player } from '~/types/player'
 
-export interface Player {
-    id: string
-    name: string
-    avatar: string // base64 or image URL
-    joinedDate: number // timestamp
-    gamesPlayed: number
-    wins: number
-}
+export const usePlayersStore = defineStore('players', {
+    state: () => ({
+        players: [] as Player[],
+        selectedPlayerIds: [] as string[],
+    }),
 
-export const usePlayersStore = defineStore('players', () => {
-    // State
-    const players = ref<Player[]>([])
-    const selectedPlayerIds = ref<string[]>([])
-    watch(players, (newPlayers) => {
-        // remove selectedPlayerIds not in newPlayers
-        selectedPlayerIds.value = selectedPlayerIds.value.filter(id => newPlayers.some(p => p.id === id));
-    })
+    getters: {
+        allPlayers: (state) => state.players,
 
-    // Getters
-    const allPlayers = computed(() => players.value)
+        playerCount: (state) => state.players.length,
 
-    const playerCount = computed(() => players.value.length)
+        getPlayerById: (state) => {
+            return (id: string) => {
+                return state.players.find(p => p.id === id)
+            }
+        },
 
-    const getPlayerById = computed(() => (id: string) => {
-        return players.value.find(p => p.id === id)
-    })
+        selectedPlayers: (state) => {
+            return state.players.filter(p => state.selectedPlayerIds.includes(p.id))
+        },
+    },
 
-    const selectedPlayers = computed(() => {
-        return players.value.filter(p => selectedPlayerIds.value.includes(p.id))
-    })
+    actions: {
+        addPlayer(name: string, avatar: string = '') {
+            const newPlayer: Player = {
+                id: `player_${Date.now()}_${Math.random()}`,
+                name,
+                avatar,
+                joinedDate: Date.now(),
+                gamesPlayed: 0,
+                wins: 0,
+            }
+            this.players.push(newPlayer)
+            return newPlayer
+        },
 
-    // Actions
-    function addPlayer(name: string, avatar: string = '') {
-        const newPlayer: Player = {
-            id: `player_${Date.now()}_${Math.random()}`,
-            name,
-            avatar,
-            joinedDate: Date.now(),
-            gamesPlayed: 0,
-            wins: 0,
-        }
-        players.value.push(newPlayer)
-        return newPlayer
-    }
+        updatePlayer(id: string, updates: Partial<Player>) {
+            const index = this.players.findIndex(p => p.id === id)
+            if (index !== -1) {
+                this.players[index] = { ...this.players[index], ...updates }
+            }
+        },
 
-    function updatePlayer(id: string, updates: Partial<Player>) {
-        const index = players.value.findIndex(p => p.id === id)
-        if (index !== -1) {
-            players.value[index] = { ...players.value[index], ...updates }
-        }
-    }
+        deletePlayer(id: string) {
+            const index = this.players.findIndex(p => p.id === id)
+            if (index !== -1) {
+                this.players.splice(index, 1)
+                // remove selectedPlayerIds not in players
+                this.selectedPlayerIds = this.selectedPlayerIds.filter(selectedId => 
+                    this.players.some(p => p.id === selectedId)
+                )
+            }
+        },
 
-    function deletePlayer(id: string) {
-        const index = players.value.findIndex(p => p.id === id)
-        if (index !== -1) {
-            players.value.splice(index, 1)
-        }
-    }
+        incrementGamesPlayed(id: string) {
+            const player = this.players.find(p => p.id === id)
+            if (player) {
+                player.gamesPlayed++
+            }
+        },
 
-    function incrementGamesPlayed(id: string) {
-        const player = players.value.find(p => p.id === id)
-        if (player) {
-            player.gamesPlayed++
-        }
-    }
+        incrementWins(id: string) {
+            const player = this.players.find(p => p.id === id)
+            if (player) {
+                player.wins++
+            }
+        },
 
-    function incrementWins(id: string) {
-        const player = players.value.find(p => p.id === id)
-        if (player) {
-            player.wins++
-        }
-    }
+        importPlayers(newPlayers: Player[]) {
+            this.players = newPlayers
+            // remove selectedPlayerIds not in newPlayers
+            this.selectedPlayerIds = this.selectedPlayerIds.filter(id => 
+                newPlayers.some(p => p.id === id)
+            )
+        },
 
-    function importPlayers(newPlayers: Player[]) {
-        players.value = newPlayers
-    }
+        exportPlayers() {
+            return JSON.stringify(this.players, null, 2)
+        },
 
-    function exportPlayers() {
-        return JSON.stringify(players.value, null, 2)
-    }
+        clearAllPlayers() {
+            this.players = []
+            this.selectedPlayerIds = []
+        },
 
-    function clearAllPlayers() {
-        players.value = []
-    }
+        setSelectedPlayerIds(ids: string[]) {
+            this.selectedPlayerIds = ids
+        },
+    },
 
-    function setSelectedPlayerIds(ids: string[]) {
-        selectedPlayerIds.value = ids
-    }
-
-    return {
-        players,
-        selectedPlayerIds,
-        allPlayers,
-        playerCount,
-        getPlayerById,
-        selectedPlayers,
-        addPlayer,
-        updatePlayer,
-        deletePlayer,
-        incrementGamesPlayed,
-        incrementWins,
-        importPlayers,
-        exportPlayers,
-        clearAllPlayers,
-        setSelectedPlayerIds,
-    }
-}, {
     persist: true,
 })

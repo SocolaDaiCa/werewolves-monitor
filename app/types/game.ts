@@ -16,6 +16,9 @@ export interface GameState {
   players: string[] // player IDs
   selectedRoles: { [roleId: string]: number }
   gameLog: GameEvent[]
+  roleAcknowledgments: { [playerId: string]: string } // playerId -> roleId
+  currentRoleRevealIndex: number
+  playerRoles: { [playerId: string]: string } // playerId -> roleId (assigned roles)
 }
 
 export interface PlayerRole {
@@ -50,5 +53,12 @@ export interface DayPhaseVote {
   voterId: string
   targetPlayerId?: string // null for 'vote none'
   timestamp: number
+}
+
+export interface PlayerElimination {
+  playerId: string
+  round: number
+  method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER'
+  description: string
 }
 

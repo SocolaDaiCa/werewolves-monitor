@@ -65,7 +65,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useGameStore } from '~/stores/game'
-import type { GameEvent } from '~/stores/game'
+import type { GameEvent } from '~/types/game'
 
 const gameStore = useGameStore()
 

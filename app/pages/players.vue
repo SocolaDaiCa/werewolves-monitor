@@ -196,7 +196,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { usePlayersStore } from '~/stores/players'
-import type { Player } from '~/stores/players'
+import type { Player } from '~/types/player'
 
 // Store
 const playersStore = usePlayersStore()

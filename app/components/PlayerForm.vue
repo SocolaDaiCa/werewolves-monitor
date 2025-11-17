@@ -102,7 +102,7 @@
 
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import type { Player } from '~/stores/players'
+import type { Player } from '~/types/player'
 
 const modal = ref()
 const cancel = () => modal.value?.$el.dismiss(null, 'cancel');

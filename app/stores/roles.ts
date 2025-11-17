@@ -1,19 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-
-export interface Role {
-    id: string
-    name: string
-    nameVi: string
-    description: string
-    descriptionVi: string
-    faction: 'VILLAGER' | 'WEREWOLF' | 'CULT' | 'VAMPIRE' | 'SPECIAL'
-    balancePoints: number
-    nightly: 'ALWAYS' | 'FIRST_NIGHT' | 'NEVER'
-    nightOrder?: number
-    actionType?: 'SELECT_PLAYER' | 'DUAL_SELECT' | 'TEXT_INPUT' | 'ACKNOWLEDGE' | 'DUAL_OPTION' | 'NONE'
-    icon?: string
-}
+import type { Role } from '~/types/role'
 
 // All roles from Ultimate Werewolf with balance points and Vietnamese translations
 const defaultRoles: Role[] = [
@@ -429,108 +415,95 @@ const defaultRoles: Role[] = [
     // },
 ]
 
-export const useRolesStore = defineStore('roles', () => {
-    // State
-    const roles = ref<Role[]>(defaultRoles)
-    const selectedRoles = ref<{ [roleId: string]: number }>({})
+export const useRolesStore = defineStore('roles', {
+    state: () => ({
+        roles: defaultRoles as Role[],
+        selectedRoles: {} as { [roleId: string]: number },
+    }),
 
-    // Getters
-    const allRoles = computed(() => roles.value)
+    getters: {
+        allRoles: (state) => state.roles,
 
-    const rolesByFaction = computed(() => (faction: Role['faction']) => {
-        return roles.value.filter(role => role.faction === faction)
-    })
-
-    const totalBalancePoints = computed(() => {
-        return Object.entries(selectedRoles.value).reduce((total, [roleId, count]) => {
-            const role = roles.value.find(r => r.id === roleId)
-            return total + (role?.balancePoints ?? 0) * count
-        }, 0)
-    })
-
-    const balanceStatus = computed(() => {
-        const points = totalBalancePoints.value
-        if (points === 0) return 'perfect'
-        if (points > 0 && points <= 5) return 'light-green'
-        if (points < 0 && points >= -5) return 'light-red'
-        return 'red'
-    })
-
-    const totalRoleCount = computed(() => {
-        return Object.values(selectedRoles.value).reduce((sum, count) => sum + count, 0)
-    })
-
-    // Actions
-    function addRole(roleId: string, quantity: number = 1) {
-        if (!selectedRoles.value[roleId]) {
-            selectedRoles.value[roleId] = 0
-        }
-        selectedRoles.value[roleId] += quantity
-    }
-
-    function removeRole(roleId: string, quantity: number = 1) {
-        if (selectedRoles.value[roleId]) {
-            selectedRoles.value[roleId] = Math.max(0, selectedRoles.value[roleId] - quantity)
-            if (selectedRoles.value[roleId] === 0) {
-                delete selectedRoles.value[roleId]
+        rolesByFaction: (state) => {
+            return (faction: Role['faction']) => {
+                return state.roles.filter(role => role.faction === faction)
             }
-        }
-    }
+        },
 
-    function setRoleQuantity(roleId: string, quantity: number) {
-        if (quantity <= 0) {
-            delete selectedRoles.value[roleId]
-        } else {
-            selectedRoles.value[roleId] = quantity
-        }
-    }
+        totalBalancePoints: (state) => {
+            return Object.entries(state.selectedRoles).reduce((total, [roleId, count]) => {
+                const role = state.roles.find(r => r.id === roleId)
+                return total + (role?.balancePoints ?? 0) * count
+            }, 0)
+        },
 
-    function getRoleQuantity(roleId: string): number {
-        return selectedRoles.value[roleId] ?? 0
-    }
+        balanceStatus() {
+            const points = this.totalBalancePoints
+            if (points === 0) return 'perfect'
+            if (points > 0 && points <= 5) return 'light-green'
+            if (points < 0 && points >= -5) return 'light-red'
+            return 'red'
+        },
 
-    function clearAllRoles() {
-        selectedRoles.value = {}
-    }
+        totalRoleCount: (state) => {
+            return Object.values(state.selectedRoles).reduce((sum, count) => sum + count, 0)
+        },
+    },
 
-    function setSelectedRoles(roles: { [roleId: string]: number }) {
-        selectedRoles.value = roles
-    }
+    actions: {
+        addRole(roleId: string, quantity: number = 1) {
+            if (!this.selectedRoles[roleId]) {
+                this.selectedRoles[roleId] = 0
+            }
+            this.selectedRoles[roleId] += quantity
+        },
 
-    function getRoleById(roleId: string): Role | undefined {
-        return roles.value.find(r => r.id === roleId)
-    }
+        removeRole(roleId: string, quantity: number = 1) {
+            if (this.selectedRoles[roleId]) {
+                this.selectedRoles[roleId] = Math.max(0, this.selectedRoles[roleId] - quantity)
+                if (this.selectedRoles[roleId] === 0) {
+                    delete this.selectedRoles[roleId]
+                }
+            }
+        },
 
-    function addCustomRole(role: Role) {
-        const index = roles.value.findIndex(r => r.id === role.id)
-        if (index === -1) {
-            roles.value.push(role)
-        } else {
-            roles.value[index] = role
-        }
-    }
+        setRoleQuantity(roleId: string, quantity: number) {
+            if (quantity <= 0) {
+                delete this.selectedRoles[roleId]
+            } else {
+                this.selectedRoles[roleId] = quantity
+            }
+        },
 
-    return {
-        roles,
-        selectedRoles,
-        allRoles,
-        rolesByFaction,
-        totalBalancePoints,
-        balanceStatus,
-        totalRoleCount,
-        addRole,
-        removeRole,
-        setRoleQuantity,
-        getRoleQuantity,
-        clearAllRoles,
-        setSelectedRoles,
-        getRoleById,
-        addCustomRole,
-    }
-}, {
+        getRoleQuantity(roleId: string): number {
+            return this.selectedRoles[roleId] ?? 0
+        },
+
+        clearAllRoles() {
+            this.selectedRoles = {}
+        },
+
+        setSelectedRoles(roles: { [roleId: string]: number }) {
+            this.selectedRoles = roles
+        },
+
+        getRoleById(roleId: string): Role | undefined {
+            return this.roles.find(r => r.id === roleId)
+        },
+
+        addCustomRole(role: Role) {
+            const index = this.roles.findIndex(r => r.id === role.id)
+            if (index === -1) {
+                this.roles.push(role)
+            } else {
+                this.roles[index] = role
+            }
+        },
+    },
+
     persist: {
         pick: [
             'selectedRoles',
         ]
-    }
+    },
 })

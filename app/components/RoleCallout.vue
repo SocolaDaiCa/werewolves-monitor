@@ -93,8 +93,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useRolesStore, type Role } from '~/stores/roles'
-import { usePlayersStore, type Player } from '~/stores/players'
+import { useRolesStore } from '~/stores/roles'
+import { usePlayersStore } from '~/stores/players'
+import type { Role } from '~/types/role'
+import type { Player } from '~/types/player'
 import { useGameStore } from '~/stores/game'
 
 const { locale } = useI18n()
