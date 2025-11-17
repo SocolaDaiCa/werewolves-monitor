@@ -233,6 +233,10 @@ export const useGameStore = defineStore('game', {
         },
         getPlayerElimination(playerId: string) {
             return this.playerEliminations.find(e => e.playerId === playerId)
+        },
+        getEliminationRound(playerId: string): number | undefined {
+            const elimination = this.getPlayerElimination(playerId)
+            return elimination ? elimination.round : undefined
         }
     },
     persist: true,

@@ -32,11 +32,11 @@
       >
         <div>
           <p class="text-sm opacity-75 mb-1">{{ $t('gameEnd.roundsPlayed') }}</p>
-          <p class="text-3xl font-bold">{{ round }}</p>
+          <p class="text-3xl font-bold">{{ gameStore.round }}</p>
         </div>
         <div>
           <p class="text-sm opacity-75 mb-1">{{ $t('gameEnd.totalPlayers') }}</p>
-          <p class="text-3xl font-bold">{{ totalPlayers }}</p>
+          <p class="text-3xl font-bold">{{ gameStore.players.length }}</p>
         </div>
         <div>
           <p class="text-sm opacity-75 mb-1">{{ $t('gameEnd.survivors') }}</p>
@@ -52,7 +52,7 @@
     <!-- Summary Section -->
     <div class="bg-white rounded-xl p-6 shadow-md">
       <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ $t('gameEnd.summary') }}</h2>
-      
+
       <!-- Summary Table -->
       <div class="overflow-x-auto">
         <table class="w-full text-sm md:text-base">
@@ -192,8 +192,6 @@ const gameStore = useGameStore()
 const playersStore = usePlayersStore()
 const rolesStore = useRolesStore()
 
-const round = computed(() => gameStore.round)
-const totalPlayers = computed(() => gameStore.players.length)
 const survivors = computed(
   () => gameStore.players.length - gameStore.eliminatedPlayers.length
 )
@@ -220,7 +218,7 @@ const playerResults = computed((): PlayerResult[] => {
       faction: role?.faction || 'VILLAGER',
       alive: isAlive,
       eliminatedBy: isAlive ? undefined : getEliminationMethod(playerId),
-      eliminatedRound: isAlive ? undefined : getEliminationRound(playerId),
+      eliminatedRound: isAlive ? undefined : gameStore.getEliminationRound(playerId),
       isWinner: isWinner || false,
     }
   })
@@ -296,11 +294,6 @@ function getEliminationMethod(playerId: string): string {
     return methodLabels[elimination.method] || elimination.description
   }
   return '-'
-}
-
-function getEliminationRound(playerId: string): number | undefined {
-  const elimination = gameStore.getPlayerElimination(playerId)
-  return elimination ? elimination.round : undefined
 }
 
 function handlePlayAgain() {
