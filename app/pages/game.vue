@@ -7,7 +7,7 @@
         <div class="flex-1 px-6 py-8">
             <div class="max-w-6xl mx-auto">
                 <!-- Night Phase -->
-                <div v-if="currentPhase === 'NIGHT'">
+                <div v-if="currentPhase === GamePhase.NIGHT">
                     <RoleActionPanel
                         :readonly="false"
                         @phase-complete="completeNightPhase"
@@ -15,7 +15,7 @@
                 </div>
 
                 <!-- Day Phase -->
-                <div v-else-if="currentPhase === 'DAY'" class="space-y-6">
+                <div v-else-if="currentPhase === GamePhase.DAY" class="space-y-6">
                     <!-- Day Discussion Timer -->
                     <div class="bg-white rounded-2xl shadow-lg p-8">
                         <h2 class="text-3xl font-bold text-center mb-6 text-amber-700">☀️ {{ $t('game.day') }} {{ currentRound }}</h2>
@@ -70,7 +70,7 @@
                 </button>
 
                 <button
-                    v-if="currentPhase === 'NIGHT'"
+                    v-if="currentPhase === GamePhase.NIGHT"
                     @click="skipToDay"
                     class="flex-1 py-3 px-4 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors"
                 >
@@ -78,7 +78,7 @@
                 </button>
 
                 <button
-                    v-if="currentPhase === 'DAY' && discussionTimeRemaining > 0"
+                    v-if="currentPhase === GamePhase.DAY && discussionTimeRemaining > 0"
                     @click="skipDiscussion"
                     class="flex-1 py-3 px-4 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors"
                 >
@@ -100,6 +100,7 @@ import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 import { useNightPhaseActions } from '~/composables/useNightPhaseActions'
 import type { DayPhaseVote } from '~/types/game'
+import { GamePhase } from '~/types/game'
 import PhaseHeader from '~/components/PhaseHeader.vue'
 import RoleActionPanel from '~/components/RoleActionPanel.vue'
 import VotingInterface from '~/components/VotingInterface.vue'
@@ -199,7 +200,7 @@ const completeNightPhase = () => {
 
     // Show results for 3 seconds then transition
     showNightResults.value = false
-    gameStore.setPhase('DAY')
+    gameStore.setPhase(GamePhase.DAY)
     gameStore.clearDayVotes()
     startDayPhaseTimer()
 }
@@ -226,7 +227,7 @@ const completeDayPhase = () => {
         })
     } else {
         // Continue to next night
-        gameStore.setPhase('NIGHT')
+        gameStore.setPhase(GamePhase.NIGHT)
         gameStore.setRound(gameStore.round + 1)
         gameStore.startNightPhase()
         showNightResults.value = false
@@ -265,9 +266,9 @@ const goToMenu = () => {
 
 onMounted(() => {
     // Initialize night phase
-    if (currentPhase.value === 'NIGHT') {
+    if (currentPhase.value === GamePhase.NIGHT) {
         gameStore.startNightPhase()
-    } else if (currentPhase.value === 'DAY') {
+    } else if (currentPhase.value === GamePhase.DAY) {
         startDayPhaseTimer()
     }
 })

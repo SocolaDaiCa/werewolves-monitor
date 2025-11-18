@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { RoleAction, NightPhaseState, DayPhaseVote, GamePhase, GameStatus, GameState, GameEvent, PlayerElimination } from '~/types/game'
-import { EliminationMethod } from '~/types/game'
+import type { RoleAction, NightPhaseState, DayPhaseVote, GameStatus, GameState, GameEvent, PlayerElimination } from '~/types/game'
+import { EliminationMethod, GamePhase } from '~/types/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 
@@ -10,7 +10,7 @@ import { usePlayersStore } from '~/stores/players'
 
 export const useGameStore = defineStore('game', {
     state: () => ({
-        phase: 'SETUP' as GamePhase,
+        phase: GamePhase.SETUP,
         round: 1,
         status: 'SETUP' as GameStatus,
         players: [] as string[],
@@ -43,16 +43,16 @@ export const useGameStore = defineStore('game', {
             return state.players.length
         },
         nightPhaseCount: (state: any) => {
-            return state.gameLog.filter((e: GameEvent) => e.phase === 'NIGHT').length
+            return state.gameLog.filter((e: GameEvent) => e.phase === GamePhase.NIGHT).length
         },
         dayPhaseCount: (state: any) => {
-            return state.gameLog.filter((e: GameEvent) => e.phase === 'DAY').length
+            return state.gameLog.filter((e: GameEvent) => e.phase === GamePhase.DAY).length
         },
         totalActions: (state: any) => {
             return state.nightPhaseActions.length
         },
         isNightPhase: (state: any) => {
-            return state.phase === 'NIGHT'
+            return state.phase === GamePhase.NIGHT
         },
         totalRoleCount: (state: any) => {
             return Object.values(state.selectedRoles).reduce((sum, count) => sum + count, 0)
@@ -91,8 +91,8 @@ export const useGameStore = defineStore('game', {
             return Math.ceil(totalMinutes / state.round)
         },
         hasStats: (state: any) => {
-            const nightCount = state.gameLog.filter((e: GameEvent) => e.phase === 'NIGHT').length
-            const dayCount = state.gameLog.filter((e: GameEvent) => e.phase === 'DAY').length
+            const nightCount = state.gameLog.filter((e: GameEvent) => e.phase === GamePhase.NIGHT).length
+            const dayCount = state.gameLog.filter((e: GameEvent) => e.phase === GamePhase.DAY).length
             const actionsCount = state.nightPhaseActions.length
             return nightCount > 0 || dayCount > 0 || actionsCount > 0
         },
@@ -119,7 +119,7 @@ export const useGameStore = defineStore('game', {
     },
     actions: {
         resetGame() {
-            this.phase = 'SETUP'
+            this.phase = GamePhase.SETUP
             this.round = 1
             this.status = 'SETUP'
             this.players = []
@@ -164,16 +164,16 @@ export const useGameStore = defineStore('game', {
             })
         },
         nextPhase() {
-            if (this.phase === 'NIGHT') {
-                this.phase = 'DAY'
-            } else if (this.phase === 'DAY') {
-                this.phase = 'NIGHT'
+            if (this.phase === GamePhase.NIGHT) {
+                this.phase = GamePhase.DAY
+            } else if (this.phase === GamePhase.DAY) {
+                this.phase = GamePhase.NIGHT
                 this.round++
             }
         },
         endGame() {
             this.status = 'FINISHED'
-            this.phase = 'END'
+            this.phase = GamePhase.END
         },
         acknowledgeRole(playerId: string, roleId: string) {
             this.roleAcknowledgments[playerId] = roleId

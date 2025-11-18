@@ -53,15 +53,16 @@ import { computed } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { useI18n } from 'vue-i18n'
+import { GamePhase } from '~/types/game'
 
 const { t } = useI18n()
 const gameStore = useGameStore()
 const rolesStore = useRolesStore()
 
 const currentPhaseName = computed(() => {
-    if (gameStore.phase === 'NIGHT') {
+    if (gameStore.phase === GamePhase.NIGHT) {
         return t('game.night')
-    } else if (gameStore.phase === 'DAY') {
+    } else if (gameStore.phase === GamePhase.DAY) {
         return t('game.day')
     }
     return t('game.phase')

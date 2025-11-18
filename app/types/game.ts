@@ -1,4 +1,10 @@
-export type GamePhase = 'NIGHT' | 'DAY' | 'SETUP' | 'END'
+export enum GamePhase {
+  NIGHT = 'NIGHT',
+  DAY = 'DAY',
+  SETUP = 'SETUP',
+  END = 'END'
+}
+
 export type GameStatus = 'SETUP' | 'PLAYING' | 'FINISHED'
 export type Faction = 'VILLAGER' | 'WEREWOLF' | 'CULT' | 'VAMPIRE' | 'SPECIAL'
 

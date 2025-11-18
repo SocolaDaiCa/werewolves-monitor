@@ -66,21 +66,22 @@
 import {computed} from 'vue'
 import {useGameStore} from '~/stores/game'
 import type {GameEvent} from '~/types/game'
+import {GamePhase} from '~/types/game'
 
 const gameStore = useGameStore()
 
 function eventColorClass(event: GameEvent): string {
-    if (event.phase === 'NIGHT') {
+    if (event.phase === GamePhase.NIGHT) {
         return 'bg-blue-50 border-blue-400'
     }
-    if (event.phase === 'DAY') {
+    if (event.phase === GamePhase.DAY) {
         return 'bg-yellow-50 border-yellow-400'
     }
     return 'bg-gray-50 border-gray-400'
 }
 
 function eventPhaseLabel(event: GameEvent): string {
-    const phaseLabel = event.phase === 'NIGHT' ? '🌙 Night' : '☀️ Day'
+    const phaseLabel = event.phase === GamePhase.NIGHT ? '🌙 Night' : '☀️ Day'
     return `${phaseLabel} ${event.round}`
 }
 </script>

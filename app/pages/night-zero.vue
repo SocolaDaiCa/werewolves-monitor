@@ -194,6 +194,7 @@ import { useRolesStore } from '~/stores/roles'
 import type { Role } from '~/types/role'
 import { usePlayersStore } from '~/stores/players'
 import RoleCallout from '~/components/RoleCallout.vue'
+import { GamePhase } from '~/types/game'
 
 const { locale } = useI18n()
 const router = useRouter()
@@ -281,7 +282,7 @@ async function startGame() {
 
     try {
         // Set game phase to first night
-        gameStore.setPhase('NIGHT')
+        gameStore.setPhase(GamePhase.NIGHT)
         gameStore.setStatus('PLAYING')
 
         // Navigate to game page
@@ -293,7 +294,7 @@ async function startGame() {
 
 async function forceStart() {
     try {
-        gameStore.setPhase('NIGHT')
+        gameStore.setPhase(GamePhase.NIGHT)
         gameStore.setStatus('PLAYING')
         await router.push('/game')
     } catch (error) {
