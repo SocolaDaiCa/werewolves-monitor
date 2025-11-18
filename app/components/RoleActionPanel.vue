@@ -130,6 +130,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RoleActionType } from '~/types/game'
+import { NightlyActivity, RoleFaction } from '~/types/role'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
@@ -160,8 +161,8 @@ const completedRoles = ref<number[]>([])
 const allRoles = computed(() => {
     return rolesStore.roles
         .filter(role => {
-            if (role.nightly === 'NEVER') return false
-            if (role.nightly === 'FIRST_NIGHT' && gameStore.round !== 1) return false
+            if (role.nightly === NightlyActivity.NEVER) return false
+            if (role.nightly === NightlyActivity.FIRST_NIGHT && gameStore.round !== 1) return false
             // Check if any player (alive or dead) has this role
             return Object.entries(gameStore.playerRoles).some(
                 ([, roleId]) => roleId === role.id
@@ -284,7 +285,7 @@ const formatActionLog = (
             if (!action.targetPlayerId) return ''
             const targetRole = gameStore.playerRoles[action.targetPlayerId]
             const targetRoleObj = rolesStore.getRoleById(targetRole || '')
-            const isWerewolf = targetRoleObj?.faction === 'WEREWOLF'
+            const isWerewolf = targetRoleObj?.faction === RoleFaction.WEREWOLF
             return `🔮 ${roleName} (${playerName}) kiểm tra ${targetName} là ${isWerewolf ? 'sói 🐺' : 'không phải sói 👤'}`
 
         case 'werewolf':

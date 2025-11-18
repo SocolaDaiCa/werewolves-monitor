@@ -128,6 +128,7 @@ import { computed, ref } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { usePlayersStore } from '~/stores/players'
 import { useRolesStore } from '~/stores/roles'
+import { RoleFaction } from '~/types/role'
 
 interface Props {
     isDisabled?: boolean
@@ -168,7 +169,7 @@ const selectPlayer = (playerId: string) => {
     if (selectedTarget.value) {
         const targetRole = gameStore.playerRoles[selectedTarget.value] || ''
         const targetRoleObj = rolesStore.getRoleById(targetRole)
-        const isWerewolf = targetRoleObj?.faction === 'WEREWOLF'
+        const isWerewolf = targetRoleObj?.faction === RoleFaction.WEREWOLF
 
         investigationResult.value = { isWerewolf }
     } else {

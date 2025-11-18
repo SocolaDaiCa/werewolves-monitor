@@ -1,6 +1,18 @@
-export type RoleFaction = 'VILLAGER' | 'WEREWOLF' | 'CULT' | 'VAMPIRE' | 'SPECIAL'
-export type NightlyActivity = 'ALWAYS' | 'FIRST_NIGHT' | 'NEVER'
-export type RoleActionType = 'SELECT_PLAYER' | 'DUAL_SELECT' | 'TEXT_INPUT' | 'ACKNOWLEDGE' | 'DUAL_OPTION' | 'NONE'
+export enum RoleFaction {
+  VILLAGER = 'VILLAGER',
+  WEREWOLF = 'WEREWOLF',
+  CULT = 'CULT',
+  VAMPIRE = 'VAMPIRE',
+  SPECIAL = 'SPECIAL'
+}
+
+export enum NightlyActivity {
+  ALWAYS = 'ALWAYS',
+  FIRST_NIGHT = 'FIRST_NIGHT',
+  NEVER = 'NEVER'
+}
+
+import type { RoleActionType } from '~/types/game'
 
 export interface Role {
   id: string
@@ -15,6 +27,9 @@ export interface Role {
   actionType?: RoleActionType
   icon?: string // URL to role icon
 }
+
+// Re-export RoleActionType for convenience
+export { RoleActionType } from '~/types/game'
 
 export interface RoleConfiguration {
   roleId: string

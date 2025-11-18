@@ -169,6 +169,7 @@ import { usePlayersStore } from '~/stores/players'
 import { useRolesStore } from '~/stores/roles'
 import { useRouter } from 'vue-router'
 import type { Faction } from '~/types/game'
+import { RoleFaction } from '~/types/role'
 
 interface PlayerResult {
   playerId: string
@@ -203,14 +204,14 @@ const playerResults = computed((): PlayerResult[] => {
     const isWinner =
       winConditions.value &&
       ((winConditions.value.winner === 'VILLAGERS' &&
-        role?.faction === 'VILLAGER') ||
-        (winConditions.value.winner === 'WEREWOLVES' && role?.faction === 'WEREWOLF'))
+        role?.faction === RoleFaction.VILLAGER) ||
+        (winConditions.value.winner === 'WEREWOLVES' && role?.faction === RoleFaction.WEREWOLF))
 
     return {
       playerId,
       playerName: player?.name || 'Unknown',
       roleId,
-      faction: role?.faction || 'VILLAGER',
+      faction: role?.faction || RoleFaction.VILLAGER,
       alive: isAlive,
       eliminatedBy: isAlive ? undefined : gameStore.getEliminationMethod(playerId),
       eliminatedRound: isAlive ? undefined : gameStore.getEliminationRound(playerId),
@@ -255,13 +256,13 @@ const winnerClass = computed(() => {
 
 function factionColorClass(faction: Faction): string {
   switch (faction) {
-    case 'VILLAGER':
+    case RoleFaction.VILLAGER:
       return 'bg-green-500'
-    case 'WEREWOLF':
+    case RoleFaction.WEREWOLF:
       return 'bg-red-500'
-    case 'CULT':
+    case RoleFaction.CULT:
       return 'bg-purple-600'
-    case 'VAMPIRE':
+    case RoleFaction.VAMPIRE:
       return 'bg-gray-700'
     default:
       return 'bg-gray-500'

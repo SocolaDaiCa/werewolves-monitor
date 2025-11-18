@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { Role } from '~/types/role'
+import { RoleFaction, NightlyActivity, RoleActionType } from '~/types/role'
 
 // All roles from Ultimate Werewolf with balance points and Vietnamese translations
 const defaultRoles: Role[] = [
@@ -10,9 +11,9 @@ const defaultRoles: Role[] = [
         nameVi: 'Dân Làng',
         description: 'An ordinary villager trying to find and eliminate the werewolves.',
         descriptionVi: 'Một dân thường bình thường cố gắng tìm và tiêu diệt các con sói.',
-        faction: 'VILLAGER',
+        faction: RoleFaction.VILLAGER,
         balancePoints: 1,
-        nightly: 'NEVER',
+        nightly: NightlyActivity.NEVER,
     },
     {
         id: 'seer',
@@ -20,11 +21,11 @@ const defaultRoles: Role[] = [
         nameVi: 'Tiên Tri',
         description: 'Each night, choose a player to learn if they are a werewolf or not.',
         descriptionVi: 'Mỗi đêm, chọn một người chơi để biết họ có phải sói hay không.',
-        faction: 'VILLAGER',
+        faction: RoleFaction.VILLAGER,
         balancePoints: 7,
-        nightly: 'ALWAYS',
+        nightly: NightlyActivity.ALWAYS,
         nightOrder: 14,
-        actionType: 'SELECT_PLAYER',
+        actionType: RoleActionType.SELECT_PLAYER,
     },
     {
         id: 'witch',
@@ -32,11 +33,11 @@ const defaultRoles: Role[] = [
         nameVi: 'Phù Thủy',
         description: 'Each night, choose to heal someone (save from death) or poison someone. One use of each potion per game.',
         descriptionVi: 'Mỗi đêm, chọn để cứu chữa ai đó (tránh tử) hoặc làm ai đó bị độc. Mỗi loại thuốc dùng một lần mỗi game.',
-        faction: 'VILLAGER',
+        faction: RoleFaction.VILLAGER,
         balancePoints: 4,
-        nightly: 'ALWAYS',
+        nightly: NightlyActivity.ALWAYS,
         nightOrder: 13,
-        actionType: 'DUAL_OPTION',
+        actionType: RoleActionType.DUAL_OPTION,
     },
     // {
     //   id: 'hunter',
@@ -246,10 +247,10 @@ const defaultRoles: Role[] = [
         nameVi: 'Sói',
         description: 'Each night, choose a player to eliminate.',
         descriptionVi: 'Mỗi đêm, chọn một người chơi để tiêu diệt.',
-        faction: 'WEREWOLF',
+        faction: RoleFaction.WEREWOLF,
         balancePoints: -6,
         nightOrder: 5,
-        nightly: 'ALWAYS',
+        nightly: NightlyActivity.ALWAYS,
     },
     // {
     //   id: 'sorceress',

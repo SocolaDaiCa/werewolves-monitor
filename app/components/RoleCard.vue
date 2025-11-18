@@ -69,6 +69,7 @@ import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRolesStore } from '~/stores/roles'
 import type { Role } from '~/types/role'
+import { RoleFaction } from '~/types/role'
 
 interface Props {
     role: Role
@@ -159,22 +160,22 @@ const decreaseQuantity = () => {
 
 const getFactionLabel = () => {
     const factionMap: { [key: string]: string } = {
-        'VILLAGER': '🏘️ Village',
-        'WEREWOLF': '🐺 Werewolf',
-        'CULT': '🔮 Cult',
-        'VAMPIRE': '🧛 Vampire',
-        'SPECIAL': '✨ Special',
+        [RoleFaction.VILLAGER]: '🏘️ Village',
+        [RoleFaction.WEREWOLF]: '🐺 Werewolf',
+        [RoleFaction.CULT]: '🔮 Cult',
+        [RoleFaction.VAMPIRE]: '🧛 Vampire',
+        [RoleFaction.SPECIAL]: '✨ Special',
     }
     return factionMap[props.role.faction] || props.role.faction
 }
 
 const getFactionColor = () => {
     const colorMap: { [key: string]: string } = {
-        'VILLAGER': 'blue',
-        'WEREWOLF': 'red',
-        'CULT': 'purple',
-        'VAMPIRE': 'slate',
-        'SPECIAL': 'amber',
+        [RoleFaction.VILLAGER]: 'blue',
+        [RoleFaction.WEREWOLF]: 'red',
+        [RoleFaction.CULT]: 'purple',
+        [RoleFaction.VAMPIRE]: 'slate',
+        [RoleFaction.SPECIAL]: 'amber',
     }
     return colorMap[props.role.faction] || 'gray'
 }

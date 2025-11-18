@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import type { RoleAction } from '~/types/game'
 import { EliminationMethod } from '~/types/game'
+import { RoleFaction } from '~/types/role'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
@@ -145,7 +146,7 @@ export const useNightPhaseActions = () => {
     if (action.targetPlayerId && gameStore.alivePlayers.includes(action.targetPlayerId)) {
       const targetRole = gameStore.playerRoles[action.targetPlayerId]
       const targetRoleObj = rolesStore.getRoleById(targetRole)
-      const isWerewolf = targetRoleObj?.faction === 'WEREWOLF'
+      const isWerewolf = targetRoleObj?.faction === RoleFaction.WEREWOLF
 
       investigationResults.value.set(action.playerId, isWerewolf)
       results.value.push({

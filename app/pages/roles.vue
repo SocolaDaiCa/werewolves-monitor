@@ -156,14 +156,15 @@ import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useRolesStore } from '~/stores/roles'
 import type { Role } from '~/types/role'
+import { RoleFaction } from '~/types/role'
 import RoleCard from '~/components/RoleCard.vue'
 
 const { t } = useI18n()
 const rolesStore = useRolesStore()
 
 // Reactive state
-const activeFaction = ref<Role['faction']>('VILLAGER')
-const factions: Role['faction'][] = ['VILLAGER', 'WEREWOLF', 'SPECIAL']
+const activeFaction = ref<Role['faction']>(RoleFaction.VILLAGER)
+const factions: Role['faction'][] = [RoleFaction.VILLAGER, RoleFaction.WEREWOLF, RoleFaction.SPECIAL]
 
 // Computed properties
 const balancePoints = computed(() => rolesStore.totalBalancePoints)
@@ -197,11 +198,11 @@ const getFactionBalancePoints = (faction: Role['faction']) => {
 // Methods
 const getFactionLabel = (faction: Role['faction']) => {
     const labels: Record<Role['faction'], string> = {
-        'VILLAGER': '🏘️ ' + t('roles.villagers'),
-        'WEREWOLF': '🐺 ' + t('roles.werewolves'),
-        'CULT': '🔮 ' + t('roles.cult'),
-        'VAMPIRE': '🧛 ' + t('roles.vampire'),
-        'SPECIAL': '✨ ' + t('roles.special'),
+        [RoleFaction.VILLAGER]: '🏘️ ' + t('roles.villagers'),
+        [RoleFaction.WEREWOLF]: '🐺 ' + t('roles.werewolves'),
+        [RoleFaction.CULT]: '🔮 ' + t('roles.cult'),
+        [RoleFaction.VAMPIRE]: '🧛 ' + t('roles.vampire'),
+        [RoleFaction.SPECIAL]: '✨ ' + t('roles.special'),
     }
     return labels[faction] || faction
 }

@@ -114,6 +114,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { RoleActionType } from '~/types/game'
+import { RoleFaction } from '~/types/role'
 import { usePlayersStore } from '~/stores/players'
 import { useRolesStore } from '~/stores/roles'
 import { useGameStore } from '~/stores/game'
@@ -161,14 +162,14 @@ const roleColor = computed(() => {
     const currentRole = role.value
     if (!currentRole) return 'bg-gray-500'
     switch (currentRole.faction) {
-        case 'WEREWOLF':
+        case RoleFaction.WEREWOLF:
             return 'bg-red-600'
-        case 'CULT':
+        case RoleFaction.CULT:
             return 'bg-orange-600'
-        case 'VAMPIRE':
+        case RoleFaction.VAMPIRE:
             return 'bg-purple-600'
-        case 'VILLAGER':
-        case 'SPECIAL':
+        case RoleFaction.VILLAGER:
+        case RoleFaction.SPECIAL:
         default:
             return 'bg-blue-600'
     }
