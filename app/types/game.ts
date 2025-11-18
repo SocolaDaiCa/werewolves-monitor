@@ -5,7 +5,11 @@ export enum GamePhase {
   END = 'END'
 }
 
-export type GameStatus = 'SETUP' | 'PLAYING' | 'FINISHED'
+export enum GameStatus {
+  SETUP = 'SETUP',
+  PLAYING = 'PLAYING',
+  FINISHED = 'FINISHED'
+}
 export type Faction = 'VILLAGER' | 'WEREWOLF' | 'CULT' | 'VAMPIRE' | 'SPECIAL'
 
 export interface GameEvent {

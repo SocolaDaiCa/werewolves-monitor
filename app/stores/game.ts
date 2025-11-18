@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
-import type { RoleAction, NightPhaseState, DayPhaseVote, GameStatus, GameState, GameEvent, PlayerElimination } from '~/types/game'
-import { EliminationMethod, GamePhase } from '~/types/game'
+import type { RoleAction, NightPhaseState, DayPhaseVote, GameState, GameEvent, PlayerElimination } from '~/types/game'
+import { EliminationMethod, GamePhase, GameStatus } from '~/types/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 
@@ -12,7 +12,7 @@ export const useGameStore = defineStore('game', {
     state: () => ({
         phase: GamePhase.SETUP,
         round: 1,
-        status: 'SETUP' as GameStatus,
+        status: GameStatus.SETUP,
         players: [] as string[],
         selectedRoles: {} as { [roleId: string]: number },
         gameLog: [] as GameEvent[],
@@ -121,7 +121,7 @@ export const useGameStore = defineStore('game', {
         resetGame() {
             this.phase = GamePhase.SETUP
             this.round = 1
-            this.status = 'SETUP'
+            this.status = GameStatus.SETUP
             this.players = []
             this.selectedRoles = {}
             this.gameLog = []
@@ -172,7 +172,7 @@ export const useGameStore = defineStore('game', {
             }
         },
         endGame() {
-            this.status = 'FINISHED'
+            this.status = GameStatus.FINISHED
             this.phase = GamePhase.END
         },
         acknowledgeRole(playerId: string, roleId: string) {
