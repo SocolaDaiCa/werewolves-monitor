@@ -2,9 +2,9 @@
     <div class="bg-white rounded-xl p-6 shadow-md">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ $t('gameEnd.gameLog') }}</h2>
 
-        <div v-if="gameEvents.length > 0" class="space-y-3 max-h-96 overflow-y-auto">
+        <div v-if="gameStore.gameEvents.length > 0" class="space-y-3 max-h-96 overflow-y-auto">
             <div
-                v-for="(event, index) in gameEvents"
+                v-for="(event, index) in gameStore.gameEvents"
                 :key="index"
                 :class="[
           'p-4 rounded-lg border-l-4 transition-all',
@@ -30,7 +30,7 @@
         </div>
 
         <!-- Additional Stats -->
-        <div v-if="hasStats" class="mt-6 pt-6 border-t border-gray-200">
+        <div v-if="gameStore.hasStats" class="mt-6 pt-6 border-t border-gray-200">
             <h3 class="text-lg font-bold text-gray-800 mb-4">{{ $t('gameEnd.statistics') }}</h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="text-center">
@@ -43,19 +43,19 @@
                     <p class="text-xs text-gray-600 uppercase font-semibold mb-1">
                         {{ $t('gameEnd.dayPhases') }}
                     </p>
-                    <p class="text-2xl font-bold text-yellow-600">{{ dayPhaseCount }}</p>
+                    <p class="text-2xl font-bold text-yellow-600">{{ gameStore.dayPhaseCount }}</p>
                 </div>
                 <div class="text-center">
                     <p class="text-xs text-gray-600 uppercase font-semibold mb-1">
                         {{ $t('gameEnd.totalActions') }}
                     </p>
-                    <p class="text-2xl font-bold text-purple-600">{{ totalActions }}</p>
+                    <p class="text-2xl font-bold text-purple-600">{{ gameStore.totalActions }}</p>
                 </div>
                 <div class="text-center">
                     <p class="text-xs text-gray-600 uppercase font-semibold mb-1">
                         {{ $t('gameEnd.avgRoundTime') }}
                     </p>
-                    <p class="text-2xl font-bold text-green-600">{{ avgRoundTime }}m</p>
+                    <p class="text-2xl font-bold text-green-600">{{ gameStore.avgRoundTime }}m</p>
                 </div>
             </div>
         </div>
@@ -68,16 +68,6 @@ import {useGameStore} from '~/stores/game'
 import type {GameEvent} from '~/types/game'
 
 const gameStore = useGameStore()
-
-const gameEvents = computed(() => gameStore.gameEvents)
-
-const nightPhaseCount = computed(() => gameStore.nightPhaseCount)
-const dayPhaseCount = computed(() => gameStore.dayPhaseCount)
-const totalActions = computed(() => gameStore.totalActions)
-
-const avgRoundTime = computed(() => gameStore.avgRoundTime)
-
-const hasStats = computed(() => gameStore.hasStats)
 
 function eventColorClass(event: GameEvent): string {
     if (event.phase === 'NIGHT') {

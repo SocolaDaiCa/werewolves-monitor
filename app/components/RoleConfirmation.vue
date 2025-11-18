@@ -4,7 +4,7 @@
         <div class="space-y-2">
             <h2 class="text-2xl font-bold text-gray-800">{{ $t('gameSetup.rolesConfigured') }}</h2>
             <p class="text-sm text-gray-600">
-                {{ totalRoles }} {{ $t('roles.roles') }} for {{ playerSelectedCount }}
+                {{ rolesStore.totalRoleCount }} {{ $t('roles.roles') }} for {{ playersStore.playerSelectedCount }}
                 {{ $t('gameSetup.playersSelected').toLowerCase() }}
             </p>
         </div>
@@ -39,7 +39,7 @@
 
         <!-- Role Summary -->
         <div
-            v-if="Object.keys(selectedRolesData).length > 0"
+            v-if="Object.keys(rolesStore.selectedRoles).length > 0"
             class="bg-white rounded-xl border border-gray-200 overflow-hidden"
         >
             <div class="bg-gray-50 px-4 py-3 border-b font-semibold text-gray-700">
@@ -47,27 +47,27 @@
             </div>
             <div class="divide-y">
                 <div
-                    v-for="(count, roleId) in selectedRolesData"
+                    v-for="(count, roleId) in rolesStore.selectedRoles"
                     :key="roleId"
                     class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition"
                 >
                     <div class="flex-1">
-                        <p class="font-semibold text-gray-800">{{ getRoleName(roleId) }}</p>
-                        <p class="text-xs text-gray-600">{{ getRoleDescription(roleId) }}</p>
+                        <p class="font-semibold text-gray-800">{{ getRoleName(''+roleId) }}</p>
+                        <p class="text-xs text-gray-600">{{ getRoleDescription(''+roleId) }}</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <span class="text-sm font-semibold text-gray-600">×{{ count }}</span>
                         <span
                             :class="[
                                 'px-3 py-1 rounded-full text-xs font-semibold',
-                                getRolePoints(roleId) > 0
+                                getRolePoints(''+roleId) > 0
                                     ? 'bg-green-100 text-green-700'
-                                    : getRolePoints(roleId) < 0
+                                    : getRolePoints(''+roleId) < 0
                                         ? 'bg-red-100 text-red-700'
                                         : 'bg-gray-100 text-gray-700'
                             ]"
                         >
-                            {{ getRolePoints(roleId) * count > 0 ? '+' : '' }}{{ getRolePoints(roleId) * count }}
+                            {{ getRolePoints(''+roleId) * count > 0 ? '+' : '' }}{{ getRolePoints(''+roleId) * count }}
                         </span>
                     </div>
                 </div>
@@ -84,14 +84,14 @@
 
         <!-- Balance Summary -->
         <div
-            v-if="Object.keys(selectedRolesData).length > 0"
+            v-if="Object.keys(rolesStore.selectedRoles).length > 0"
             :class="[
                 'rounded-xl p-4 border-2',
-                balanceStatus === 'perfect'
+                rolesStore.balanceStatus === 'perfect'
                     ? 'bg-green-50 border-green-300'
-                    : balanceStatus === 'light-green'
+                    : rolesStore.balanceStatus === 'light-green'
                         ? 'bg-blue-50 border-blue-300'
-                        : balanceStatus === 'light-red'
+                        : rolesStore.balanceStatus === 'light-red'
                     ? 'bg-orange-50 border-orange-300'
                     : 'bg-red-50 border-red-300'
             ]"
@@ -101,11 +101,11 @@
                     <p
                         :class="[
                             'font-semibold',
-                            balanceStatus === 'perfect'
+                            rolesStore.balanceStatus === 'perfect'
                                 ? 'text-green-800'
-                                : balanceStatus === 'light-green'
+                                : rolesStore.balanceStatus === 'light-green'
                                     ? 'text-blue-800'
-                                    : balanceStatus === 'light-red'
+                                    : rolesStore.balanceStatus === 'light-red'
                                     ? 'text-orange-800'
                                 : 'text-red-800'
                         ]"
@@ -116,16 +116,16 @@
                 <span
                     :class="[
                         'px-4 py-2 rounded-lg font-bold text-lg',
-                        balanceStatus === 'perfect'
+                        rolesStore.balanceStatus === 'perfect'
                             ? 'bg-green-200 text-green-900'
-                            : balanceStatus === 'light-green'
+                            : rolesStore.balanceStatus === 'light-green'
                                 ? 'bg-blue-200 text-blue-900'
-                                : balanceStatus === 'light-red'
+                                : rolesStore.balanceStatus === 'light-red'
                                     ? 'bg-orange-200 text-orange-900'
                                     : 'bg-red-200 text-red-900'
                     ]"
                 >
-                    {{ totalBalancePoints > 0 ? '+' : '' }}{{ totalBalancePoints }}
+                    {{ rolesStore.totalBalancePoints > 0 ? '+' : '' }}{{ rolesStore.totalBalancePoints }}
                 </span>
             </div>
         </div>
@@ -150,39 +150,27 @@ import { usePlayersStore } from '~/stores/players'
 
 const { t } = useI18n()
 const rolesStore = useRolesStore()
-const gameStore = useGameStore()
 const playersStore = usePlayersStore()
 
-// Computed properties
-const selectedRolesData = computed(() => rolesStore.selectedRoles)
-
-const totalRoles = computed(() => rolesStore.totalRoleCount)
-
-const playerSelectedCount = computed(() => playersStore.playerSelectedCount)
-
-const totalBalancePoints = computed(() => rolesStore.totalBalancePoints)
-
-const balanceStatus = computed(() => rolesStore.balanceStatus)
-
 const balanceLabel = computed(() => {
-    const points = totalBalancePoints.value
+    const points = rolesStore.totalBalancePoints
     if (points === 0) return t('roles.balancePerfect') || 'Perfect Balance'
     if (points > 0 && points <= 5) return t('roles.balanceLightGreen') || 'Slightly Favors Village'
     if (points < 0 && points >= -5) return t('roles.balanceLightRed') || 'Slightly Favors Werewolves'
     return t('roles.balanceRed') || 'Heavily Unbalanced'
 })
 
-const isValid = computed(() => playerSelectedCount.value === totalRoles.value && totalRoles.value > 0)
+const isValid = computed(() => playersStore.playerSelectedCount === rolesStore.totalRoleCount && rolesStore.totalRoleCount > 0)
 
 const mismatchMessage = computed(() => {
-    if (totalRoles.value === 0) return t('gameSetup.validation.noRolesSelected') || 'Please select at least 1 role'
-    if (playerSelectedCount.value === 0) return t('gameSetup.validation.noPlayersSelected') || 'Please select at least 2 players'
+    if (rolesStore.totalRoleCount === 0) return t('gameSetup.validation.noRolesSelected') || 'Please select at least 1 role'
+    if (playersStore.playerSelectedCount === 0) return t('gameSetup.validation.noPlayersSelected') || 'Please select at least 2 players'
 
-    const difference = Math.abs(playerSelectedCount.value - totalRoles.value)
-    if (playerSelectedCount.value > totalRoles.value) {
-        return `You have ${playerSelectedCount.value} players but only ${totalRoles.value} roles. Need ${difference} more role${difference > 1 ? 's' : ''}.`
+    const difference = Math.abs(playersStore.playerSelectedCount - rolesStore.totalRoleCount)
+    if (playersStore.playerSelectedCount > rolesStore.totalRoleCount) {
+        return `You have ${playersStore.playerSelectedCount} players but only ${rolesStore.totalRoleCount} roles. Need ${difference} more role${difference > 1 ? 's' : ''}.`
     } else {
-        return `You have ${playerSelectedCount.value} players but ${totalRoles.value} roles. Too many roles by ${difference}.`
+        return `You have ${playersStore.playerSelectedCount} players but ${rolesStore.totalRoleCount} roles. Too many roles by ${difference}.`
     }
 })
 
