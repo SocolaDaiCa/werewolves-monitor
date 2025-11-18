@@ -1,18 +1,42 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import type { RoleAction, NightPhaseState, DayPhaseVote, GameState, GameEvent, PlayerElimination } from '~/types/game'
-import { EliminationMethod, Faction, GamePhase, GameStatus } from '~/types/game'
-import { useRolesStore } from '~/stores/roles'
-import { usePlayersStore } from '~/stores/players'
+import {defineStore} from 'pinia'
+import type {DayPhaseVote, GameEvent, GameState, PlayerElimination, RoleAction} from '~/types/game'
+import {EliminationMethod, Faction, GamePhase, GameStatus} from '~/types/game'
+import {useRolesStore} from '~/stores/roles'
+import {usePlayersStore} from '~/stores/players'
 
 // Store instances
 // const rolesStore = useRolesStore()
+
+interface DayOrNightAction {
+    round: number
+    phase: GamePhase
+    villagerVoteKillForPlayerId?: string
+    werewolfKillToPlayerId?: string
+    // ----
+    witchHealToPlayerId?: string
+    witchPoisonToPlayerId?: string
+    // hunterKillToPlayerId?: string
+    // bodyguardProtectFromPlayerId?: string
+    // bodyguardProtectToPlayerId?: string
+    // seerInvestigatePlayerId?: string
+    // seerInvestigateResult?: boolean
+    // seerInvestigateToPlayerId?: string
+    // seerInvestigateResult?: boolean
+}
+
+interface DayAction extends DayOrNightAction {
+    index: number
+
+}
 
 export const useGameStore = defineStore('game', {
     state: () => ({
         phase: GamePhase.SETUP,
         round: 1,
         status: GameStatus.SETUP,
+        dayOrNightActions: [] as DayOrNightAction[],
+        currentDayOrNightAction: {} as DayOrNightAction,
+        // ---
         players: [] as string[],
         selectedRoles: {} as { [roleId: string]: number },
         gameLog: [] as GameEvent[],
@@ -47,9 +71,6 @@ export const useGameStore = defineStore('game', {
         },
         dayPhaseCount: (state: any) => {
             return state.gameLog.filter((e: GameEvent) => e.phase === GamePhase.DAY).length
-        },
-        totalActions: (state: any) => {
-            return state.nightPhaseActions.length
         },
         isNightPhase: (state: any) => {
             return state.phase === GamePhase.NIGHT
@@ -93,8 +114,7 @@ export const useGameStore = defineStore('game', {
         hasStats: (state: any) => {
             const nightCount = state.gameLog.filter((e: GameEvent) => e.phase === GamePhase.NIGHT).length
             const dayCount = state.gameLog.filter((e: GameEvent) => e.phase === GamePhase.DAY).length
-            const actionsCount = state.nightPhaseActions.length
-            return nightCount > 0 || dayCount > 0 || actionsCount > 0
+            return nightCount > 0 || dayCount > 0
         },
         gameEvents: (state: any) => {
             return state.gameLog
@@ -128,7 +148,6 @@ export const useGameStore = defineStore('game', {
             this.roleAcknowledgments = {}
             this.currentRoleRevealIndex = 0
             this.playerRoles = {}
-            this.nightPhaseActions = []
             this.currentNightRoleIndex = 0
             this.alivePlayers = []
             this.dayPhaseVotes = []
@@ -137,6 +156,8 @@ export const useGameStore = defineStore('game', {
             this.gameWinner = null
             this.witchHealUsed = false
             this.witchPoisonUsed = false
+            this.dayOrNightActions = []
+            this.currentDayOrNightAction = null
         },
         setPhase(newPhase: GamePhase) {
             this.phase = newPhase
@@ -165,8 +186,18 @@ export const useGameStore = defineStore('game', {
         },
         nextPhase() {
             if (this.phase === GamePhase.NIGHT) {
+                this.dayOrNightActions.push(this.currentDayOrNightAction as DayOrNightAction)
+                this.currentDayOrNightAction = {
+                    round: this.round,
+                    phase: GamePhase.DAY,
+                }
                 this.phase = GamePhase.DAY
             } else if (this.phase === GamePhase.DAY) {
+                this.dayOrNightActions.push(this.currentDayOrNightAction as DayOrNightAction)
+                this.currentDayOrNightAction = {
+                    round: this.round + 1,
+                    phase: GamePhase.NIGHT,
+                }
                 this.phase = GamePhase.NIGHT
                 this.round++
             }
@@ -189,11 +220,7 @@ export const useGameStore = defineStore('game', {
         },
         startNightPhase() {
             this.updateAlivePlayers()
-            this.nightPhaseActions = []
             this.currentNightRoleIndex = 0
-        },
-        addNightAction(action: RoleAction) {
-            this.nightPhaseActions.push(action)
         },
         setCurrentNightRoleIndex(index: number) {
             this.currentNightRoleIndex = index

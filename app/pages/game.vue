@@ -96,9 +96,7 @@
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useGameStore } from '~/stores/game'
-import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
-import { useNightPhaseActions } from '~/composables/useNightPhaseActions'
 import type { DayPhaseVote } from '~/types/game'
 import { GamePhase } from '~/types/game'
 import PhaseHeader from '~/components/PhaseHeader.vue'
@@ -107,9 +105,7 @@ import VotingInterface from '~/components/VotingInterface.vue'
 
 const router = useRouter()
 const gameStore = useGameStore()
-const rolesStore = useRolesStore()
 const playersStore = usePlayersStore()
-const { processNightActions } = useNightPhaseActions()
 
 const currentPhase = computed(() => gameStore.phase)
 const currentRound = computed(() => gameStore.round)
@@ -166,9 +162,6 @@ const startDayPhaseTimer = () => {
  * Complete night phase and move to day
  */
 const completeNightPhase = () => {
-    // Process all night actions
-    const results = processNightActions(gameStore.nightPhaseActions)
-
     // Update alive players list (remove eliminated players)
     gameStore.updateAlivePlayers()
 

@@ -47,12 +47,6 @@
                 </div>
                 <div class="text-center">
                     <p class="text-xs text-gray-600 uppercase font-semibold mb-1">
-                        {{ $t('gameEnd.totalActions') }}
-                    </p>
-                    <p class="text-2xl font-bold text-purple-600">{{ gameStore.totalActions }}</p>
-                </div>
-                <div class="text-center">
-                    <p class="text-xs text-gray-600 uppercase font-semibold mb-1">
                         {{ $t('gameEnd.avgRoundTime') }}
                     </p>
                     <p class="text-2xl font-bold text-green-600">{{ gameStore.avgRoundTime }}m</p>

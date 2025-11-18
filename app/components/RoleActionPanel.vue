@@ -361,24 +361,16 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
     console.log('action', action);
 
     if (currentRole.value && currentRolePlayer.value) {
-        gameStore.addNightAction({
-            roleId: currentRole.value.id,
-            playerId: currentRolePlayer.value.id,
-            actionType: getRoleActionType(currentRole.value.id),
-            targetPlayerId: action.targetPlayerId,
-            secondaryTargetPlayerId: action.secondaryTargetPlayerId,
-            timestamp: Date.now(),
-        })
-
         // Log the action to game log
-        const logMessage = formatActionLog(currentRole.value.id, currentRolePlayer.value.id, action)
-        if (logMessage) {
-            gameStore.addGameEvent(logMessage)
+        if (action.targetPlayerId) {
+            if (currentRole.value.faction == RoleFaction.WEREWOLF) {
+                gameStore.currentDayOrNightAction.werewolfKillToPlayerId = action.targetPlayerId
+            }
         }
-
         // Mark this role as completed
         if (!completedRoles.value.includes(gameStore.currentNightRoleIndex)) {
             completedRoles.value.push(gameStore.currentNightRoleIndex)
+            completedRoles.value = [...(new Set(completedRoles.value))]
         }
 
         // Move to next role
@@ -390,16 +382,10 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
 
 const handleActionSkip = () => {
     if (currentRole.value) {
-        gameStore.addNightAction({
-            roleId: currentRole.value.id,
-            playerId: currentRolePlayer.value?.id || '',
-            actionType: RoleActionType.SKIP,
-            timestamp: Date.now(),
-        })
-
         // Mark as completed
         if (!completedRoles.value.includes(gameStore.currentNightRoleIndex)) {
             completedRoles.value.push(gameStore.currentNightRoleIndex)
+            completedRoles.value = [...(new Set(completedRoles.value))]
         }
 
         // Move to next

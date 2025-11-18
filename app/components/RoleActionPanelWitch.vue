@@ -227,13 +227,8 @@ const selectedPoisonTarget = ref<string>('')
 
 // Get the player killed by werewolves (determined from kill targets)
 const killedPlayer = computed(() => {
-    // Look for werewolf kill targets in the night actions
-    const killAction = gameStore.nightPhaseActions.find(action =>
-        action.roleId.toLowerCase().includes('werewolf') && action.targetPlayerId
-    )
-
-    if (killAction && killAction.targetPlayerId) {
-        return playersStore.getPlayerById(killAction.targetPlayerId)
+    if (gameStore.currentDayOrNightAction?.werewolfKillToPlayerId) {
+        return playersStore.getPlayerById(gameStore.currentDayOrNightAction?.werewolfKillToPlayerId)
     }
 
     return null
