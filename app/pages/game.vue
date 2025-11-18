@@ -1,95 +1,112 @@
 <template>
-    <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
-        <!-- Phase Header -->
-        <PhaseHeader />
+    <ion-page>
+        <ion-header>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-back-button default-href="/"></ion-back-button>
+                </ion-buttons>
+                <ion-title>{{ $t('gameSetup.title') }}</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button :disabled="!isValid" @click="startGame">
+                        {{ $t('gameSetup.startGameBtn') }}
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content>
+            <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
+                <!-- Phase Header -->
+                <PhaseHeader />
 
-        <!-- Main Content -->
-        <div class="flex-1 px-6 py-8">
-            <div class="max-w-6xl mx-auto">
-                <!-- Night Phase -->
-                <div v-if="currentPhase === GamePhase.NIGHT">
-                    <RoleActionPanel
-                        :readonly="false"
-                        @phase-complete="completeNightPhase"
-                    />
-                </div>
-
-                <!-- Day Phase -->
-                <div v-else-if="currentPhase === GamePhase.DAY" class="space-y-6">
-                    <!-- Day Discussion Timer -->
-                    <div class="bg-white rounded-2xl shadow-lg p-8">
-                        <h2 class="text-3xl font-bold text-center mb-6 text-amber-700">☀️ {{ $t('game.day') }} {{ currentRound }}</h2>
-
-                        <!-- Timer -->
-                        <div class="text-center mb-8">
-                            <div class="text-6xl font-bold text-amber-600 font-mono mb-2">{{ formatTime(discussionTimeRemaining) }}</div>
-                            <p class="text-gray-600">{{ discussionTimeRemaining > 0 ? 'Discussion Time' : 'Time to Vote' }}</p>
-                        </div>
-
-                        <!-- Timer Bar -->
-                        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                            <div
-                                :style="{ width: timerProgress + '%' }"
-                                class="bg-gradient-to-r from-amber-400 to-amber-600 h-full transition-all duration-1000"
+                <!-- Main Content -->
+                <div class="flex-1 px-6 py-8">
+                    <div class="max-w-6xl mx-auto">
+                        <!-- Night Phase -->
+                        <div v-if="currentPhase === GamePhase.NIGHT">
+                            <RoleActionPanel
+                                :readonly="false"
+                                @phase-complete="completeNightPhase"
                             />
                         </div>
-                    </div>
 
-                    <!-- Voting Interface -->
-                    <VotingInterface
-                        :voting-phase="discussionTimeRemaining <= 0"
-                        @vote="handleVote"
-                        @complete="completeDayPhase"
-                    />
+                        <!-- Day Phase -->
+                        <div v-else-if="currentPhase === GamePhase.DAY" class="space-y-6">
+                            <!-- Day Discussion Timer -->
+                            <div class="bg-white rounded-2xl shadow-lg p-8">
+                                <h2 class="text-3xl font-bold text-center mb-6 text-amber-700">☀️ {{ $t('game.day') }} {{ gameStore.round }}</h2>
+
+                                <!-- Timer -->
+                                <div class="text-center mb-8">
+                                    <div class="text-6xl font-bold text-amber-600 font-mono mb-2">{{ formatTime(discussionTimeRemaining) }}</div>
+                                    <p class="text-gray-600">{{ discussionTimeRemaining > 0 ? 'Discussion Time' : 'Time to Vote' }}</p>
+                                </div>
+
+                                <!-- Timer Bar -->
+                                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                    <div
+                                        :style="{ width: timerProgress + '%' }"
+                                        class="bg-gradient-to-r from-amber-400 to-amber-600 h-full transition-all duration-1000"
+                                    />
+                                </div>
+                            </div>
+
+                            <!-- Voting Interface -->
+                            <VotingInterface
+                                :voting-phase="discussionTimeRemaining <= 0"
+                                @vote="handleVote"
+                                @complete="completeDayPhase"
+                            />
+                        </div>
+
+                        <!-- Night Results Display -->
+                        <div v-if="showNightResults" class="bg-white rounded-2xl shadow-lg p-8 border-2 border-red-300">
+                            <h3 class="text-2xl font-bold mb-6 text-red-700">🌙 {{ $t('nightPhase.nightResults') }}</h3>
+                            <div class="space-y-3">
+                                <div v-if="nightResults.length === 0" class="text-gray-600 text-center py-4">
+                                    {{ $t('nightPhase.noElimination') }}
+                                </div>
+                                <div v-for="result in nightResults" :key="result.playerId" class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <p class="font-bold text-red-900">{{ $t('nightPhase.playerDied', { player: getPlayerName(result.playerId) }) }}</p>
+                                    <p class="text-sm text-red-700 mt-2">Killed at {{ formatTime(Date.now()) }} on Night {{ currentRound }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Night Results Display -->
-                <div v-if="showNightResults" class="bg-white rounded-2xl shadow-lg p-8 border-2 border-red-300">
-                    <h3 class="text-2xl font-bold mb-6 text-red-700">🌙 {{ $t('nightPhase.nightResults') }}</h3>
-                    <div class="space-y-3">
-                        <div v-if="nightResults.length === 0" class="text-gray-600 text-center py-4">
-                            {{ $t('nightPhase.noElimination') }}
-                        </div>
-                        <div v-for="result in nightResults" :key="result.playerId" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                            <p class="font-bold text-red-900">{{ $t('nightPhase.playerDied', { player: getPlayerName(result.playerId) }) }}</p>
-                            <p class="text-sm text-red-700 mt-2">Killed at {{ formatTime(Date.now()) }} on Night {{ currentRound }}</p>
-                        </div>
+                <!-- Fixed Bottom Buttons -->
+                <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 px-6 py-4 shadow-2xl">
+                    <div class="max-w-6xl mx-auto flex gap-4">
+                        <button
+                            @click="goToMenu"
+                            class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"
+                        >
+                            {{ $t('common.back') }}
+                        </button>
+
+                        <button
+                            v-if="currentPhase === GamePhase.NIGHT"
+                            @click="skipToDay"
+                            class="flex-1 py-3 px-4 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors"
+                        >
+                            Skip Night
+                        </button>
+
+                        <button
+                            v-if="currentPhase === GamePhase.DAY && discussionTimeRemaining > 0"
+                            @click="skipDiscussion"
+                            class="flex-1 py-3 px-4 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors"
+                        >
+                            Skip Discussion
+                        </button>
                     </div>
                 </div>
+
+                <!-- Safe area padding for fixed buttons -->
+                <div class="h-20" />
             </div>
-        </div>
-
-        <!-- Fixed Bottom Buttons -->
-        <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 px-6 py-4 shadow-2xl">
-            <div class="max-w-6xl mx-auto flex gap-4">
-                <button
-                    @click="goToMenu"
-                    class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"
-                >
-                    {{ $t('common.back') }}
-                </button>
-
-                <button
-                    v-if="currentPhase === GamePhase.NIGHT"
-                    @click="skipToDay"
-                    class="flex-1 py-3 px-4 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors"
-                >
-                    Skip Night
-                </button>
-
-                <button
-                    v-if="currentPhase === GamePhase.DAY && discussionTimeRemaining > 0"
-                    @click="skipDiscussion"
-                    class="flex-1 py-3 px-4 bg-amber-500 text-white rounded-lg font-medium hover:bg-amber-600 transition-colors"
-                >
-                    Skip Discussion
-                </button>
-            </div>
-        </div>
-
-        <!-- Safe area padding for fixed buttons -->
-        <div class="h-20" />
-    </div>
+        </ion-content>
+    </ion-page>
 </template>
 
 <script setup lang="ts">

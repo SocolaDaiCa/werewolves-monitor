@@ -3,11 +3,6 @@
         <!-- Current Role Display -->
         <div class="bg-gradient-to-br from-purple-500 to-purple-700 text-white rounded-3xl p-8 md:p-12 mb-8 shadow-2xl">
             <div class="text-center">
-                <!-- Progress -->
-                <div class="text-purple-100 mb-4 font-semibold">
-                    {{ $t('nightZero.progressLabel', { current: currentIndex + 1, total: totalRoles }) }}
-                </div>
-
                 <!-- Role Name (Large) -->
                 <h2 class="text-5xl md:text-6xl font-bold mb-6 tracking-tight">
                     {{ currentRoleName }}
@@ -17,27 +12,14 @@
                 <p class="text-xl md:text-2xl text-purple-100 mb-8 leading-relaxed">
                     {{ currentRoleDescription }}
                 </p>
-
-                <!-- Expected vs Acknowledged Count -->
-                <div class="grid grid-cols-2 gap-4 max-w-md mx-auto">
-                    <div class="bg-purple-600 bg-opacity-50 rounded-xl p-4">
-                        <div class="text-sm text-purple-100 font-semibold">{{ $t('nightZero.expectedCount') }}</div>
-                        <div class="text-4xl font-bold mt-2">{{ expectedCount }}</div>
-                    </div>
-                    <div class="bg-purple-600 bg-opacity-50 rounded-xl p-4">
-                        <div class="text-sm text-purple-100 font-semibold">{{ $t('nightZero.acknowledgedCount') }}</div>
-                        <div class="text-4xl font-bold mt-2">{{ acknowledgedCount }}</div>
-                    </div>
-                </div>
-
                 <!-- Status Indicator -->
                 <div
                     :class="[
-            'mt-6 py-3 px-4 rounded-xl font-semibold text-lg transition',
-            acknowledgedCount === expectedCount
-              ? 'bg-green-400 bg-opacity-30 text-green-100'
-              : 'bg-orange-400 bg-opacity-30 text-orange-100'
-          ]"
+                        'mt-6 py-3 px-4 rounded-xl font-semibold text-lg transition',
+                        acknowledgedCount === expectedCount
+                            ? 'bg-green-400 bg-opacity-30 text-green-100'
+                            : 'bg-orange-400 bg-opacity-30 text-orange-100'
+                    ]"
                 >
                     {{ acknowledgedCount === expectedCount ? '✅ ' : '⏳ ' }}
                     {{ acknowledgedCount }}/{{ expectedCount }} {{ $t('nightZero.playerAcknowledgments') }}

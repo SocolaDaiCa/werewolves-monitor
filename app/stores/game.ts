@@ -157,7 +157,7 @@ export const useGameStore = defineStore('game', {
             this.witchHealUsed = false
             this.witchPoisonUsed = false
             this.dayOrNightActions = []
-            this.currentDayOrNightAction = null
+            this.currentDayOrNightAction = {} as DayOrNightAction
         },
         setPhase(newPhase: GamePhase) {
             this.phase = newPhase

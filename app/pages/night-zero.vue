@@ -11,7 +11,6 @@
         <ion-content>
             <div class="min-h-screen pb-24">
                 <!-- Header -->
-                <p>{{ $t('nightZero.subtitle') }}</p>
                 <!-- Main Content -->
                 <div class="px-6 py-8 max-w-7xl mx-auto">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
