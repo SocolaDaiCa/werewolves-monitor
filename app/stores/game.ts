@@ -184,18 +184,18 @@ export const useGameStore = defineStore('game', {
         },
         nextPhase() {
             if (this.phase === GamePhase.NIGHT) {
-                this.dayOrNightActions.push(this.currentDayOrNightAction as DayOrNightAction)
                 this.currentDayOrNightAction = {
                     round: this.round,
                     phase: GamePhase.DAY,
                 }
+                this.dayOrNightActions.push(this.currentDayOrNightAction as DayOrNightAction)
                 this.phase = GamePhase.DAY
             } else if (this.phase === GamePhase.DAY) {
-                this.dayOrNightActions.push(this.currentDayOrNightAction as DayOrNightAction)
                 this.currentDayOrNightAction = {
                     round: this.round + 1,
                     phase: GamePhase.NIGHT,
                 }
+                this.dayOrNightActions.push(this.currentDayOrNightAction as DayOrNightAction)
                 this.phase = GamePhase.NIGHT
                 this.round++
             }

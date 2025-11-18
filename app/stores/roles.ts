@@ -2,11 +2,69 @@ import { defineStore } from 'pinia'
 import type { Role } from '~/types/role'
 import { RoleFaction, NightlyActivity, RoleActionType } from '~/types/role'
 
+let roleNightOrder = 1
+
+export enum RoleId {
+    VILLAGER = 'villager',
+    SEER = 'seer',
+    WITCH = 'witch',
+    WEREWOLF = 'werewolf',
+}
+
+enum RoleNightOrder {
+    // 1. Ghost (Hồn ma)
+    // 2. § Cupid (Thần tình yêu)
+    // 3. § Doppelganger (Người nhân bản)
+    // 4. § Nostradamis
+    // 5. Werewolf (Tất cả sói): Các sói sẽ giới thiệu chức năng của nhau bằng cách giơ bài lên, sau đó quản trò sẽ sắp xếp thứ tự để từng Sói thực hiện chức năng.
+    WEREWOLF = roleNightOrder++,
+    // 6. § Minion(Kẻ phản bội)
+    // 7. Vampire(Ma cà rồng)
+    // 8. Bogeyman (Ông kẹ)
+    // 9. Leprechaun (Yêu tinh)
+    // 10. Zombie (Xác sống)
+    // 11. Count Dracula (Bá tước Dracula)
+    // 12. Body Guard (Bảo vệ)
+    // 13. Witch (Phù thuỷ)
+    WITCH = roleNightOrder++,
+    // 14. Seer (Tiên tri)
+    SEER = roleNightOrder++,
+    // 15. Hunter(Thợ săn)
+    // 16. Huntress (Nữ thợ săn)
+    // 17. § Drunk (Kẻ say rượu)
+    // 18. P.I
+    // 19. Old Hag (Mụ già)
+    // 20. Troublemaker (Kẻ phá rối)
+    // 21. § Virginia Wolf
+    // 22. § Mason (Hội tam điểm)
+    // 23. § Các chức năng sau theo thứ tự tuỳ ý của quản trò, dưới đây là thứ tự mà tôi mong muốn:
+    //     - Priest (Mục sư)
+    //     - Martyr (Kẻ tử đạo)
+    //     - Lycan (Người lai sói)
+    //     - Time Bandit (Tên cướp thời gian)
+    //     - Village Idiot (Thằng ngốc)
+    //     - Tanner (Chán đời)
+    //     - Prince (Hoàng tử)
+    //     - Tough Guy (Lực sĩ)
+    //     - Diseased (Con bệnh)
+    //     - Pacifist (Người yêu hoà bình)
+    //     - Mayor (Thị trưởng)
+    //     - Old Man (Ông già)
+    //     - Aprentice Seer (Tiên tri tập sự)
+    // 24. The thing (Quái vật kinh dị)
+    // 25. § Sasquatch (Chân to)
+    // 26. § Cursed (Kẻ bị nguyền rủa)
+    // 27. Cult Leader (Kẻ sùng đạo)
+    // 28. Frankenstein (Quái vật Frankenstein)
+    // 29. Spellcaster (Pháp sư câm)
+    // 30. Aura Seer (Tiên tri vũ trụ)
+}
+
 // All roles from Ultimate Werewolf with balance points and Vietnamese translations
 const defaultRoles: Role[] = [
     // VILLAGER FACTION
     {
-        id: 'villager',
+        id: RoleId.VILLAGER,
         name: 'Villager',
         nameVi: 'Dân Làng',
         description: 'An ordinary villager trying to find and eliminate the werewolves.',
@@ -16,7 +74,7 @@ const defaultRoles: Role[] = [
         nightly: NightlyActivity.NEVER,
     },
     {
-        id: 'seer',
+        id: RoleId.SEER,
         name: 'Seer',
         nameVi: 'Tiên Tri',
         description: 'Each night, choose a player to learn if they are a werewolf or not.',
@@ -24,11 +82,11 @@ const defaultRoles: Role[] = [
         faction: RoleFaction.VILLAGER,
         balancePoints: 7,
         nightly: NightlyActivity.ALWAYS,
-        nightOrder: 14,
+        nightOrder: RoleNightOrder.SEER,
         actionType: RoleActionType.SELECT_PLAYER,
     },
     {
-        id: 'witch',
+        id: RoleId.WITCH,
         name: 'Witch',
         nameVi: 'Phù Thủy',
         description: 'Each night, choose to heal someone (save from death) or poison someone. One use of each potion per game.',
@@ -36,7 +94,7 @@ const defaultRoles: Role[] = [
         faction: RoleFaction.VILLAGER,
         balancePoints: 4,
         nightly: NightlyActivity.ALWAYS,
-        nightOrder: 13,
+        nightOrder: RoleNightOrder.WITCH,
         actionType: RoleActionType.DUAL_OPTION,
     },
     // {
@@ -242,14 +300,14 @@ const defaultRoles: Role[] = [
 
     // WEREWOLF FACTION
     {
-        id: 'werewolf',
+        id: RoleId.WEREWOLF,
         name: 'Werewolf',
         nameVi: 'Sói',
         description: 'Each night, choose a player to eliminate.',
         descriptionVi: 'Mỗi đêm, chọn một người chơi để tiêu diệt.',
         faction: RoleFaction.WEREWOLF,
         balancePoints: -6,
-        nightOrder: 5,
+        nightOrder: RoleNightOrder.WEREWOLF,
         nightly: NightlyActivity.ALWAYS,
     },
     // {

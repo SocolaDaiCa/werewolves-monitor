@@ -115,6 +115,8 @@
         </div>
 
         <!-- Phase Complete Action -->
+         {{ allRoles }} {{ completedRoles }}
+         return allRoles.value.length > 0 && completedRoles.value.length === allRoles.value.length
         <div v-if="isNightPhaseComplete && allRoles.length > 0" class="bg-green-50 border-2 border-green-300 rounded-xl p-6 text-center">
             <p class="text-lg font-bold text-green-900 mb-4">✓ {{ $t('nightPhase.actionCompleted') }}</p>
             <button
@@ -363,13 +365,25 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
     if (currentRole.value && currentRolePlayer.value) {
         // Log the action to game log
         if (action.targetPlayerId) {
-            if (currentRole.value.faction == RoleFaction.WEREWOLF) {
+            if (currentRole.value.id == RoleId.WEREWOLF) {
                 gameStore.currentDayOrNightAction.werewolfKillToPlayerId = action.targetPlayerId
                 gameStore.eliminatePlayer(
                     action.targetPlayerId,
                     gameStore.round,
                     EliminationMethod.WEREWOLF_KILL,
                 )
+            }
+            if (currentRole.value.id == RoleId.WITCH) {
+                gameStore.currentDayOrNightAction.witchHealToPlayerId = action.targetPlayerId
+                gameStore.currentDayOrNightAction.witchPoisonToPlayerId = action.secondaryTargetPlayerId
+
+                if (action.secondaryTargetPlayerId) {
+                    gameStore.eliminatePlayer(
+                        action.targetPlayerId,
+                        gameStore.round,
+                        EliminationMethod.WITCH_POISON,
+                    )
+                }
             }
         }
         // Mark this role as completed

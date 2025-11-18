@@ -6,11 +6,6 @@
                     <ion-back-button default-href="/"></ion-back-button>
                 </ion-buttons>
                 <ion-title>{{ $t('gameSetup.title') }}</ion-title>
-                <ion-buttons slot="end">
-                    <ion-button :disabled="!isValid" @click="startGame">
-                        {{ $t('gameSetup.startGameBtn') }}
-                    </ion-button>
-                </ion-buttons>
             </ion-toolbar>
         </ion-header>
         <ion-content>
@@ -198,19 +193,7 @@ const completeNightPhase = () => {
         return
     }
 
-    // Collect eliminated players
-    nightResults.value = results
-        .filter(r => r.action === 'kill')
-        .map(r => ({
-            playerId: r.affectedPlayer || '',
-            reason: r.message,
-        }))
-
-    showNightResults.value = true
-
-    // Show results for 3 seconds then transition
-    showNightResults.value = false
-    gameStore.setPhase(GamePhase.DAY)
+    gameStore.nextPhase()
     gameStore.clearDayVotes()
     startDayPhaseTimer()
 }
@@ -237,8 +220,7 @@ const completeDayPhase = () => {
         })
     } else {
         // Continue to next night
-        gameStore.setPhase(GamePhase.NIGHT)
-        gameStore.setRound(gameStore.round + 1)
+        gameStore.nextPhase()
         gameStore.startNightPhase()
         showNightResults.value = false
     }

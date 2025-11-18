@@ -7,9 +7,9 @@
                 </ion-buttons>
                 <ion-title>{{ $t('gameEnd.title') }}</ion-title>
                 <ion-buttons slot="end">
-<!--                    <ion-button :disabled="!isValid" @click="startGame">-->
-<!--                        {{ $t('gameSetup.startGameBtn') }}-->
-<!--                    </ion-button>-->
+                   <ion-button @click="handleNewGame">
+                        {{ $t('gameEnd.newGame') }}
+                    </ion-button>
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>

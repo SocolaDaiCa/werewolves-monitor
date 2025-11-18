@@ -1,4 +1,4 @@
-export enum RoleFaction {
+export enum RoleFaction {  
   VILLAGER = 'VILLAGER',
   WEREWOLF = 'WEREWOLF',
   CULT = 'CULT',
