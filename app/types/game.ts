@@ -37,17 +37,34 @@ export interface GameState {
   playerRoles: { [playerId: string]: string } // playerId -> roleId (assigned roles)
 }
 
+export enum EliminatedBy {
+  VOTE = 'VOTE',
+  WEREWOLF = 'WEREWOLF',
+  WITCH = 'WITCH',
+  HUNTER = 'HUNTER',
+  OTHER = 'OTHER'
+}
+
 export interface PlayerRole {
   playerId: string
   roleId: string
   faction: Faction
   alive: boolean
-  elimatedBy?: 'VOTE' | 'WEREWOLF' | 'WITCH' | 'HUNTER' | 'OTHER'
+  eliminatedBy?: EliminatedBy
   eliminatedRound?: number
 }
 
 // Night Phase Action Types
-export type RoleActionType = 'SELECT_PLAYER' | 'SELECT_TARGET' | 'DUAL_SELECT' | 'TEXT_INPUT' | 'ACKNOWLEDGE' | 'DUAL_OPTION' | 'SKIP' | 'NONE'
+export enum RoleActionType {
+  SELECT_PLAYER = 'SELECT_PLAYER',
+  SELECT_TARGET = 'SELECT_TARGET',
+  DUAL_SELECT = 'DUAL_SELECT',
+  TEXT_INPUT = 'TEXT_INPUT',
+  ACKNOWLEDGE = 'ACKNOWLEDGE',
+  DUAL_OPTION = 'DUAL_OPTION',
+  SKIP = 'SKIP',
+  NONE = 'NONE'
+}
 
 export interface RoleAction {
   roleId: string

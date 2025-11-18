@@ -129,7 +129,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { RoleActionType } from '~/types/game'
+import { RoleActionType } from '~/types/game'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
@@ -222,7 +222,7 @@ const getRoleActionType = (roleId: string): RoleActionType => {
 
     // If role has actionType defined, use it
     if (role?.actionType) {
-        return role.actionType
+        return role.actionType as RoleActionType
     }
 
     // Fallback for roles without actionType (backward compatibility)
@@ -230,20 +230,20 @@ const getRoleActionType = (roleId: string): RoleActionType => {
 
     // Roles with single target selection
     if (['werewolf', 'seer', 'hunter', 'bodyguard', 'witch', 'aura-seer', 'priest'].includes(roleName)) {
-        return 'SELECT_PLAYER'
+        return RoleActionType.SELECT_PLAYER
     }
 
     // Roles with dual selection
     if (['cupid', 'dire-wolf', 'hoodlum'].includes(roleName)) {
-        return 'DUAL_SELECT'
+        return RoleActionType.DUAL_SELECT
     }
 
     // Special cases
     if (['mayor', 'villager'].includes(roleName)) {
-        return 'NONE'
+        return RoleActionType.NONE
     }
 
-    return 'SELECT_PLAYER'
+    return RoleActionType.SELECT_PLAYER
 }
 
 const selectRole = (index: number) => {
@@ -392,7 +392,7 @@ const handleActionSkip = () => {
         gameStore.addNightAction({
             roleId: currentRole.value.id,
             playerId: currentRolePlayer.value?.id || '',
-            actionType: 'SKIP',
+            actionType: RoleActionType.SKIP,
             timestamp: Date.now(),
         })
 

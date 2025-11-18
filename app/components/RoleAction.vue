@@ -20,7 +20,7 @@
             </p>
 
             <!-- Player Selection -->
-            <div v-if="actionType === 'SELECT_PLAYER' || actionType === 'SELECT_TARGET'" class="space-y-3">
+            <div v-if="actionType === RoleActionType.SELECT_PLAYER || actionType === RoleActionType.SELECT_TARGET" class="space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto">
                     <button
                         v-for="player in selectablePlayers"
@@ -47,7 +47,7 @@
             </div>
 
             <!-- Dual Selection (for Cupid, etc.) -->
-            <div v-if="actionType === 'DUAL_SELECT'" class="space-y-3">
+            <div v-if="actionType === RoleActionType.DUAL_SELECT" class="space-y-3">
                 <p class="text-sm text-gray-600 mb-3">Select 2 different players</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto">
                     <button
@@ -113,7 +113,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import type { RoleActionType } from '~/types/game'
+import { RoleActionType } from '~/types/game'
 import { usePlayersStore } from '~/stores/players'
 import { useRolesStore } from '~/stores/roles'
 import { useGameStore } from '~/stores/game'
@@ -176,13 +176,13 @@ const roleColor = computed(() => {
 
 const actionPrompt = computed(() => {
     switch (props.actionType) {
-        case 'SELECT_PLAYER':
+        case RoleActionType.SELECT_PLAYER:
             return 'Select a player:'
-        case 'SELECT_TARGET':
+        case RoleActionType.SELECT_TARGET:
             return 'Select your target:'
-        case 'DUAL_SELECT':
+        case RoleActionType.DUAL_SELECT:
             return 'Select two different players:'
-        case 'SKIP':
+        case RoleActionType.SKIP:
             return 'This role has no action this night.'
         default:
             return 'Awaiting action...'
@@ -196,10 +196,10 @@ const selectablePlayers = computed(() => {
 })
 
 const isActionValid = computed(() => {
-    if (props.actionType === 'SELECT_PLAYER' || props.actionType === 'SELECT_TARGET') {
+    if (props.actionType === RoleActionType.SELECT_PLAYER || props.actionType === RoleActionType.SELECT_TARGET) {
         return !!selectedPlayerId.value
     }
-    if (props.actionType === 'DUAL_SELECT') {
+    if (props.actionType === RoleActionType.DUAL_SELECT) {
         return !!selectedPlayerId.value && !!secondarySelectedPlayerId.value && selectedPlayerId.value !== secondarySelectedPlayerId.value
     }
     return true
