@@ -7,7 +7,7 @@ import {usePlayersStore} from '~/stores/players'
 // Store instances
 // const rolesStore = useRolesStore()
 
-interface DayOrNightAction {
+export interface DayOrNightAction {
     round: number
     phase: GamePhase
     villagerVoteKillForPlayerId?: string
@@ -151,8 +151,11 @@ export const useGameStore = defineStore('game', {
             this.gameWinner = null
             this.witchHealUsed = false
             this.witchPoisonUsed = false
-            this.dayOrNightActions = []
-            this.currentDayOrNightAction = {} as DayOrNightAction
+            this.currentDayOrNightAction = {
+                round: 1,
+                phase: GamePhase.NIGHT,
+            } as DayOrNightAction
+            this.dayOrNightActions = [this.currentDayOrNightAction]
         },
         setPhase(newPhase: GamePhase) {
             this.phase = newPhase
@@ -298,6 +301,17 @@ export const useGameStore = defineStore('game', {
         },
         isPlayerHasRole(playerId: string): boolean {
             return !!this.roleAcknowledgments[playerId]
+        },
+        buildDayOrNightActionMessage(event: DayOrNightAction): string[] {
+            const playersStore = usePlayersStore()
+            let messages: string[] = []
+
+            if (event.werewolfKillToPlayerId) {
+                const player = playersStore.getPlayerById(event.werewolfKillToPlayerId)
+                messages.push(`🐺 Werewolves killed ${player?.name || 'Unknown Player'}.`)
+            }
+
+            return messages
         }
     },
     persist: true,

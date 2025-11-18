@@ -122,6 +122,7 @@ async function startGame() {
             playersStore.selectedPlayerIds,
             rolesStore.selectedRoles
         )
+        // gameStore.startGame()
 
         // Navigate to night zero (role reveal) page
         await router.push('/night-zero')

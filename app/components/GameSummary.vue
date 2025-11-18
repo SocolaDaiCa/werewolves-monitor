@@ -2,24 +2,35 @@
     <div class="bg-white rounded-xl p-6 shadow-md">
         <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ $t('gameEnd.gameLog') }}</h2>
 
-        <div v-if="gameStore.gameEvents.length > 0" class="space-y-3 max-h-96 overflow-y-auto">
+<!--        <div v-if="false && gameStore.gameEvents.length > 0" class="space-y-3 max-h-96 overflow-y-auto">-->
+        <div v-if="gameStore.dayOrNightActions" class="space-y-3 max-h-96 overflow-y-auto">
             <div
-                v-for="(event, index) in gameStore.gameEvents"
+                v-for="(dayOrNightAction, index) in gameStore.dayOrNightActions"
                 :key="index"
                 :class="[
                     'p-4 rounded-lg border-l-4 transition-all',
-                    eventColorClass(event),
+                        eventColorClass(dayOrNightAction),
                 ]"
             >
                 <div class="flex items-start justify-between gap-2">
                     <div class="flex-1">
                         <p class="text-sm font-semibold text-gray-700">
-                            {{ eventPhaseLabel(event) }}
+                            {{ eventPhaseLabel(dayOrNightAction) }}
                         </p>
-                        <p class="text-sm text-gray-600 mt-1">{{ event.message }}</p>
+                        <p class="text-sm text-gray-600 mt-1">
+<!--                            {{ event.message }}-->
+                            <ul>
+                                <li
+                                    v-for="message in gameStore.buildDayOrNightActionMessage(dayOrNightAction)"
+                                    :key="message"
+                                >
+                                    {{ message }}
+                                </li>
+                            </ul>
+                        </p>
                     </div>
-                    <span class="text-xs font-medium text-gray-500 whitespace-nowrap">
-                        R{{ event.round }}
+                   <span class="text-xs font-medium text-gray-500 whitespace-nowrap">
+                       R{{ dayOrNightAction.round }}
                     </span>
                 </div>
             </div>
@@ -57,14 +68,12 @@
 </template>
 
 <script setup lang="ts">
-import {computed} from 'vue'
-import {useGameStore} from '~/stores/game'
-import type {GameEvent} from '~/types/game'
+import {useGameStore, type DayOrNightAction} from '~/stores/game'
 import {GamePhase} from '~/types/game'
 
 const gameStore = useGameStore()
 
-function eventColorClass(event: GameEvent): string {
+function eventColorClass(event: DayOrNightAction): string {
     if (event.phase === GamePhase.NIGHT) {
         return 'bg-blue-50 border-blue-400'
     }
@@ -74,7 +83,7 @@ function eventColorClass(event: GameEvent): string {
     return 'bg-gray-50 border-gray-400'
 }
 
-function eventPhaseLabel(event: GameEvent): string {
+function eventPhaseLabel(event: DayOrNightAction): string {
     const phaseLabel = event.phase === GamePhase.NIGHT ? '🌙 Night' : '☀️ Day'
     return `${phaseLabel} ${event.round}`
 }
