@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { RoleAction, NightPhaseState, DayPhaseVote, GameState, GameEvent, PlayerElimination } from '~/types/game'
-import { EliminationMethod, GamePhase, GameStatus } from '~/types/game'
+import { EliminationMethod, Faction, GamePhase, GameStatus } from '~/types/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 
@@ -229,12 +229,12 @@ export const useGameStore = defineStore('game', {
 
                 // Get the actual role from roles store to check faction
                 const role = rolesStore.getRoleById(roleId)
-                const faction = role?.faction || 'VILLAGER'
+                const faction = role?.faction || Faction.VILLAGER
                 alivePlayersByFaction.set(faction, (alivePlayersByFaction.get(faction) || 0) + 1)
             })
 
-            const werewolvesAlive = alivePlayersByFaction.get('WEREWOLF') || 0
-            const villagersAlive = alivePlayersByFaction.get('VILLAGER') || 0
+            const werewolvesAlive = alivePlayersByFaction.get(Faction.WEREWOLF) || 0
+            const villagersAlive = alivePlayersByFaction.get(Faction.VILLAGER) || 0
 
             // Check win conditions
             // Condition 1: No werewolves left → Villagers win

@@ -10,7 +10,13 @@ export enum GameStatus {
   PLAYING = 'PLAYING',
   FINISHED = 'FINISHED'
 }
-export type Faction = 'VILLAGER' | 'WEREWOLF' | 'CULT' | 'VAMPIRE' | 'SPECIAL'
+export enum Faction {
+  VILLAGER = 'VILLAGER',
+  WEREWOLF = 'WEREWOLF',
+  CULT = 'CULT',
+  VAMPIRE = 'VAMPIRE',
+  SPECIAL = 'SPECIAL'
+}
 
 export interface GameEvent {
   round: number
