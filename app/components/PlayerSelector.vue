@@ -33,7 +33,7 @@
                         class="w-12 h-12 rounded-full object-cover mb-2"
                     />
                     <div v-else class="w-12 h-12 rounded-full bg-gray-300 mb-2 flex items-center justify-center text-xs font-bold text-gray-600">
-                        {{ getInitials(player.name) }}
+                        {{ playersStore.getInitials(player.name) }}
                     </div>
 
                     <!-- Player Name -->
@@ -94,15 +94,5 @@ import { useGameStore } from '~/stores/game'
 
 const playersStore = usePlayersStore()
 const gameStore = useGameStore()
-
-// Get player initials for avatar
-function getInitials(name: string): string {
-    return name
-        .split(' ')
-        .map(word => word[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2)
-}
 </script>
 

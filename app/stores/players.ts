@@ -119,6 +119,15 @@ export const usePlayersStore = defineStore('players', {
         clearSelectedPlayers() {
             this.setSelectedPlayerIds([])
         },
+
+        getInitials(name: string): string {
+            return name
+                .split(' ')
+                .map(word => word[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2)
+        },
     },
 
     persist: true,
