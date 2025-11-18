@@ -24,11 +24,6 @@ interface DayOrNightAction {
     // seerInvestigateResult?: boolean
 }
 
-interface DayAction extends DayOrNightAction {
-    index: number
-
-}
-
 export const useGameStore = defineStore('game', {
     state: () => ({
         phase: GamePhase.SETUP,
@@ -61,7 +56,7 @@ export const useGameStore = defineStore('game', {
     }),
     getters: {
         totalRoleSlots: (state: any) => {
-            return Object.values(state.selectedRoles).reduce((sum: number, count: number): number => sum + count, 0)
+            return (Object.values(state.selectedRoles) as number[]).reduce((sum: number, count: number): number => sum + count, 0)
         },
         livingPlayersCount: (state: any) => {
             return state.players.length
@@ -76,7 +71,7 @@ export const useGameStore = defineStore('game', {
             return state.phase === GamePhase.NIGHT
         },
         totalRoleCount: (state: any) => {
-            return Object.values(state.selectedRoles).reduce((sum, count) => sum + count, 0)
+            return (Object.values(state.selectedRoles as number[]).reduce((sum, count) => sum + count, 0))
         },
         progressPercent: (state: any) => {
             const total = state.players.length

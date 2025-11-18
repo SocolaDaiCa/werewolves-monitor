@@ -129,7 +129,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { RoleActionType } from '~/types/game'
+import {EliminationMethod, RoleActionType} from '~/types/game'
 import { NightlyActivity, RoleFaction } from '~/types/role'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
@@ -365,6 +365,11 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
         if (action.targetPlayerId) {
             if (currentRole.value.faction == RoleFaction.WEREWOLF) {
                 gameStore.currentDayOrNightAction.werewolfKillToPlayerId = action.targetPlayerId
+                gameStore.eliminatePlayer(
+                    action.targetPlayerId,
+                    gameStore.round,
+                    EliminationMethod.WEREWOLF_KILL,
+                )
             }
         }
         // Mark this role as completed
