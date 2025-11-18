@@ -8,15 +8,15 @@
             <div class="mb-4">
                 <div class="flex justify-between items-center mb-2">
                     <span class="text-sm font-medium text-gray-700">
-                        {{ $t('nightPhase.roleAction') }} {{ currentRoleIndex + 1 }}/{{ allRoles.length }}
+                        {{ $t('nightPhase.roleAction') }} {{ gameStore.currentNightRoleIndex + 1 }}/{{ allRoles.length }}
                     </span>
                     <span class="text-xs font-medium text-gray-500">
-                        {{ Math.round((currentRoleIndex / Math.max(allRoles.length, 1)) * 100) }}%
+                        {{ Math.round((gameStore.currentNightRoleIndex / Math.max(allRoles.length, 1)) * 100) }}%
                     </span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                     <div
-                        :style="{ width: ((currentRoleIndex + 1) / Math.max(allRoles.length, 1)) * 100 + '%' }"
+                        :style="{ width: ((gameStore.currentNightRoleIndex + 1) / Math.max(allRoles.length, 1)) * 100 + '%' }"
                         class="bg-gradient-to-r from-blue-500 to-purple-500 h-full transition-all duration-300"
                     />
                 </div>
@@ -30,9 +30,9 @@
                     @click="selectRole(index)"
                     :class="[
                         'w-full px-4 py-3 rounded-lg text-left transition-all duration-200 flex items-center justify-between',
-                        index === currentRoleIndex && !isRoleDisabled.has(role.id)
+                        index === gameStore.currentNightRoleIndex && !isRoleDisabled.has(role.id)
                             ? 'bg-blue-600 text-white shadow-md'
-                            : index === currentRoleIndex && isRoleDisabled.has(role.id)
+                            : index === gameStore.currentNightRoleIndex && isRoleDisabled.has(role.id)
                                 ? 'bg-red-400 text-white shadow-md opacity-60'
                                 : completedRoles.includes(index)
                                 ? 'bg-green-100 text-green-900 border border-green-300'
@@ -46,7 +46,7 @@
                         {{ getRoleName(role.id) }}
                     </span>
                     <span v-if="completedRoles.includes(index)" class="text-sm">✓</span>
-                    <span v-else-if="index === currentRoleIndex" class="text-sm animate-pulse">◆</span>
+                    <span v-else-if="index === gameStore.currentNightRoleIndex" class="text-sm animate-pulse">◆</span>
                 </button>
             </div>
 
@@ -100,14 +100,14 @@
         <div v-if="allRoles.length > 0" class="flex gap-3">
             <button
                 @click="previousRole"
-                :disabled="currentRoleIndex === 0"
+                :disabled="gameStore.currentNightRoleIndex === 0"
                 class="flex-1 py-3 px-4 rounded-lg font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
                 ← {{ $t('common.back') }}
             </button>
             <button
                 @click="nextRole"
-                :disabled="currentRoleIndex === allRoles.length - 1"
+                :disabled="gameStore.currentNightRoleIndex === allRoles.length - 1"
                 class="flex-1 py-3 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
                 {{ $t('common.next') }} →
@@ -190,9 +190,7 @@ const isRoleDisabled = computed(() => {
     return disabled
 })
 
-const currentRoleIndex = computed(() => gameStore.currentNightRoleIndex)
-
-const currentRole = computed(() => allRoles.value[currentRoleIndex.value])
+const currentRole = computed(() => allRoles.value[gameStore.currentNightRoleIndex])
 
 const currentRolePlayer = computed(() => {
     if (!currentRole.value) return null
@@ -253,14 +251,14 @@ const selectRole = (index: number) => {
 }
 
 const previousRole = () => {
-    if (currentRoleIndex.value > 0) {
-        gameStore.setCurrentNightRoleIndex(currentRoleIndex.value - 1)
+    if (gameStore.currentNightRoleIndex > 0) {
+        gameStore.setCurrentNightRoleIndex(gameStore.currentNightRoleIndex - 1)
     }
 }
 
 const nextRole = () => {
-    if (currentRoleIndex.value < allRoles.value.length - 1) {
-        gameStore.setCurrentNightRoleIndex(currentRoleIndex.value + 1)
+    if (gameStore.currentNightRoleIndex < allRoles.value.length - 1) {
+        gameStore.setCurrentNightRoleIndex(gameStore.currentNightRoleIndex + 1)
     }
 }
 
@@ -378,12 +376,12 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
         }
 
         // Mark this role as completed
-        if (!completedRoles.value.includes(currentRoleIndex.value)) {
-            completedRoles.value.push(currentRoleIndex.value)
+        if (!completedRoles.value.includes(gameStore.currentNightRoleIndex)) {
+            completedRoles.value.push(gameStore.currentNightRoleIndex)
         }
 
         // Move to next role
-        if (currentRoleIndex.value < allRoles.value.length - 1) {
+        if (gameStore.currentNightRoleIndex < allRoles.value.length - 1) {
             nextRole()
         }
     }
@@ -399,12 +397,12 @@ const handleActionSkip = () => {
         })
 
         // Mark as completed
-        if (!completedRoles.value.includes(currentRoleIndex.value)) {
-            completedRoles.value.push(currentRoleIndex.value)
+        if (!completedRoles.value.includes(gameStore.currentNightRoleIndex)) {
+            completedRoles.value.push(gameStore.currentNightRoleIndex)
         }
 
         // Move to next
-        if (currentRoleIndex.value < allRoles.value.length - 1) {
+        if (gameStore.currentNightRoleIndex < allRoles.value.length - 1) {
             nextRole()
         }
     }
