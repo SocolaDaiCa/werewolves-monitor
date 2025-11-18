@@ -1,12 +1,12 @@
 <template>
     <div class="space-y-6">
         <!-- Night Deaths Notification -->
-        <div v-if="lastNightDeaths.length > 0" class="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl p-6 shadow-lg border-2 border-red-800">
+        <div v-if="gameStore.lastNightDeaths.length > 0" class="bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl p-6 shadow-lg border-2 border-red-800">
             <h3 class="text-2xl font-bold mb-4 flex items-center gap-2">
                 <span class="text-3xl">🌙</span> Last Night's Deaths
             </h3>
             <div class="space-y-2">
-                <div v-for="death in lastNightDeaths" :key="death.playerId" class="flex items-center gap-3 bg-red-500 bg-opacity-30 rounded-lg p-3 border border-red-300">
+                <div v-for="death in gameStore.lastNightDeaths" :key="death.playerId" class="flex items-center gap-3 bg-red-500 bg-opacity-30 rounded-lg p-3 border border-red-300">
                     <span class="text-2xl">☠️</span>
                     <div>
                         <p class="font-bold text-red-50">{{ getPlayerName(death.playerId) }}</p>
@@ -172,7 +172,7 @@ interface Emits {
     (e: 'complete'): void
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 const emit = defineEmits<Emits>()
 
 const gameStore = useGameStore()
@@ -200,11 +200,6 @@ const totalVotes = computed(() => {
 const getPlayerName = (playerId: string): string => {
     return playersStore.getPlayerById(playerId)?.name || 'Unknown'
 }
-
-/**
- * Get last night's deaths for current round
- */
-const lastNightDeaths = computed(() => gameStore.lastNightDeaths)
 
 /**
  * Increase votes for a player
