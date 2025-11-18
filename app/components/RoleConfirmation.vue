@@ -52,22 +52,22 @@
                     class="flex items-center justify-between px-4 py-3 hover:bg-gray-50 transition"
                 >
                     <div class="flex-1">
-                        <p class="font-semibold text-gray-800">{{ getRoleName(''+roleId) }}</p>
-                        <p class="text-xs text-gray-600">{{ getRoleDescription(''+roleId) }}</p>
+                        <p class="font-semibold text-gray-800">{{ rolesStore.getRoleName(''+roleId) }}</p>
+                        <p class="text-xs text-gray-600">{{ rolesStore.getRoleDescription(''+roleId) }}</p>
                     </div>
                     <div class="flex items-center gap-3">
                         <span class="text-sm font-semibold text-gray-600">×{{ count }}</span>
                         <span
                             :class="[
                                 'px-3 py-1 rounded-full text-xs font-semibold',
-                                getRolePoints(''+roleId) > 0
+                                rolesStore.getRolePoints(''+roleId) > 0
                                     ? 'bg-green-100 text-green-700'
-                                    : getRolePoints(''+roleId) < 0
+                                    : rolesStore.getRolePoints(''+roleId) < 0
                                         ? 'bg-red-100 text-red-700'
                                         : 'bg-gray-100 text-gray-700'
                             ]"
                         >
-                            {{ getRolePoints(''+roleId) * count > 0 ? '+' : '' }}{{ getRolePoints(''+roleId) * count }}
+                            {{ rolesStore.getRolePoints(''+roleId) * count > 0 ? '+' : '' }}{{ rolesStore.getRolePoints(''+roleId) * count }}
                         </span>
                     </div>
                 </div>
@@ -173,21 +173,5 @@ const mismatchMessage = computed(() => {
         return `You have ${playersStore.playerSelectedCount} players but ${rolesStore.totalRoleCount} roles. Too many roles by ${difference}.`
     }
 })
-
-// Helper functions
-function getRoleName(roleId: string): string {
-    const role = rolesStore.getRoleById(roleId)
-    return role?.name || roleId
-}
-
-function getRoleDescription(roleId: string): string {
-    const role = rolesStore.getRoleById(roleId)
-    return role?.description || ''
-}
-
-function getRolePoints(roleId: string): number {
-    const role = rolesStore.getRoleById(roleId)
-    return role?.balancePoints ?? 0
-}
 </script>
 
