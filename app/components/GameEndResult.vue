@@ -40,11 +40,11 @@
         </div>
         <div>
           <p class="text-sm opacity-75 mb-1">{{ $t('gameEnd.survivors') }}</p>
-          <p class="text-3xl font-bold">{{ survivors }}</p>
+          <p class="text-3xl font-bold">{{ gameStore.survivors }}</p>
         </div>
         <div>
           <p class="text-sm opacity-75 mb-1">{{ $t('gameEnd.eliminated') }}</p>
-          <p class="text-3xl font-bold">{{ eliminated }}</p>
+          <p class="text-3xl font-bold">{{ gameStore.eliminated }}</p>
         </div>
       </div>
     </div>
@@ -192,9 +192,6 @@ const gameStore = useGameStore()
 const playersStore = usePlayersStore()
 const rolesStore = useRolesStore()
 
-const survivors = computed(() => gameStore.survivors)
-const eliminated = computed(() => gameStore.eliminated)
-
 const winConditions = computed(() => gameStore.checkWinConditions())
 
 const playerResults = computed((): PlayerResult[] => {
@@ -215,7 +212,7 @@ const playerResults = computed((): PlayerResult[] => {
       roleId,
       faction: role?.faction || 'VILLAGER',
       alive: isAlive,
-      eliminatedBy: isAlive ? undefined : getEliminationMethod(playerId),
+      eliminatedBy: isAlive ? undefined : gameStore.getEliminationMethod(playerId),
       eliminatedRound: isAlive ? undefined : gameStore.getEliminationRound(playerId),
       isWinner: isWinner || false,
     }
@@ -269,21 +266,6 @@ function factionColorClass(faction: Faction): string {
     default:
       return 'bg-gray-500'
   }
-}
-
-function getEliminationMethod(playerId: string): string {
-  const elimination = gameStore.getPlayerElimination(playerId)
-  if (elimination) {
-    const methodLabels: { [key: string]: string } = {
-      VOTE: 'Voted Out',
-      WEREWOLF_KILL: 'Killed by Werewolves',
-      WITCH: 'Poisoned by Witch',
-      HUNTER: 'Shot by Hunter',
-      OTHER: 'Eliminated',
-    }
-    return methodLabels[elimination.method] || elimination.description
-  }
-  return '-'
 }
 
 function handlePlayAgain() {

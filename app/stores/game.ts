@@ -294,6 +294,20 @@ export const useGameStore = defineStore('game', {
         getEliminationRound(playerId: string): number | undefined {
             const elimination = this.getPlayerElimination(playerId)
             return elimination ? elimination.round : undefined
+        },
+        getEliminationMethod(playerId: string): string {
+            const elimination = this.getPlayerElimination(playerId)
+            if (elimination) {
+                const methodLabels: { [key: string]: string } = {
+                    VOTE: 'Voted Out',
+                    WEREWOLF_KILL: 'Killed by Werewolves',
+                    WITCH: 'Poisoned by Witch',
+                    HUNTER: 'Shot by Hunter',
+                    OTHER: 'Eliminated',
+                }
+                return methodLabels[elimination.method] || elimination.description
+            }
+            return '-'
         }
     },
     persist: true,
