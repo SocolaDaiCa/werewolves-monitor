@@ -53,7 +53,7 @@
                 <SelectableCard
                     v-for="player in players"
                     :key="player.id"
-                    v-show="!isPlayerHasRole(player.id) || hasPlayerAcknowledged(player.id)"
+                    v-show="!gameStore.isPlayerHasRole(player.id) || hasPlayerAcknowledged(player.id)"
                     :is-selected="hasPlayerAcknowledged(player.id)"
                     @toggle="togglePlayerAcknowledgment(player.id)"
                 >
@@ -162,10 +162,6 @@ const acknowledgedCount = computed(() => {
 })
 
 // Helper functions
-function isPlayerHasRole(playerId: string): boolean {
-    return !!gameStore.roleAcknowledgments[playerId];
-}
-
 function hasPlayerAcknowledged(playerId: string): boolean {
     const acknowledgedRole = gameStore.roleAcknowledgments[playerId]
     return acknowledgedRole === currentRole.value?.id

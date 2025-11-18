@@ -308,6 +308,9 @@ export const useGameStore = defineStore('game', {
                 return methodLabels[elimination.method] || elimination.description
             }
             return '-'
+        },
+        isPlayerHasRole(playerId: string): boolean {
+            return !!this.roleAcknowledgments[playerId]
         }
     },
     persist: true,
