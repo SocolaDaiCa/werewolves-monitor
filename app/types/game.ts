@@ -55,10 +55,18 @@ export interface DayPhaseVote {
   timestamp: number
 }
 
+export enum EliminationMethod {
+  VOTE = 'VOTE',
+  WEREWOLF_KILL = 'WEREWOLF_KILL',
+  WITCH = 'WITCH',
+  HUNTER = 'HUNTER',
+  OTHER = 'OTHER'
+}
+
 export interface PlayerElimination {
   playerId: string
   round: number
-  method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER'
+  method: EliminationMethod
   description: string
 }
 

@@ -1,5 +1,6 @@
 import { computed, ref } from 'vue'
 import type { RoleAction } from '~/types/game'
+import { EliminationMethod } from '~/types/game'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
@@ -252,7 +253,7 @@ export const useNightPhaseActions = () => {
         actualDeaths.push(targetId)
         // Determine the method of elimination based on who killed them
         const killer = Array.from(results.value).find(r => r.affectedPlayer === targetId)
-        const method = killer?.action === 'vampire-kill' ? 'WEREWOLF_KILL' : 'WEREWOLF_KILL'
+        const method = EliminationMethod.WEREWOLF_KILL
         const playerName = playersStore.getPlayerById(targetId)?.name || 'Unknown'
         gameStore.eliminatePlayer(targetId, gameStore.round, method, `${playerName} was killed during the night`)
       }

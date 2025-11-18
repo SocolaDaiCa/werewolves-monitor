@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { RoleAction, NightPhaseState, DayPhaseVote, GamePhase, GameStatus, GameState, GameEvent, PlayerElimination } from '~/types/game'
+import { EliminationMethod } from '~/types/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
 
@@ -36,7 +37,7 @@ export const useGameStore = defineStore('game', {
     }),
     getters: {
         totalRoleSlots: (state: any) => {
-            return Object.values(state.selectedRoles).reduce((sum, count) => sum + count, 0)
+            return Object.values(state.selectedRoles).reduce((sum: number, count: number): number => sum + count, 0)
         },
         livingPlayersCount: (state: any) => {
             return state.players.length
@@ -65,7 +66,7 @@ export const useGameStore = defineStore('game', {
             return state.playerEliminations
                 .filter((elimination: PlayerElimination) => {
                     return elimination.round === currentRound &&
-                        (elimination.method === 'WEREWOLF_KILL' || elimination.method === 'WITCH')
+                        (elimination.method === EliminationMethod.WEREWOLF_KILL || elimination.method === EliminationMethod.WITCH)
                 })
                 .map((elimination: PlayerElimination) => ({
                     playerId: elimination.playerId,
@@ -180,44 +181,8 @@ export const useGameStore = defineStore('game', {
         deacknowledgeRole(playerId: string) {
             delete this.roleAcknowledgments[playerId]
         },
-        setCurrentRoleRevealIndex(index: number) {
-            this.currentRoleRevealIndex = index
-        },
-        resetRoleReveal() {
-            this.roleAcknowledgments = {}
-            this.currentRoleRevealIndex = 0
-        },
         copyAcknowledgmentsToPlayerRoles() {
             this.playerRoles = { ...this.roleAcknowledgments }
-        },
-        assignRolesToPlayers(roles: { [roleId: string]: number }, playerIds: string[]) {
-            // Create role assignments from the selected roles
-            const roleAssignments: { [playerId: string]: string } = {}
-            const rolesList: string[] = []
-
-            // Build a list of roleIds repeated by their count
-            Object.entries(roles).forEach(([roleId, count]) => {
-                for (let i = 0; i < count; i++) {
-                    rolesList.push(roleId)
-                }
-            })
-
-            // Shuffle the roles list
-            for (let i = rolesList.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1))
-                const temp = rolesList[i] as string
-                rolesList[i] = rolesList[j] as string
-                rolesList[j] = temp
-            }
-
-            // Assign roles to players
-            playerIds.forEach((playerId, index) => {
-                if (index < rolesList.length) {
-                    roleAssignments[playerId] = rolesList[index] || ''
-                }
-            })
-
-            this.playerRoles = roleAssignments
         },
         updateAlivePlayers() {
             this.alivePlayers = this.players.filter(pid => !this.eliminatedPlayers.includes(pid))
@@ -241,7 +206,7 @@ export const useGameStore = defineStore('game', {
         clearDayVotes() {
             this.dayPhaseVotes = []
         },
-        eliminatePlayer(playerId: string, round: number, method: 'VOTE' | 'WEREWOLF_KILL' | 'WITCH' | 'HUNTER' | 'OTHER' = 'OTHER', description?: string) {
+        eliminatePlayer(playerId: string, round: number, method: EliminationMethod = EliminationMethod.OTHER, description?: string) {
             if (!this.eliminatedPlayers.includes(playerId)) {
                 this.eliminatedPlayers.push(playerId)
                 this.playerEliminations.push({
@@ -271,10 +236,6 @@ export const useGameStore = defineStore('game', {
             const werewolvesAlive = alivePlayersByFaction.get('WEREWOLF') || 0
             const villagersAlive = alivePlayersByFaction.get('VILLAGER') || 0
 
-            console.log('werewolvesAlive', werewolvesAlive)
-            console.log('villagersAlive', villagersAlive)
-            console.log('alivePlayersByFaction', alivePlayersByFaction)
-
             // Check win conditions
             // Condition 1: No werewolves left → Villagers win
             if (werewolvesAlive === 0) {
@@ -292,9 +253,6 @@ export const useGameStore = defineStore('game', {
 
             return null // Game continues
         },
-        setGameWinner(winner: string, reason: string) {
-            this.gameWinner = { winner, reason }
-        },
         getPlayerElimination(playerId: string) {
             return this.playerEliminations.find(e => e.playerId === playerId)
         },
@@ -305,12 +263,12 @@ export const useGameStore = defineStore('game', {
         getEliminationMethod(playerId: string): string {
             const elimination = this.getPlayerElimination(playerId)
             if (elimination) {
-                const methodLabels: { [key: string]: string } = {
-                    VOTE: 'Voted Out',
-                    WEREWOLF_KILL: 'Killed by Werewolves',
-                    WITCH: 'Poisoned by Witch',
-                    HUNTER: 'Shot by Hunter',
-                    OTHER: 'Eliminated',
+                const methodLabels: { [key in EliminationMethod]: string } = {
+                    [EliminationMethod.VOTE]: 'Voted Out',
+                    [EliminationMethod.WEREWOLF_KILL]: 'Killed by Werewolves',
+                    [EliminationMethod.WITCH]: 'Poisoned by Witch',
+                    [EliminationMethod.HUNTER]: 'Shot by Hunter',
+                    [EliminationMethod.OTHER]: 'Eliminated',
                 }
                 return methodLabels[elimination.method] || elimination.description
             }

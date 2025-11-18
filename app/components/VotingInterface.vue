@@ -163,6 +163,7 @@
 import { computed, ref } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { usePlayersStore } from '~/stores/players'
+import { EliminationMethod } from '~/types/game'
 
 interface Props {
     votingPhase: boolean
@@ -249,7 +250,7 @@ const submitVotes = () => {
             gameStore.eliminatePlayer(
                 playerId,
                 gameStore.round,
-                'VOTE',
+                EliminationMethod.VOTE,
                 `${playerName} was eliminated by vote (${voteCount} vote${voteCount !== 1 ? 's' : ''})`
             )
         }
