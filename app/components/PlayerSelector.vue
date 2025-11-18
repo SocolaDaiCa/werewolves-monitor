@@ -23,7 +23,7 @@
                 v-for="player in playersStore.allPlayers"
                 :key="player.id"
                 :is-selected="playersStore.selectedPlayerIds.includes(player.id)"
-                @toggle="togglePlayer(player.id)"
+                @toggle="playersStore.togglePlayer(player.id)"
             >
                 <div class="absolute inset-0 flex flex-col items-center justify-center p-3">
                     <img
@@ -61,14 +61,14 @@
         <!-- Action Buttons -->
         <div class="flex gap-3 mt-2">
             <button
-                @click="selectAllPlayers"
+                @click="playersStore.selectAllPlayers"
                 class="flex-1 px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="playersStore.selectedPlayerIds.length === playersStore.allPlayers.length"
             >
                 {{ $t('common.add') }} All
             </button>
             <button
-                @click="clearAllPlayers"
+                @click="playersStore.clearSelectedPlayers"
                 class="flex-1 px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
                 :disabled="playersStore.selectedPlayerIds.length === 0"
             >
@@ -103,30 +103,6 @@ function getInitials(name: string): string {
         .join('')
         .toUpperCase()
         .slice(0, 2)
-}
-
-// Toggle player selection
-function togglePlayer(playerId: string) {
-    const ids = [...playersStore.selectedPlayerIds]
-    const index = ids.indexOf(playerId)
-    if (index > -1) {
-        ids.splice(index, 1)
-    } else {
-        ids.push(playerId)
-    }
-    playersStore.setSelectedPlayerIds(ids)
-}
-
-// Select all players
-function selectAllPlayers() {
-    const allIds = playersStore.allPlayers.map(p => p.id)
-    const ids = [...new Set([...playersStore.selectedPlayerIds, ...allIds])]
-    playersStore.setSelectedPlayerIds(ids)
-}
-
-// Clear all selections
-function clearAllPlayers() {
-    playersStore.setSelectedPlayerIds([])
 }
 </script>
 

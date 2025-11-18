@@ -98,6 +98,27 @@ export const usePlayersStore = defineStore('players', {
             const player = this.players.find(p => p.id === playerId)
             return player?.avatar
         },
+
+        togglePlayer(playerId: string) {
+            const ids = [...this.selectedPlayerIds]
+            const index = ids.indexOf(playerId)
+            if (index > -1) {
+                ids.splice(index, 1)
+            } else {
+                ids.push(playerId)
+            }
+            this.setSelectedPlayerIds(ids)
+        },
+
+        selectAllPlayers() {
+            const allIds = this.players.map(p => p.id)
+            const ids = [...new Set([...this.selectedPlayerIds, ...allIds])]
+            this.setSelectedPlayerIds(ids)
+        },
+
+        clearSelectedPlayers() {
+            this.setSelectedPlayerIds([])
+        },
     },
 
     persist: true,
