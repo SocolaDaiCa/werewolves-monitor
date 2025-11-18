@@ -7,9 +7,9 @@
                 v-for="(event, index) in gameStore.gameEvents"
                 :key="index"
                 :class="[
-          'p-4 rounded-lg border-l-4 transition-all',
-          eventColorClass(event),
-        ]"
+                    'p-4 rounded-lg border-l-4 transition-all',
+                    eventColorClass(event),
+                ]"
             >
                 <div class="flex items-start justify-between gap-2">
                     <div class="flex-1">
@@ -19,8 +19,8 @@
                         <p class="text-sm text-gray-600 mt-1">{{ event.message }}</p>
                     </div>
                     <span class="text-xs font-medium text-gray-500 whitespace-nowrap">
-            R{{ event.round }}
-          </span>
+                        R{{ event.round }}
+                    </span>
                 </div>
             </div>
         </div>
