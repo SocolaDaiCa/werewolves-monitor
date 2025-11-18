@@ -204,21 +204,7 @@ const getPlayerName = (playerId: string): string => {
 /**
  * Get last night's deaths for current round
  */
-const lastNightDeaths = computed(() => {
-    const currentRound = gameStore.round
-    // Get eliminations from the current round that happened during night phase
-    // Show all deaths from night actions (werewolf kills, witch poison, etc.)
-    return gameStore.playerEliminations
-        .filter(elimination => {
-            // Show deaths from the current round that were caused by night phase actions
-            return elimination.round === currentRound &&
-                (elimination.method === 'WEREWOLF_KILL' || elimination.method === 'WITCH')
-        })
-        .map(elimination => ({
-            playerId: elimination.playerId,
-            description: elimination.description,
-        }))
-})
+const lastNightDeaths = computed(() => gameStore.lastNightDeaths)
 
 /**
  * Increase votes for a player

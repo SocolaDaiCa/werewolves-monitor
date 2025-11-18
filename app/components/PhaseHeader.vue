@@ -65,7 +65,7 @@ const currentPhase = computed(() => gameStore.phase)
 const alivePlayers = computed(() => gameStore.alivePlayers)
 const eliminatedPlayers = computed(() => gameStore.eliminatedPlayers)
 
-const isNightPhase = computed(() => currentPhase.value === 'NIGHT')
+const isNightPhase = computed(() => gameStore.isNightPhase)
 
 const currentPhaseName = computed(() => {
     if (currentPhase.value === 'NIGHT') {
@@ -98,13 +98,8 @@ const activeRoleCount = computed(() => {
     return activeRoles.length
 })
 
-const totalRoleCount = computed(() => {
-    return Object.values(gameStore.selectedRoles).reduce((sum, count) => sum + count, 0)
-})
+const totalRoleCount = computed(() => gameStore.totalRoleCount)
 
 // Progress calculation: (eliminated count / total players) * 100
-const progressPercent = computed(() => {
-    const total = gameStore.players.length
-    return total > 0 ? (eliminatedPlayers.value.length / total) * 100 : 0
-})
+const progressPercent = computed(() => gameStore.progressPercent)
 </script>

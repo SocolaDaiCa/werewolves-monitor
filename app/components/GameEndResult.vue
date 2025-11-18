@@ -192,10 +192,8 @@ const gameStore = useGameStore()
 const playersStore = usePlayersStore()
 const rolesStore = useRolesStore()
 
-const survivors = computed(
-  () => gameStore.players.length - gameStore.eliminatedPlayers.length
-)
-const eliminated = computed(() => gameStore.eliminatedPlayers.length)
+const survivors = computed(() => gameStore.survivors)
+const eliminated = computed(() => gameStore.eliminated)
 
 const winConditions = computed(() => gameStore.checkWinConditions())
 

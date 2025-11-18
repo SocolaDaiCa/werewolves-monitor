@@ -49,6 +49,54 @@ export const useGameStore = defineStore('game', {
         totalActions: (state: any) => {
             return state.nightPhaseActions.length
         },
+        isNightPhase: (state: any) => {
+            return state.phase === 'NIGHT'
+        },
+        totalRoleCount: (state: any) => {
+            return Object.values(state.selectedRoles).reduce((sum, count) => sum + count, 0)
+        },
+        progressPercent: (state: any) => {
+            const total = state.players.length
+            return total > 0 ? (state.eliminatedPlayers.length / total) * 100 : 0
+        },
+        lastNightDeaths: (state: any) => {
+            const currentRound = state.round
+            return state.playerEliminations
+                .filter((elimination: PlayerElimination) => {
+                    return elimination.round === currentRound &&
+                        (elimination.method === 'WEREWOLF_KILL' || elimination.method === 'WITCH')
+                })
+                .map((elimination: PlayerElimination) => ({
+                    playerId: elimination.playerId,
+                    description: elimination.description,
+                }))
+        },
+        survivors: (state: any) => {
+            return state.players.length - state.eliminatedPlayers.length
+        },
+        eliminated: (state: any) => {
+            return state.eliminatedPlayers.length
+        },
+        avgRoundTime: (state: any) => {
+            if (state.gameLog.length === 0) return 0
+            const firstEvent = state.gameLog[0]
+            const lastEvent = state.gameLog[state.gameLog.length - 1]
+            if (!firstEvent || !lastEvent) return 0
+
+            const firstTimestamp = firstEvent.timestamp
+            const lastTimestamp = lastEvent.timestamp
+            const totalMinutes = Math.floor((lastTimestamp - firstTimestamp) / 60000)
+            return Math.ceil(totalMinutes / state.round)
+        },
+        hasStats: (state: any) => {
+            const nightCount = state.gameLog.filter((e: GameEvent) => e.phase === 'NIGHT').length
+            const dayCount = state.gameLog.filter((e: GameEvent) => e.phase === 'DAY').length
+            const actionsCount = state.nightPhaseActions.length
+            return nightCount > 0 || dayCount > 0 || actionsCount > 0
+        },
+        gameEvents: (state: any) => {
+            return state.gameLog
+        },
         gameState: (state: any): GameState => ({
             phase: state.phase.value,
             round: state.round.value,

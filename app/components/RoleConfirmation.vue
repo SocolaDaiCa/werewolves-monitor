@@ -158,7 +158,7 @@ const selectedRolesData = computed(() => rolesStore.selectedRoles)
 
 const totalRoles = computed(() => rolesStore.totalRoleCount)
 
-const playerSelectedCount = computed(() => playersStore.selectedPlayers.length)
+const playerSelectedCount = computed(() => playersStore.playerSelectedCount)
 
 const totalBalancePoints = computed(() => rolesStore.totalBalancePoints)
 

@@ -69,30 +69,15 @@ import type {GameEvent} from '~/types/game'
 
 const gameStore = useGameStore()
 
-const gameEvents = computed(() => gameStore.gameLog)
+const gameEvents = computed(() => gameStore.gameEvents)
 
 const nightPhaseCount = computed(() => gameStore.nightPhaseCount)
 const dayPhaseCount = computed(() => gameStore.dayPhaseCount)
 const totalActions = computed(() => gameStore.totalActions)
 
-const avgRoundTime = computed(() => {
-    if (gameEvents.value.length === 0) return 0
-    const firstEvent = gameEvents.value[0]
-    const lastEvent = gameEvents.value[gameEvents.value.length - 1]
-    if (!firstEvent || !lastEvent) return 0
+const avgRoundTime = computed(() => gameStore.avgRoundTime)
 
-    const firstTimestamp = firstEvent.timestamp
-    const lastTimestamp = lastEvent.timestamp
-    const totalMinutes = Math.floor((lastTimestamp - firstTimestamp) / 60000)
-    return Math.ceil(totalMinutes / gameStore.round)
-})
-
-const hasStats = computed(
-    () =>
-        nightPhaseCount.value > 0 ||
-        dayPhaseCount.value > 0 ||
-        totalActions.value > 0
-)
+const hasStats = computed(() => gameStore.hasStats)
 
 function eventColorClass(event: GameEvent): string {
     if (event.phase === 'NIGHT') {

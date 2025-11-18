@@ -21,6 +21,10 @@ export const usePlayersStore = defineStore('players', {
         selectedPlayers: (state) => {
             return state.players.filter(p => state.selectedPlayerIds.includes(p.id))
         },
+
+        playerSelectedCount: (state) => {
+            return state.selectedPlayerIds.length
+        },
     },
 
     actions: {
