@@ -102,7 +102,7 @@
 
             <div v-if="!gameStore.witchPoisonUsed" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <button
-                    v-for="player in alivePlayers"
+                    v-for="player in gameStore.alivePlayersWithDetails"
                     :key="player.id"
                     @click="selectedPoisonTarget = selectedPoisonTarget === player.id ? '' : player.id"
                     :disabled="isDisabled"
@@ -133,7 +133,7 @@
                 </button>
             </div>
 
-            <div v-if="alivePlayers.length === 0" class="text-center p-4 bg-gray-100 rounded-lg">
+            <div v-if="gameStore.alivePlayersWithDetails.length === 0" class="text-center p-4 bg-gray-100 rounded-lg">
                 <p class="text-sm text-gray-600">No players available</p>
             </div>
         </div>
@@ -224,13 +224,6 @@ const playersStore = usePlayersStore()
 
 const selectedHealTarget = ref<string>('')
 const selectedPoisonTarget = ref<string>('')
-
-// Get all alive players
-const alivePlayers = computed(() => {
-    return gameStore.alivePlayers
-        .map(playerId => playersStore.getPlayerById(playerId))
-        .filter((p): p is NonNullable<typeof p> => p !== null && p !== undefined)
-})
 
 // Get the player killed by werewolves (determined from kill targets)
 const killedPlayer = computed(() => {

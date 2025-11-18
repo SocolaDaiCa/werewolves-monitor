@@ -33,7 +33,7 @@
                 </div>
                 <div class="text-center">
                     <p class="text-sm font-medium text-gray-600">Alive Players</p>
-                    <p class="text-2xl font-bold text-blue-600">{{ alivePlayers.length }}</p>
+                    <p class="text-2xl font-bold text-blue-600">{{ gameStore.alivePlayersWithDetails.length }}</p>
                 </div>
                 <div class="text-center">
                     <p class="text-sm font-medium text-gray-600">Marked for Kill</p>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="text-center">
                     <p class="text-sm font-medium text-gray-600">Remaining Votes</p>
-                    <p class="text-2xl font-bold text-green-600">{{ alivePlayers.length - totalVotes }}</p>
+                    <p class="text-2xl font-bold text-green-600">{{ gameStore.alivePlayersWithDetails.length - totalVotes }}</p>
                 </div>
             </div>
         </div>
@@ -49,7 +49,7 @@
         <!-- Player Vote Cards Grid (Moderator Control) -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div
-                v-for="player in alivePlayers"
+                v-for="player in gameStore.alivePlayersWithDetails"
                 :key="player.id"
                 :class="[
           'p-4 rounded-xl border-2 transition-all duration-200 shadow-md',
@@ -97,7 +97,7 @@
                         </div>
                         <button
                             @click="increaseVote(player.id)"
-                            :disabled="totalVotes >= alivePlayers.length"
+                            :disabled="totalVotes >= gameStore.alivePlayersWithDetails.length"
                             class="flex-1 py-2 px-2 bg-green-500 text-white font-bold rounded-lg hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors text-lg"
                         >
                             +
@@ -183,12 +183,6 @@ const markedForKill = ref<Set<string>>(new Set())
 const showResults = ref(false)
 const eliminations = ref<Array<{ id: string; name: string; votes: number }>>([])
 
-const alivePlayers = computed(() => {
-    return gameStore.alivePlayers
-        .map(playerId => playersStore.getPlayerById(playerId))
-        .filter((p): p is NonNullable<typeof p> => p !== null && p !== undefined)
-})
-
 const totalVotes = computed(() => {
     let total = 0
     playerVotes.value.forEach(count => {
@@ -206,7 +200,7 @@ const getPlayerName = (playerId: string): string => {
  */
 const increaseVote = (playerId: string) => {
     const currentVotes = playerVotes.value.get(playerId) || 0
-    if (totalVotes.value < alivePlayers.value.length) {
+    if (totalVotes.value < gameStore.alivePlayersWithDetails.length) {
         playerVotes.value.set(playerId, currentVotes + 1)
     }
 }
@@ -248,7 +242,7 @@ const submitVotes = () => {
 
     // Eliminate players that are marked for kill
     markedForKill.value.forEach(playerId => {
-        if (alivePlayers.value.some(p => p.id === playerId)) {
+        if (gameStore.alivePlayersWithDetails.some(p => p.id === playerId)) {
             eliminated.push(playerId)
             const playerName = getPlayerName(playerId)
             const voteCount = playerVotes.value.get(playerId) || 0

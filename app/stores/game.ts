@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { RoleAction, NightPhaseState, DayPhaseVote, GamePhase, GameStatus, GameState, GameEvent, PlayerElimination } from '~/types/game'
 import { useRolesStore } from '~/stores/roles'
+import { usePlayersStore } from '~/stores/players'
 
 // Store instances
 // const rolesStore = useRolesStore()
@@ -108,6 +109,12 @@ export const useGameStore = defineStore('game', {
             currentRoleRevealIndex: state.currentRoleRevealIndex.value,
             playerRoles: state.playerRoles.value,
         }),
+        alivePlayersWithDetails: (state: any) => {
+            const playersStore = usePlayersStore()
+            return state.alivePlayers
+                .map((playerId: string) => playersStore.getPlayerById(playerId))
+                .filter((p: any) => p !== null && p !== undefined)
+        },
     },
     actions: {
         resetGame() {

@@ -17,7 +17,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="text-center">
                     <p class="text-sm font-medium text-gray-600">Alive Players</p>
-                    <p class="text-2xl font-bold text-purple-600">{{ alivePlayers.length }}</p>
+                    <p class="text-2xl font-bold text-purple-600">{{ gameStore.alivePlayersWithDetails.length }}</p>
                 </div>
                 <div class="text-center">
                     <p class="text-sm font-medium text-gray-600">Investigation Result</p>
@@ -34,7 +34,7 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <button
-                    v-for="player in alivePlayers"
+                    v-for="player in gameStore.alivePlayersWithDetails"
                     :key="player.id"
                     @click="selectPlayer(player.id)"
                     :disabled="isDisabled"
@@ -72,7 +72,7 @@
             </div>
 
             <!-- No Players Available -->
-            <div v-if="alivePlayers.length === 0" class="text-center py-8 text-gray-500">
+            <div v-if="gameStore.alivePlayersWithDetails.length === 0" class="text-center py-8 text-gray-500">
                 <p class="text-lg font-medium">No players available to investigate</p>
             </div>
         </div>
@@ -150,13 +150,6 @@ const rolesStore = useRolesStore()
 
 const selectedTarget = ref<string>('')
 const investigationResult = ref<{ isWerewolf: boolean } | null>(null)
-
-// Get all alive players
-const alivePlayers = computed(() => {
-    return gameStore.alivePlayers
-        .map(playerId => playersStore.getPlayerById(playerId))
-        .filter((p): p is NonNullable<typeof p> => p !== null && p !== undefined)
-})
 
 /**
  * Get player name by ID
