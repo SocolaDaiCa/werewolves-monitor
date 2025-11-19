@@ -52,11 +52,11 @@
                 v-for="player in gameStore.alivePlayersWithDetails"
                 :key="player.id"
                 :class="[
-          'p-4 rounded-xl border-2 transition-all duration-200 shadow-md',
-          markedForKill.has(player.id)
-            ? 'border-red-500 bg-red-50'
-            : 'border-gray-300 bg-white'
-        ]"
+                    'p-4 rounded-xl border-2 transition-all duration-200 shadow-md',
+                    markedForKill.has(player.id)
+                        ? 'border-red-500 bg-red-50'
+                        : 'border-gray-300 bg-white'
+                ]"
             >
                 <!-- Player Header -->
                 <div class="flex items-center gap-3 mb-4">
@@ -109,11 +109,11 @@
                 <button
                     @click="toggleKill(player.id)"
                     :class="[
-            'w-full py-3 px-4 rounded-lg font-bold transition-all duration-200 flex items-center justify-center gap-2',
-            markedForKill.has(player.id)
-              ? 'bg-red-600 text-white hover:bg-red-700'
-              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-          ]"
+                        'w-full py-3 px-4 rounded-lg font-bold transition-all duration-200 flex items-center justify-center gap-2',
+                        markedForKill.has(player.id)
+                            ? 'bg-red-600 text-white hover:bg-red-700'
+                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    ]"
                 >
                     <span class="text-xl">{{ markedForKill.has(player.id) ? '☠️' : '⚔️' }}</span>
                     {{ markedForKill.has(player.id) ? 'Marked for Kill' : 'Mark for Kill' }}

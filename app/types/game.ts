@@ -92,8 +92,6 @@ export enum EliminationMethod {
   VOTE = 'VOTE',
   WEREWOLF_KILL = 'WEREWOLF_KILL',
   WITCH = 'WITCH',
-  WITCH_HEAL = 'WITCH_HEAL',
-  WITCH_POISON = 'WITCH_POISON',
   HUNTER = 'HUNTER',
   OTHER = 'OTHER'
 }

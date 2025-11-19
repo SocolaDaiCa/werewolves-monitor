@@ -367,23 +367,10 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
         if (action.targetPlayerId) {
             if (currentRole.value.id == RoleId.WEREWOLF) {
                 gameStore.currentDayOrNightAction.werewolfKillToPlayerId = action.targetPlayerId
-                gameStore.eliminatePlayer(
-                    action.targetPlayerId,
-                    gameStore.round,
-                    EliminationMethod.WEREWOLF_KILL,
-                )
             }
             if (currentRole.value.id == RoleId.WITCH) {
                 gameStore.currentDayOrNightAction.witchHealToPlayerId = action.targetPlayerId
                 gameStore.currentDayOrNightAction.witchPoisonToPlayerId = action.secondaryTargetPlayerId
-
-                if (action.secondaryTargetPlayerId) {
-                    gameStore.eliminatePlayer(
-                        action.targetPlayerId,
-                        gameStore.round,
-                        EliminationMethod.WITCH_POISON,
-                    )
-                }
             }
         }
         // Mark this role as completed

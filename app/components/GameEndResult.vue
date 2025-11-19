@@ -52,7 +52,6 @@
     <!-- Summary Section -->
     <div class="bg-white rounded-xl p-6 shadow-md">
       <h2 class="text-2xl font-bold text-gray-800 mb-6">{{ $t('gameEnd.summary') }}</h2>
-
       <!-- Summary Table -->
       <div class="overflow-x-auto">
         <table class="w-full text-sm md:text-base">

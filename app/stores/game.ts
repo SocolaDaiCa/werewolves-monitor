@@ -78,12 +78,8 @@ export const useGameStore = defineStore('game', {
             return total > 0 ? (state.eliminatedPlayers.length / total) * 100 : 0
         },
         lastNightDeaths: (state: any) => {
-            const currentRound = state.round
             return state.playerEliminations
-                .filter((elimination: PlayerElimination) => {
-                    return elimination.round === currentRound &&
-                        (elimination.method === EliminationMethod.WEREWOLF_KILL || elimination.method === EliminationMethod.WITCH)
-                })
+                .filter((elimination: PlayerElimination) => elimination.round === state.round)
                 .map((elimination: PlayerElimination) => ({
                     playerId: elimination.playerId,
                     description: elimination.description,
@@ -214,6 +210,29 @@ export const useGameStore = defineStore('game', {
             this.playerRoles = { ...this.roleAcknowledgments }
         },
         updateAlivePlayers() {
+            let currentEliminatedPlayers = []
+
+            if (
+                this.currentDayOrNightAction.werewolfKillToPlayerId
+                && !this.currentDayOrNightAction.witchHealToPlayerId
+            ) {
+                currentEliminatedPlayers.push(this.currentDayOrNightAction.werewolfKillToPlayerId)
+                this.eliminatePlayer(
+                    this.currentDayOrNightAction.werewolfKillToPlayerId,
+                    this.round,
+                    EliminationMethod.WEREWOLF_KILL,
+                )
+            }
+
+            if (this.currentDayOrNightAction.witchPoisonToPlayerId) {
+                currentEliminatedPlayers.push(this.currentDayOrNightAction.witchPoisonToPlayerId)
+                this.eliminatePlayer(
+                    this.currentDayOrNightAction.witchPoisonToPlayerId,
+                    this.round,
+                    EliminationMethod.WITCH,
+                )
+            }
+
             this.alivePlayers = this.players.filter(pid => !this.eliminatedPlayers.includes(pid))
         },
         startNightPhase() {

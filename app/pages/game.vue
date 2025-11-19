@@ -5,7 +5,10 @@
                 <ion-buttons slot="start">
                     <ion-back-button default-href="/"></ion-back-button>
                 </ion-buttons>
-                <ion-title>{{ $t('gameSetup.title') }}</ion-title>
+                <ion-title>
+                    {{ gameStore.phase === GamePhase.NIGHT ? '🌙' : '☀️' }}
+                    {{ gameStore.phase }} {{ gameStore.round }}
+                </ion-title>
             </ion-toolbar>
         </ion-header>
         <ion-content>
