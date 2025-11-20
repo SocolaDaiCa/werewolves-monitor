@@ -223,6 +223,7 @@ const toggleKill = (playerId: string) => {
     if (markedForKill.value.has(playerId)) {
         markedForKill.value.delete(playerId)
     } else {
+        markedForKill.value.clear()
         markedForKill.value.add(playerId)
     }
 }
@@ -245,14 +246,9 @@ const submitVotes = () => {
     markedForKill.value.forEach(playerId => {
         if (gameStore.alivePlayersWithDetails.some(p => p.id === playerId)) {
             eliminated.push(playerId)
-            const playerName = getPlayerName(playerId)
-            const voteCount = playerVotes.value.get(playerId) || 0
-            gameStore.eliminatePlayer(
-                playerId,
-                gameStore.round,
-                EliminationMethod.VOTE,
-                `${playerName} was eliminated by vote (${voteCount} vote${voteCount !== 1 ? 's' : ''})`
-            )
+            // const playerName = getPlayerName(playerId)
+            // const voteCount = playerVotes.value.get(playerId) || 0
+            gameStore.currentDayOrNightAction.villagerVoteKillForPlayerId = playerId
         }
     })
 

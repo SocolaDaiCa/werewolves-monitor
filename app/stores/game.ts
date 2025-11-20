@@ -233,6 +233,16 @@ export const useGameStore = defineStore('game', {
                 )
             }
 
+            if (this.currentDayOrNightAction.villagerVoteKillForPlayerId) {
+                currentEliminatedPlayers
+                this.eliminatePlayer(
+                    this.currentDayOrNightAction.villagerVoteKillForPlayerId,
+                    this.round,
+                    EliminationMethod.VOTE,
+                //     `${playerName} was eliminated by vote (${voteCount} vote${voteCount !== 1 ? 's' : ''})`
+                )
+            }
+
             this.alivePlayers = this.players.filter(pid => !this.eliminatedPlayers.includes(pid))
         },
         startNightPhase() {
