@@ -9,7 +9,7 @@
                 </h2>
 
                 <!-- Role Description -->
-                <p class="text-xl md:text-2xl text-purple-100 mb-8 leading-relaxed">
+                <p class="text-xl md:text-2xl text-purple-100">
                     {{ currentRoleDescription }}
                 </p>
                 <!-- Status Indicator -->

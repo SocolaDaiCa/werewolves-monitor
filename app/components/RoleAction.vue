@@ -28,18 +28,18 @@
                         @click="selectPlayer(player.id)"
                         :disabled="isDisabled"
                         :class="[
-              'p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2',
-              isDisabled
-                ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
-                : selectedPlayerId === player.id
-                ? 'border-green-500 bg-green-50'
-                : 'border-gray-300 bg-gray-50 hover:border-gray-400'
-            ]"
+                            'p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2',
+                            isDisabled
+                                ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
+                                : selectedPlayerId === player.id
+                                ? 'border-green-500 bg-green-50'
+                                : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                        ]"
                     >
                         <img v-if="player.avatar" :src="player.avatar" :alt="player.name" class="w-8 h-8 rounded-full object-cover" />
                         <span v-else class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white text-xs flex items-center justify-center font-bold">
-              {{ player.name.charAt(0).toUpperCase() }}
-            </span>
+                            {{ player.name.charAt(0).toUpperCase() }}
+                        </span>
                         <span class="font-medium text-gray-800">{{ player.name }}</span>
                         <span v-if="selectedPlayerId === player.id" class="ml-auto text-green-500">✓</span>
                     </button>
@@ -56,18 +56,18 @@
                         @click="toggleSecondarySelect(player.id)"
                         :disabled="isDisabled"
                         :class="[
-              'p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2',
-              isDisabled
-                ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
-                : isSecondarySelected(player.id)
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-300 bg-gray-50 hover:border-gray-400'
-            ]"
+                        'p-3 rounded-lg border-2 transition-all duration-200 flex items-center gap-2',
+                        isDisabled
+                            ? 'border-gray-300 bg-gray-100 cursor-not-allowed opacity-50'
+                            : isSecondarySelected(player.id)
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-300 bg-gray-50 hover:border-gray-400'
+                        ]"
                     >
                         <img v-if="player.avatar" :src="player.avatar" :alt="player.name" class="w-8 h-8 rounded-full object-cover" />
                         <span v-else class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 text-white text-xs flex items-center justify-center font-bold">
-              {{ player.name.charAt(0).toUpperCase() }}
-            </span>
+                            {{ player.name.charAt(0).toUpperCase() }}
+                        </span>
                         <span class="font-medium text-gray-800">{{ player.name }}</span>
                     </button>
                 </div>
@@ -82,11 +82,11 @@
                     @click="skipAction"
                     :disabled="isDisabled"
                     :class="[
-            'w-full py-2 px-4 text-sm font-medium rounded-lg transition-colors',
-            isDisabled
-              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
-          ]"
+                        'w-full py-2 px-4 text-sm font-medium rounded-lg transition-colors',
+                        isDisabled
+                          ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                          : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
+                    ]"
                 >
                     {{ $t('nightPhase.skipAction') }}
                 </button>
@@ -99,11 +99,11 @@
                 @click="confirmAction"
                 :disabled="!isActionValid || isDisabled"
                 :class="[
-          'flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200',
-          (!isActionValid || isDisabled)
-            ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-            : 'bg-green-500 text-white hover:bg-green-600 active:scale-95'
-        ]"
+                    'flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200',
+                    (!isActionValid || isDisabled)
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-green-500 text-white hover:bg-green-600 active:scale-95'
+                ]"
             >
                 {{ $t('nightPhase.confirmAction') }}
             </button>

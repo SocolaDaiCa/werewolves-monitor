@@ -112,75 +112,61 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Navigation and Control Buttons -->
-                <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-20">
-                    <div class="max-w-7xl mx-auto px-6 py-4 flex gap-3 sm:gap-4 flex-wrap">
-                        <!-- Previous Role -->
-                        <button
-                            @click="previousRole"
-                            :disabled="currentRoleIndex === 0"
-                            :class="[
-                                'px-4 py-3 font-semibold rounded-lg transition text-center',
-                                currentRoleIndex === 0
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-gray-400 hover:bg-gray-500 text-white'
-                                ]"
-                        >
-                            ←
-                        </button>
-
-                        <!-- Next Role -->
-                        <button
-                            @click="nextRole"
-                            :disabled="currentRoleIndex === sortedRoles.length - 1"
-                            :class="[
-                                'px-4 py-3 font-semibold rounded-lg transition text-center',
-                                currentRoleIndex === sortedRoles.length - 1
-                                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                    : 'bg-blue-500 hover:bg-blue-600 text-white'
-                            ]"
-                        >
-                            →
-                        </button>
-
-                        <!-- Back to Setup -->
-                        <NuxtLink
-                            to="/game-setup"
-                            class="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition text-center"
-                        >
-                            {{ $t('nightZero.backToSetup') }}
-                        </NuxtLink>
-
-                        <!-- Force Start (if needed) -->
-                        <button
-                            v-show="!allRolesAcknowledged"
-                            @click="forceStart"
-                            class="px-4 py-3 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition text-center"
-                        >
-                            {{ $t('nightZero.forceStart') }}
-                        </button>
-
-                        <!-- Start Game -->
-                        <button
-                            @click="startGame"
-                            :disabled="!canStartGame"
-                            :class="[
-                                'flex-1 px-4 py-3 font-semibold rounded-lg transition text-center',
-                                canStartGame
-                                    ? 'bg-green-500 hover:bg-green-600 text-white cursor-pointer'
-                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                ]"
-                        >
-                            {{ $t('nightZero.startGameBtn') }}
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Spacer for Fixed Buttons -->
-                <div class="h-20"></div>
             </div>
         </ion-content>
+        <ion-footer>
+            <ion-toolbar>
+                <!-- Navigation and Control Buttons -->
+                <ion-buttons class="flex gap-3">
+                    <!-- Previous Role -->
+                    <button
+                        @click="previousRole"
+                        :disabled="currentRoleIndex === 0"
+                        :class="[
+                            'px-4 py-3 font-semibold rounded-lg transition text-center',
+                            currentRoleIndex === 0
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-gray-400 hover:bg-gray-500 text-white'
+                            ]"
+                    >
+                        ←
+                    </button>
+                    <!-- Next Role -->
+                    <button
+                        @click="nextRole"
+                        :disabled="currentRoleIndex === sortedRoles.length - 1"
+                        :class="[
+                            'px-4 py-3 font-semibold rounded-lg transition text-center',
+                            currentRoleIndex === sortedRoles.length - 1
+                                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                : 'bg-blue-500 hover:bg-blue-600 text-white'
+                        ]"
+                    >
+                        <ion-icon :icon="ioniconsArrowForwardOutline" size="large"></ion-icon>
+                    </button>
+                    <!-- Back to Setup -->
+                    <NuxtLink
+                        to="/game-setup"
+                        class="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition text-center"
+                    >
+                        {{ $t('nightZero.backToSetup') }}
+                    </NuxtLink>
+                    <!-- Start Game -->
+                    <button
+                        @click="startGame"
+                        :disabled="!canStartGame"
+                        :class="[
+                            'flex-1 px-4 py-3 font-semibold rounded-lg transition text-center',
+                            canStartGame
+                                ? 'bg-green-500 hover:bg-green-600 text-white cursor-pointer'
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        ]"
+                    >
+                        {{ $t('nightZero.startGameBtn') }}
+                    </button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-footer>
     </ion-page>
 </template>
 
@@ -194,6 +180,7 @@ import type { Role } from '~/types/role'
 import { usePlayersStore } from '~/stores/players'
 import RoleCallout from '~/components/RoleCallout.vue'
 import { GamePhase, GameStatus } from '~/types/game'
+import {ioniconsArrowForwardOutline} from "#imports";
 
 const { locale } = useI18n()
 const router = useRouter()
@@ -288,16 +275,6 @@ async function startGame() {
         await router.push('/game')
     } catch (error) {
         console.error('Failed to start game:', error)
-    }
-}
-
-async function forceStart() {
-    try {
-        gameStore.setPhase(GamePhase.NIGHT)
-        gameStore.setStatus(GameStatus.PLAYING)
-        await router.push('/game')
-    } catch (error) {
-        console.error('Failed to force start game:', error)
     }
 }
 </script>

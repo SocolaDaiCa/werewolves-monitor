@@ -200,7 +200,6 @@
     "noMatchingRole": "This role is not yours",
     "waitForYourRole": "Keep watching - it's not your role yet",
     "startGameBtn": "Start Game",
-    "forceStart": "Force Start (Moderator Override)",
     "validationWarning": "Warning: Not all roles have correct acknowledgments",
     "validationSuccess": "All roles acknowledged correctly!",
     "roleProgress": "Role Progress",

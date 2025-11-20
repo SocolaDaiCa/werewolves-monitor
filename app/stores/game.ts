@@ -11,14 +11,14 @@ export interface DayOrNightAction {
     round: number
     phase: GamePhase
     villagerVoteKillForPlayerId?: string
-    werewolfKillToPlayerId?: string
-    // ----
+    werewolfKillToPlayerId?: string,
+    seerInvestigatePlayerId?: string,
     witchHealToPlayerId?: string
     witchPoisonToPlayerId?: string
+    // ----
     // hunterKillToPlayerId?: string
     // bodyguardProtectFromPlayerId?: string
     // bodyguardProtectToPlayerId?: string
-    // seerInvestigatePlayerId?: string
     // seerInvestigateResult?: boolean
     // seerInvestigateToPlayerId?: string
     // seerInvestigateResult?: boolean
@@ -155,9 +155,6 @@ export const useGameStore = defineStore('game', {
         },
         setPhase(newPhase: GamePhase) {
             this.phase = newPhase
-        },
-        setRound(newRound: number) {
-            this.round = newRound
         },
         setStatus(newStatus: GameStatus) {
             this.status = newStatus
