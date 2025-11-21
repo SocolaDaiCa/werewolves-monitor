@@ -175,6 +175,20 @@
       "clearSelection": "Clear Selection",
       "confirmAction": "Confirm Action",
       "noPlayersAvailable": "No players available"
+    },
+    "bodyguard": {
+      "title": "Body Guard Protection",
+      "description": "Choose a player to protect from death during the night (cannot protect yourself)",
+      "alivePlayersLabel": "Alive Players",
+      "selectTarget": "Select a player to protect:",
+      "protectedTargetLabel": "Protected Target",
+      "protectionPlan": "Protection Plan",
+      "willBeProtected": "{player} will be protected from death tonight",
+      "ifTargeted": "If this player is targeted by werewolves, they will survive",
+      "noOtherPlayersAvailable": "No other players available to protect",
+      "confirmProtection": "Confirm Protection",
+      "skip": "Skip",
+      "noPlayersAvailable": "No players available"
     }
   },
   "phaseHeader": {

@@ -15,10 +15,9 @@ export interface DayOrNightAction {
     seerInvestigatePlayerId?: string,
     witchHealToPlayerId?: string
     witchPoisonToPlayerId?: string
+    bodyguardProtectToPlayerId?: string
     // ----
     // hunterKillToPlayerId?: string
-    // bodyguardProtectFromPlayerId?: string
-    // bodyguardProtectToPlayerId?: string
     // seerInvestigateResult?: boolean
     // seerInvestigateResult?: boolean
 }
@@ -52,6 +51,8 @@ export const useGameStore = defineStore('game', {
         // Witch state tracking
         witchHealUsed: false,
         witchPoisonUsed: false,
+        // Body Guard state tracking
+        yesterdayBodyguardProtectToPlayerId: '',
     }),
     getters: {
         totalRoleSlots: (state: any) => {
@@ -151,6 +152,7 @@ export const useGameStore = defineStore('game', {
                 phase: GamePhase.NIGHT,
             } as DayOrNightAction
             this.dayOrNightActions = [this.currentDayOrNightAction]
+            this.yesterdayBodyguardProtectToPlayerId = ''
         },
         setPhase(newPhase: GamePhase) {
             this.phase = newPhase
@@ -211,6 +213,7 @@ export const useGameStore = defineStore('game', {
             if (
                 this.currentDayOrNightAction.werewolfKillToPlayerId
                 && !this.currentDayOrNightAction.witchHealToPlayerId
+                && !this.currentDayOrNightAction.bodyguardProtectToPlayerId
             ) {
                 currentEliminatedPlayers.push(this.currentDayOrNightAction.werewolfKillToPlayerId)
                 this.eliminatePlayer(
@@ -350,6 +353,9 @@ export const useGameStore = defineStore('game', {
                 }
                 if (key == 'seerInvestigatePlayerId' && event.seerInvestigatePlayerId) {
                     messages.push(`🔮 Seer investigated ${player?.name || 'Unknown Player'} (${role?.name || 'Unknown Role'}).`)
+                }
+                if (key == 'bodyguardProtectToPlayerId' && event.bodyguardProtectToPlayerId) {
+                    messages.push(`🛡️ Body Guard protected ${player?.name || 'Unknown Player'} (${role?.name || 'Unknown Role'}).`)
                 }
             }
 

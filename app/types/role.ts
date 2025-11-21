@@ -1,3 +1,11 @@
+export enum RoleId {
+  VILLAGER = 'villager',
+  SEER = 'seer',
+  WITCH = 'witch',
+  WEREWOLF = 'werewolf',
+  BODYGUARD = 'bodyguard',
+}
+
 export enum RoleFaction {  
   VILLAGER = 'VILLAGER',
   WEREWOLF = 'WEREWOLF',
@@ -15,7 +23,7 @@ export enum NightlyActivity {
 import type { RoleActionType } from '~/types/game'
 
 export interface Role {
-  id: string
+  id: RoleId
   name: string
   nameVi: string
   description: string

@@ -29,6 +29,19 @@
 
                         <!-- Day Phase -->
                         <div v-else-if="currentPhase === GamePhase.DAY" class="space-y-6">
+                            <!-- Night Results Display -->
+                            <div class="bg-white rounded-2xl shadow-lg p-8 border-2 border-red-300">
+                                <h3 class="text-2xl font-bold text-red-700">🌙 {{ $t('nightPhase.nightResults') }}</h3>
+                                <div>
+                                    <div v-if="nightResults.length === 0" class="text-gray-600 py-4">
+                                        {{ $t('nightPhase.noElimination') }}
+                                    </div>
+                                    <div v-for="result in nightResults" :key="result.playerId" class="bg-red-50 border border-red-200 rounded-lg p-4">
+                                        <p class="font-bold text-red-900">{{ $t('nightPhase.playerDied', { player: getPlayerName(result.playerId) }) }}</p>
+                                        <p class="text-sm text-red-700 mt-2">Killed at {{ formatTime(Date.now()) }} on Night {{ currentRound }}</p>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- Day Discussion Timer -->
                             <div class="bg-white rounded-2xl shadow-lg p-8">
                                 <h2 class="text-3xl font-bold text-center mb-6 text-amber-700">☀️ {{ $t('game.day') }} {{ gameStore.round }}</h2>
@@ -54,20 +67,6 @@
                                 @vote="handleVote"
                                 @complete="completeDayPhase"
                             />
-                        </div>
-
-                        <!-- Night Results Display -->
-                        <div v-if="showNightResults" class="bg-white rounded-2xl shadow-lg p-8 border-2 border-red-300">
-                            <h3 class="text-2xl font-bold mb-6 text-red-700">🌙 {{ $t('nightPhase.nightResults') }}</h3>
-                            <div class="space-y-3">
-                                <div v-if="nightResults.length === 0" class="text-gray-600 text-center py-4">
-                                    {{ $t('nightPhase.noElimination') }}
-                                </div>
-                                <div v-for="result in nightResults" :key="result.playerId" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                                    <p class="font-bold text-red-900">{{ $t('nightPhase.playerDied', { player: getPlayerName(result.playerId) }) }}</p>
-                                    <p class="text-sm text-red-700 mt-2">Killed at {{ formatTime(Date.now()) }} on Night {{ currentRound }}</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

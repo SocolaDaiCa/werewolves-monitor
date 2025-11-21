@@ -30,19 +30,19 @@
                     @click="selectRole(index)"
                     :class="[
                         'w-full px-4 py-3 rounded-lg text-left transition-all duration-200 flex items-center justify-between',
-                        index === gameStore.currentNightRoleIndex && !isRoleDisabled.has(role.id)
+                        index === gameStore.currentNightRoleIndex && !roleIdsDisabled.has(role.id)
                             ? 'bg-blue-600 text-white shadow-md'
-                            : index === gameStore.currentNightRoleIndex && isRoleDisabled.has(role.id)
+                            : index === gameStore.currentNightRoleIndex && roleIdsDisabled.has(role.id)
                                 ? 'bg-red-400 text-white shadow-md opacity-60'
                                 : completedRoles.includes(index)
                                 ? 'bg-green-100 text-green-900 border border-green-300'
-                                    : isRoleDisabled.has(role.id)
+                                    : roleIdsDisabled.has(role.id)
                                         ? 'bg-gray-300 text-gray-600 border border-gray-400 opacity-50'
                                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                     ]"
                 >
                 <span class="font-medium flex items-center gap-2">
-                    <span v-if="isRoleDisabled.has(role.id)" class="text-xs">☠️</span>
+                    <span v-if="roleIdsDisabled.has(role.id)" class="text-xs">☠️</span>
                         {{ getRoleName(role.id) }}
                     </span>
                     <span v-if="completedRoles.includes(index)" class="text-sm">✓</span>
@@ -61,24 +61,32 @@
         <div v-if="currentRole && allRoles.length > 0">
             <!-- Werewolf Role Action Panel -->
             <RoleActionPanelWerewolf
-                v-if="isWerewolfRole"
-                :is-disabled="isRoleDisabled.has(currentRole.id)"
+                v-if="currentRole.id === RoleId.WEREWOLF"
+                :is-disabled="roleIdsDisabled.has(currentRole.id)"
                 @confirm="handleActionConfirm"
                 @skip="handleActionSkip"
             />
 
             <!-- Seer Role Action Panel -->
             <RoleActionPanelSeer
-                v-else-if="isSeerRole"
-                :is-disabled="isRoleDisabled.has(currentRole.id)"
+                v-else-if="currentRole.id === RoleId.SEER"
+                :is-disabled="roleIdsDisabled.has(currentRole.id)"
                 @confirm="handleActionConfirm"
                 @skip="handleActionSkip"
             />
 
             <!-- Witch Role Action Panel -->
             <RoleActionPanelWitch
-                v-else-if="isWitchRole"
-                :is-disabled="isRoleDisabled.has(currentRole.id)"
+                v-else-if="currentRole.id === RoleId.WITCH"
+                :is-disabled="roleIdsDisabled.has(currentRole.id)"
+                @confirm="handleActionConfirm"
+                @skip="handleActionSkip"
+            />
+
+            <!-- Body Guard Role Action Panel -->
+            <RoleActionPanelBodyguard
+                v-else-if="currentRole.id === RoleId.BODYGUARD"
+                :is-disabled="roleIdsDisabled.has(currentRole.id)"
                 @confirm="handleActionConfirm"
                 @skip="handleActionSkip"
             />
@@ -90,7 +98,7 @@
                 :player-id="currentRolePlayer?.id || ''"
                 :action-type="getRoleActionType(currentRole.id)"
                 :can-skip="true"
-                :is-disabled="isRoleDisabled.has(currentRole.id)"
+                :is-disabled="roleIdsDisabled.has(currentRole.id)"
                 @confirm="handleActionConfirm"
                 @skip="handleActionSkip"
             />
@@ -129,8 +137,8 @@
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import {EliminationMethod, RoleActionType} from '~/types/game'
-import { NightlyActivity, RoleFaction } from '~/types/role'
+import { RoleActionType} from '~/types/game'
+import { NightlyActivity, RoleFaction, RoleId } from '~/types/role'
 import { useGameStore } from '~/stores/game'
 import { useRolesStore } from '~/stores/roles'
 import { usePlayersStore } from '~/stores/players'
@@ -138,6 +146,7 @@ import RoleAction from '~/components/RoleAction.vue'
 import RoleActionPanelWerewolf from '~/components/RoleActionPanelWerewolf.vue'
 import RoleActionPanelSeer from '~/components/RoleActionPanelSeer.vue'
 import RoleActionPanelWitch from '~/components/RoleActionPanelWitch.vue'
+import RoleActionPanelBodyguard from '~/components/RoleActionPanelBodyguard.vue'
 
 interface Props {
     readonly: boolean
@@ -172,7 +181,7 @@ const allRoles = computed(() => {
 })
 
 // Check if a role is disabled (all players with this role are dead)
-const isRoleDisabled = computed(() => {
+const roleIdsDisabled = computed(() => {
     const disabled = new Set<string>()
 
     allRoles.value.forEach(role => {
@@ -200,18 +209,6 @@ const currentRolePlayer = computed(() => {
         ([, roleId]) => roleId === currentRole.value?.id
     )?.[0]
     return playerId ? playersStore.getPlayerById(playerId) : null
-})
-
-const isWerewolfRole = computed(() => {
-    return currentRole.value?.id.toLowerCase().includes('werewolf') || false
-})
-
-const isSeerRole = computed(() => {
-    return currentRole.value?.id.toLowerCase() === 'seer'
-})
-
-const isWitchRole = computed(() => {
-    return currentRole.value?.id.toLowerCase() === 'witch'
 })
 
 const getRoleName = (roleId: string): string => {
@@ -351,7 +348,6 @@ const formatActionLog = (
             rolesStore.getRoleById(targetRole2 || '');
             const isSpecial = targetRole2 && !['villager', 'werewolf'].includes(targetRole2)
             return `✨ ${roleName} (${playerName}) cảm nhận ${targetName} có vai trò đặc biệt: ${isSpecial ? 'Có' : 'Không'}`
-
         default:
             return `${roleName} (${playerName}) thực hiện hành động trên ${targetName}`
     }
@@ -370,6 +366,10 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
             }
             if (currentRole.value.id == RoleId.SEER) {
                 gameStore.currentDayOrNightAction.seerInvestigatePlayerId = action.targetPlayerId
+            }
+            if (currentRole.value.id == RoleId.BODYGUARD) {
+                gameStore.currentDayOrNightAction.bodyguardProtectToPlayerId = action.targetPlayerId
+                gameStore.yesterdayBodyguardProtectToPlayerId = gameStore.currentDayOrNightAction.bodyguardProtectToPlayerId
             }
         }
         // Mark this role as completed
@@ -401,7 +401,7 @@ const handleActionSkip = () => {
 }
 
 const isNightPhaseComplete = computed(() => {
-    return allRoles.value.length > 0 && completedRoles.value.length === allRoles.value.length
+    return allRoles.value.length > 0 && completedRoles.value.length === (allRoles.value.length - roleIdsDisabled.value.size)
 })
 
 const proceedToDay = () => {

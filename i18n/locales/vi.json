@@ -175,6 +175,20 @@
       "clearSelection": "Xóa Lựa Chọn",
       "confirmAction": "Xác Nhận Hành Động",
       "noPlayersAvailable": "Không có người chơi nào"
+    },
+    "bodyguard": {
+      "title": "Bảo Vệ Bảo Vệ",
+      "description": "Chọn một người chơi để bảo vệ khỏi cái chết vào đêm nay (không thể bảo vệ chính mình)",
+      "alivePlayersLabel": "Người Chơi Sống",
+      "selectTarget": "Chọn một người chơi để bảo vệ:",
+      "protectedTargetLabel": "Mục Tiêu Được Bảo Vệ",
+      "protectionPlan": "Kế Hoạch Bảo Vệ",
+      "willBeProtected": "{player} sẽ được bảo vệ khỏi cái chết vào đêm nay",
+      "ifTargeted": "Nếu người chơi này bị nhắm bởi sói, họ sẽ sống sót",
+      "noOtherPlayersAvailable": "Không có người chơi khác có sẵn để bảo vệ",
+      "confirmProtection": "Xác Nhận Bảo Vệ",
+      "skip": "Bỏ Qua",
+      "noPlayersAvailable": "Không có người chơi nào"
     }
   },
   "phaseHeader": {

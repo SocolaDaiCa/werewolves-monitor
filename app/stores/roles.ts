@@ -1,15 +1,8 @@
 import { defineStore } from 'pinia'
-import type { Role } from '~/types/role'
+import {type Role, RoleId} from '~/types/role'
 import { RoleFaction, NightlyActivity, RoleActionType } from '~/types/role'
 
 let roleNightOrder = 1
-
-export enum RoleId {
-    VILLAGER = 'villager',
-    SEER = 'seer',
-    WITCH = 'witch',
-    WEREWOLF = 'werewolf',
-}
 
 enum RoleNightOrder {
     // 1. Ghost (Hồn ma)
@@ -25,6 +18,7 @@ enum RoleNightOrder {
     // 10. Zombie (Xác sống)
     // 11. Count Dracula (Bá tước Dracula)
     // 12. Body Guard (Bảo vệ)
+    BODYGUARD = roleNightOrder++,
     // 13. Witch (Phù thuỷ)
     WITCH = roleNightOrder++,
     // 14. Seer (Tiên tri)
@@ -127,16 +121,18 @@ const defaultRoles: Role[] = [
     //   balancePoints: 4,
     //   nightly: 'ALWAYS',
     // },
-    // {
-    //   id: 'bodyguard',
-    //   name: 'Bodyguard',
-    //   nameVi: 'Bảo Vệ',
-    //   description: 'Each night, choose a different player to protect from death.',
-    //   descriptionVi: 'Mỗi đêm, chọn một người khác để bảo vệ khỏi cái chết.',
-    //   faction: 'VILLAGER',
-    //   balancePoints: 3,
-    //   nightly: 'ALWAYS',
-    // },
+    {
+        id: RoleId.BODYGUARD,
+        name: 'Body Guard',
+        nameVi: 'Bảo Vệ',
+        description: 'Each night, choose a different player to protect from death.',
+        descriptionVi: 'Mỗi đêm, chọn một người khác để bảo vệ khỏi cái chết.',
+        faction: RoleFaction.VILLAGER,
+        balancePoints: 3,
+        nightly: NightlyActivity.ALWAYS,
+        nightOrder: RoleNightOrder.BODYGUARD,
+        actionType: RoleActionType.SELECT_PLAYER,
+    },
     // {
     //   id: 'apprentice-seer',
     //   name: 'Apprentice Seer',
