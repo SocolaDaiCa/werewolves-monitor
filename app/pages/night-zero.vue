@@ -127,7 +127,7 @@
                             currentRoleIndex === 0
                                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                                 : 'bg-gray-400 hover:bg-gray-500 text-white'
-                            ]"
+                        ]"
                     >
                         ←
                     </button>

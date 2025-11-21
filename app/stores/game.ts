@@ -20,7 +20,6 @@ export interface DayOrNightAction {
     // bodyguardProtectFromPlayerId?: string
     // bodyguardProtectToPlayerId?: string
     // seerInvestigateResult?: boolean
-    // seerInvestigateToPlayerId?: string
     // seerInvestigateResult?: boolean
 }
 
@@ -330,11 +329,28 @@ export const useGameStore = defineStore('game', {
         },
         buildDayOrNightActionMessage(event: DayOrNightAction): string[] {
             const playersStore = usePlayersStore()
+            const rolesStore = useRolesStore()
             let messages: string[] = []
 
-            if (event.werewolfKillToPlayerId) {
-                const player = playersStore.getPlayerById(event.werewolfKillToPlayerId)
-                messages.push(`🐺 Werewolves killed ${player?.name || 'Unknown Player'}.`)
+            for (const key in event) {
+                const player = playersStore.getPlayerById(event[key as keyof DayOrNightAction] as string)
+                const roleId = this.playerRoles[player?.id as string] as string
+                const role = rolesStore.getRoleById(roleId)
+                if (key == 'werewolfKillToPlayerId' && event.werewolfKillToPlayerId) {
+                    messages.push(`🐺 Werewolves killed ${player?.name || 'Unknown Player'} (${role?.name || 'Unknown Role'}).`)
+                }
+                if (key == 'witchHealToPlayerId' && event.witchHealToPlayerId) {
+                    messages.push(`🧙 Witch healed ${player?.name || 'Unknown Player'} (${role?.name || 'Unknown Role'}).`)
+                }
+                if (key == 'witchPoisonToPlayerId' && event.witchPoisonToPlayerId) {
+                    messages.push(`🧙 Witch poisoned ${player?.name || 'Unknown Player'} (${role?.name || 'Unknown Role'}).`)
+                }
+                if (key == 'villagerVoteKillForPlayerId' && event.villagerVoteKillForPlayerId) {
+                    messages.push(`👥 Villagers voted to eliminate ${player?.name || 'Unknown Player'} (${role?.name || 'Unknown Role'}).`)
+                }
+                if (key == 'seerInvestigatePlayerId' && event.seerInvestigatePlayerId) {
+                    messages.push(`🔮 Seer investigated ${player?.name || 'Unknown Player'} (${role?.name || 'Unknown Role'}).`)
+                }
             }
 
             return messages

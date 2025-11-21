@@ -369,7 +369,7 @@ const handleActionConfirm = (action: { targetPlayerId?: string, secondaryTargetP
                 gameStore.currentDayOrNightAction.witchPoisonToPlayerId = action.secondaryTargetPlayerId
             }
             if (currentRole.value.id == RoleId.SEER) {
-                gameStore.currentDayOrNightAction.seerInvestigateToPlayerId = action.targetPlayerId
+                gameStore.currentDayOrNightAction.seerInvestigatePlayerId = action.targetPlayerId
             }
         }
         // Mark this role as completed

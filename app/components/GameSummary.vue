@@ -17,7 +17,7 @@
                         <p class="text-sm font-semibold text-gray-700">
                             {{ eventPhaseLabel(dayOrNightAction) }}
                         </p>
-                        <p class="text-sm text-gray-600 mt-1">
+                        <div class="text-sm text-gray-600 mt-1">
 <!--                            {{ event.message }}-->
                             <ul>
                                 <li
@@ -27,7 +27,7 @@
                                     {{ message }}
                                 </li>
                             </ul>
-                        </p>
+                        </div>
                     </div>
                    <span class="text-xs font-medium text-gray-500 whitespace-nowrap">
                        R{{ dayOrNightAction.round }}
