@@ -12,18 +12,6 @@
                 <p class="text-xl md:text-2xl text-purple-100">
                     {{ currentRoleDescription }}
                 </p>
-                <!-- Status Indicator -->
-                <div
-                    :class="[
-                        'mt-6 py-3 px-4 rounded-xl font-semibold text-lg transition',
-                        acknowledgedCount === expectedCount
-                            ? 'bg-green-400 bg-opacity-30 text-green-100'
-                            : 'bg-orange-400 bg-opacity-30 text-orange-100'
-                    ]"
-                >
-                    {{ acknowledgedCount === expectedCount ? '✅ ' : '⏳ ' }}
-                    {{ acknowledgedCount }}/{{ expectedCount }} {{ $t('nightZero.playerAcknowledgments') }}
-                </div>
             </div>
         </div>
 
@@ -31,8 +19,18 @@
         <div class="bg-white rounded-2xl p-6 shadow-md">
             <h3 class="text-xl font-bold text-gray-800 mb-4">
                 {{ $t('nightZero.playerAcknowledgments') }}
-                {{ acknowledgedCount === expectedCount ? '✅ ' : '⏳ ' }}
-                {{ acknowledgedCount }}/{{ expectedCount }}
+                <!-- Status Indicator -->
+                <ion-text
+                    :class="[
+                        'mt-6 py-3 px-4 rounded-xl font-semibold text-lg transition',
+                        acknowledgedCount === expectedCount
+                            ? 'bg-green-400 text-green-100'
+                            : 'bg-orange-400 text-orange-100'
+                    ]"
+                >
+                    {{ acknowledgedCount === expectedCount ? '✅ ' : '⏳ ' }}
+                    {{ acknowledgedCount }}/{{ expectedCount }}
+                </ion-text>
             </h3>
             <ion-list class="ion-hide-sm-up">
                 <ion-item
@@ -40,7 +38,6 @@
                     :key="player.id"
                     v-show="!gameStore.isPlayerHasRole(player.id) || hasPlayerAcknowledged(player.id)"
                     lines="none"
-                    @click="togglePlayerAcknowledgment(player.id)"
                 >
                     <ion-avatar slot="start">
                         <img
@@ -52,6 +49,7 @@
                     <ion-checkbox
                         :checked="hasPlayerAcknowledged(player.id)"
                         :disabled="!hasPlayerAcknowledged(player.id) && acknowledgedCount >= expectedCount"
+                        @ion-change="togglePlayerAcknowledgment(player.id)"
                     >
                         {{ player.name }}
                     </ion-checkbox>
