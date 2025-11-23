@@ -31,17 +31,12 @@ export default defineNuxtConfig({
     i18n: {
         defaultLocale: 'vi',
         locales: [
-            { code: 'en', name: 'English', file: 'en.json' },
             { code: 'vi', name: 'Tiếng Việt', file: 'vi.json' },
+            { code: 'en', name: 'English', file: 'en.json' },
         ],
     },
     piniaPluginPersistedstate: {
         storage: 'localStorage',
-        // key: 'werewolves-monitor',
-        // storageKey: 'werewolves-monitor',
-        // storageOptions: {
-        //   key: 'werewolves-monitor',
-        // },
     },
     ionic: {
         css: {

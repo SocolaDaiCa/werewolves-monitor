@@ -233,6 +233,7 @@
   },
   "settings": {
     "title": "Settings",
+    "language": "Language",
     "bodyguardRules": "Bodyguard Rules",
     "bodyguardRulesDescription": "Configure bodyguard protection settings",
     "canProtectSelf": "Can Protect Self",

@@ -93,33 +93,6 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex gap-3">
-            <button
-                @click="skipAction"
-                :disabled="isDisabled"
-                :class="[
-                    'flex-1 py-3 px-4 rounded-lg font-medium transition-colors',
-                    isDisabled
-                        ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
-                        : 'bg-gray-500 text-white hover:bg-gray-600'
-                ]"
-            >
-                Skip
-            </button>
-            <button
-                @click="confirmAction"
-                :disabled="!selectedTarget || isDisabled"
-                :class="[
-                    'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                    (!selectedTarget || isDisabled)
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-purple-600 to-purple-700 text-white hover:from-purple-700 hover:to-purple-800 active:scale-95'
-                ]"
-            >
-                Investigate
-            </button>
-        </div>
     </div>
 </template>
 
@@ -198,5 +171,25 @@ const skipAction = () => {
     selectedTarget.value = ''
     investigationResult.value = null
 }
+
+/**
+ * Exposed method for parent component to submit action
+ */
+const submitAction = () => {
+    confirmAction()
+}
+
+/**
+ * Exposed method for parent component to skip action
+ */
+const skipActionExposed = () => {
+    skipAction()
+}
+
+// Expose methods to parent
+defineExpose({
+    submitAction,
+    skipActionExposed,
+})
 </script>
 

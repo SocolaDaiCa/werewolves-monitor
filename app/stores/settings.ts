@@ -1,27 +1,34 @@
-import { defineStore } from 'pinia'
+import { defineStore, acceptHMRUpdate } from 'pinia'
+import { watch } from 'vue'
+import { Locale } from '~/types/setting'
 
 export interface SettingsState {
-  bodyguardCanProtectSelf: boolean
-  bodyguardCanProtectSamePlayerOrTwoConsecutiveNights: boolean
+    bodyguardCanProtectSelf: boolean
+    bodyguardCanProtectSamePlayerOrTwoConsecutiveNights: boolean
+    locale: Locale
 }
 
 const defaultSettings: SettingsState = {
-  bodyguardCanProtectSelf: false,
-  bodyguardCanProtectSamePlayerOrTwoConsecutiveNights: false,
+    bodyguardCanProtectSelf: false,
+    bodyguardCanProtectSamePlayerOrTwoConsecutiveNights: false,
+    locale: Locale.VI,
 }
 
 export const useSettingsStore = defineStore('settings', {
-  state: (): SettingsState => ({ ...defaultSettings }),
+    state: (): SettingsState => ({ ...defaultSettings }),
 
-  getters: {
-  },
-
-  actions: {
-    resetToDefaults() {
-      Object.assign(this, defaultSettings)
+    getters: {
     },
-  },
 
-  persist: true,
+    actions: {
+        setLocale(newLocale: Locale) {
+            this.locale = newLocale
+        },
+
+        resetToDefaults() {
+            Object.assign(this, defaultSettings)
+        },
+    },
+
+    persist: true,
 })
-

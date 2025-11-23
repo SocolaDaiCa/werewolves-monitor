@@ -19,6 +19,33 @@
         </ion-header>
 
         <ion-content>
+            <!-- Language Settings Section -->
+            <ion-card>
+                <ion-card-header>
+                    <ion-card-title>{{ $t('settings.language') }}</ion-card-title>
+                </ion-card-header>
+
+                <ion-card-content>
+                    <ion-list>
+                        <ion-item>
+<!--                            <ion-label>🌐 {{ $t('settings.selectLanguage') }}</ion-label>-->
+                            <ion-select
+                                v-model="currentLocale"
+                                @ion-change="updateLocale"
+                                class="ion-text-right"
+                            >
+                                <ion-select-option
+                                    v-for="loc in locales"
+                                    :value="loc.code"
+                                >
+                                    {{ loc.name }}
+                                </ion-select-option>
+                            </ion-select>
+                        </ion-item>
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+
             <!-- Bodyguard Settings Section -->
             <ion-card>
                 <ion-card-header>
@@ -73,51 +100,53 @@ import {
     IonCardSubtitle,
     IonCardContent,
     IonToggle,
-    IonItemDivider,
     IonButton,
     IonIcon,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonSelect,
+    IonSelectOption,
 } from '@ionic/vue'
 import { refreshOutline } from 'ionicons/icons'
 import { ref, onMounted } from 'vue'
 import { useSettingsStore } from '~/stores/settings'
-import {
-    SettingBodyguardCanProtectSelf,
-    SettingBodyguardCanProtectSamePlayerOrTwoConsecutiveNights,
-} from '~/types/setting'
+import { Locale } from '~/types/setting'
 
+const {locales} = useI18n()
 const settingsStore = useSettingsStore()
 
-const canProtectSelf = ref(settingsStore.isBodyguardCanProtectSelf)
+const currentLocale = ref<Locale>(settingsStore.locale)
+const canProtectSelf = ref(settingsStore.bodyguardCanProtectSelf)
 const canProtectSameOrConsecutive = ref(
-    settingsStore.isBodyguardCanProtectSamePlayerOrTwoConsecutiveNights
+    settingsStore.bodyguardCanProtectSamePlayerOrTwoConsecutiveNights
 )
 
+const updateLocale = () => {
+    settingsStore.setLocale(currentLocale.value)
+}
+
 const updateCanProtectSelf = () => {
-    settingsStore.setBodyguardCanProtectSelf(
-        canProtectSelf.value ? SettingBodyguardCanProtectSelf.YES : SettingBodyguardCanProtectSelf.NO
-    )
+    settingsStore.bodyguardCanProtectSelf = canProtectSelf.value
 }
 
 const updateCanProtectSameOrConsecutive = () => {
-    settingsStore.setBodyguardCanProtectSamePlayerOrTwoConsecutiveNights(
-        canProtectSameOrConsecutive.value
-            ? SettingBodyguardCanProtectSamePlayerOrTwoConsecutiveNights.YES
-            : SettingBodyguardCanProtectSamePlayerOrTwoConsecutiveNights.NO
-    )
+    settingsStore.bodyguardCanProtectSamePlayerOrTwoConsecutiveNights = canProtectSameOrConsecutive.value
 }
 
 const handleResetSettings = () => {
     settingsStore.resetToDefaults()
-    canProtectSelf.value = settingsStore.isBodyguardCanProtectSelf
-    canProtectSameOrConsecutive.value =
-        settingsStore.isBodyguardCanProtectSamePlayerOrTwoConsecutiveNights
+    currentLocale.value = settingsStore.locale
+    canProtectSelf.value = settingsStore.bodyguardCanProtectSelf
+    canProtectSameOrConsecutive.value = settingsStore.bodyguardCanProtectSamePlayerOrTwoConsecutiveNights
 }
 
 onMounted(() => {
     // Settings will be automatically loaded from store
-    canProtectSelf.value = settingsStore.isBodyguardCanProtectSelf
+    currentLocale.value = settingsStore.locale
+    canProtectSelf.value = settingsStore.bodyguardCanProtectSelf
     canProtectSameOrConsecutive.value =
-        settingsStore.isBodyguardCanProtectSamePlayerOrTwoConsecutiveNights
+        settingsStore.bodyguardCanProtectSamePlayerOrTwoConsecutiveNights
 })
 </script>
 

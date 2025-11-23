@@ -3,7 +3,7 @@
         <!-- Body Guard Header -->
         <ion-card class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl p-6 shadow-lg" :class="{ 'opacity-75': isDisabled }">
             <ion-card-title>
-                <h2 class="text-white">🛡️ Body Guard</h2>
+                <h2 class="text-white">🛡️ {{ $t('roleActions.bodyguard.title')}}</h2>
             </ion-card-title>
             <ion-card-content>
                 <span v-if="isDisabled" class="text-2xl">☠️</span>
@@ -104,33 +104,6 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex gap-3">
-            <button
-                @click="skipAction"
-                :disabled="isDisabled"
-                :class="[
-                    'flex-1 py-3 px-4 rounded-lg font-medium transition-colors',
-                    isDisabled
-                        ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
-                        : 'bg-gray-500 text-white hover:bg-gray-600'
-                ]"
-            >
-                Skip
-            </button>
-            <button
-                @click="confirmAction"
-                :disabled="!selectedTarget || isDisabled"
-                :class="[
-                    'flex-1 py-3 px-4 rounded-lg font-medium transition-all',
-                    (!selectedTarget || isDisabled)
-                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                        : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 active:scale-95'
-                ]"
-            >
-                Confirm Protection
-            </button>
-        </div>
     </div>
 </template>
 
@@ -138,7 +111,7 @@
 import { computed, ref } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { usePlayersStore } from '~/stores/players'
-import type {Player} from "~/types";
+import type { Player } from "~/types";
 import { useSettingsStore } from "~/stores/settings";
 
 interface Props {
@@ -224,5 +197,25 @@ const skipAction = () => {
     emit('skip')
     selectedTarget.value = ''
 }
+
+/**
+ * Exposed method for parent component to submit action
+ */
+const submitAction = () => {
+    confirmAction()
+}
+
+/**
+ * Exposed method for parent component to skip action
+ */
+const skipActionExposed = () => {
+    skipAction()
+}
+
+// Expose methods to parent
+defineExpose({
+    submitAction,
+    skipActionExposed,
+})
 </script>
 

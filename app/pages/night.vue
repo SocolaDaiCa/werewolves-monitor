@@ -100,6 +100,7 @@
                         <!-- Werewolf Role Action Panel -->
                         <RoleActionPanelWerewolf
                             v-if="currentRole.id === RoleId.WEREWOLF"
+                            ref="werewolfPanelRef"
                             :is-disabled="roleIdsDisabled.has(currentRole.id)"
                             @confirm="handleActionConfirm"
                             @skip="handleActionSkip"
@@ -108,6 +109,7 @@
                         <!-- Seer Role Action Panel -->
                         <RoleActionPanelSeer
                             v-else-if="currentRole.id === RoleId.SEER"
+                            ref="seerPanelRef"
                             :is-disabled="roleIdsDisabled.has(currentRole.id)"
                             @confirm="handleActionConfirm"
                             @skip="handleActionSkip"
@@ -116,6 +118,7 @@
                         <!-- Witch Role Action Panel -->
                         <RoleActionPanelWitch
                             v-else-if="currentRole.id === RoleId.WITCH"
+                            ref="witchPanelRef"
                             :is-disabled="roleIdsDisabled.has(currentRole.id)"
                             @confirm="handleActionConfirm"
                             @skip="handleActionSkip"
@@ -124,6 +127,7 @@
                         <!-- Body Guard Role Action Panel -->
                         <RoleActionPanelBodyguard
                             v-else-if="currentRole.id === RoleId.BODYGUARD"
+                            ref="bodyguardPanelRef"
                             :is-disabled="roleIdsDisabled.has(currentRole.id)"
                             @confirm="handleActionConfirm"
                             @skip="handleActionSkip"
@@ -177,6 +181,22 @@
             <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 px-6 py-4 shadow-2xl">
                 <div class="max-w-6xl mx-auto flex gap-4">
                     <button
+                        @click="handleSkipCurrentRole"
+                        :disabled="roleIdsDisabled.has(currentRole?.id || '')"
+                        class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        Skip Action
+                    </button>
+
+                    <button
+                        @click="handleConfirmCurrentRole"
+                        :disabled="roleIdsDisabled.has(currentRole?.id || '')"
+                        class="flex-1 py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        Confirm Action
+                    </button>
+
+                    <button
                         @click="goToMenu"
                         class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"
                     >
@@ -215,6 +235,12 @@ const rolesStore = useRolesStore()
 const playersStore = usePlayersStore()
 
 const completedRoles = ref<number[]>([])
+
+// Refs for action panels
+const werewolfPanelRef = ref<InstanceType<typeof RoleActionPanelWerewolf>>()
+const seerPanelRef = ref<InstanceType<typeof RoleActionPanelSeer>>()
+const witchPanelRef = ref<InstanceType<typeof RoleActionPanelWitch>>()
+const bodyguardPanelRef = ref<InstanceType<typeof RoleActionPanelBodyguard>>()
 
 // Get all roles (including dead players for appearance)
 const allRoles = computed(() => {
@@ -398,6 +424,40 @@ const completeNightPhase = () => {
  */
 const skipToDay = () => {
     completeNightPhase()
+}
+
+/**
+ * Handle confirm button click - call the current panel's submitAction method
+ */
+const handleConfirmCurrentRole = () => {
+    const roleId = currentRole.value?.id
+
+    if (roleId === RoleId.WEREWOLF) {
+        werewolfPanelRef.value?.submitAction()
+    } else if (roleId === RoleId.SEER) {
+        seerPanelRef.value?.submitAction()
+    } else if (roleId === RoleId.WITCH) {
+        witchPanelRef.value?.submitAction()
+    } else if (roleId === RoleId.BODYGUARD) {
+        bodyguardPanelRef.value?.submitAction()
+    }
+}
+
+/**
+ * Handle skip button click - call the current panel's skipActionExposed method
+ */
+const handleSkipCurrentRole = () => {
+    const roleId = currentRole.value?.id
+
+    if (roleId === RoleId.WEREWOLF) {
+        werewolfPanelRef.value?.skipActionExposed()
+    } else if (roleId === RoleId.SEER) {
+        seerPanelRef.value?.skipActionExposed()
+    } else if (roleId === RoleId.WITCH) {
+        witchPanelRef.value?.skipActionExposed()
+    } else if (roleId === RoleId.BODYGUARD) {
+        bodyguardPanelRef.value?.skipActionExposed()
+    }
 }
 
 /**

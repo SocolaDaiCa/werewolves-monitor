@@ -1,68 +1,68 @@
 <template>
-  <ion-page>
-    <ion-content :fullscreen="true" class="ion-padding">
-      <!-- Hero Section -->
-      <div class="flex flex-col items-center justify-center py-8 mb-6">
-        <div class="text-6xl mb-4">🐺</div>
-        <h1 class="text-4xl font-bold text-center mb-3 leading-tight">
-          {{ $t('home.welcome') }}
-        </h1>
-      </div>
+    <ion-page>
+        <ion-content :fullscreen="true" class="ion-padding">
+            <!-- Hero Section -->
+            <div class="flex flex-col items-center justify-center py-8 mb-6">
+                <div class="text-6xl mb-4">🐺</div>
+                <h1 class="text-4xl font-bold text-center mb-3 leading-tight">
+                    {{ $t('home.welcome') }}
+                </h1>
+            </div>
 
-      <!-- Main Menu Cards -->
-      <div>
-        <div class="flex flex-col gap-4 m-auto" style="width: 280px">
-          <!-- Start Game Button -->
-          <ion-button
-            expand="block"
-            router-link="/game-setup"
-            class="ion-button-success"
-            size="large"
-          >
-            <ion-icon slot="start" name="gamepad"></ion-icon>
-            {{ $t('home.startGame') }}
-            <span slot="end" class="text-xl">🎮</span>
-          </ion-button>
+            <!-- Main Menu Cards -->
+            <div>
+                <div class="flex flex-col gap-4 m-auto" style="width: 280px">
+                    <!-- Start Game Button -->
+                    <ion-button
+                        expand="block"
+                        router-link="/game-setup"
+                        class="ion-button-success"
+                        size="large"
+                    >
+<!--                        <ion-icon slot="start" name="gamepad"></ion-icon>-->
+                        {{ $t('home.startGame') }}
+                        <span slot="end" class="text-xl">🎮</span>
+                    </ion-button>
 
-          <!-- Manage Roles Button -->
-          <ion-button
-            expand="block"
-            router-link="/roles"
-            fill="outline"
-            size="large"
-          >
-            <ion-icon slot="start" name="card"></ion-icon>
-            {{ $t('home.manageRoles') }}
-            <span slot="end" class="text-xl">🃏</span>
-          </ion-button>
+                    <!-- Manage Roles Button -->
+                    <ion-button
+                        expand="block"
+                        router-link="/roles"
+                        fill="outline"
+                        size="large"
+                    >
+<!--                        <ion-icon slot="start" name="card"></ion-icon>-->
+                        {{ $t('home.manageRoles') }}
+                        <span slot="end" class="text-xl">🃏</span>
+                    </ion-button>
 
-          <!-- Manage Players Button -->
-          <ion-button
-            expand="block"
-            router-link="/players"
-            fill="outline"
-            size="large"
-          >
-            <ion-icon name="person-outline"></ion-icon>
-            {{ $t('home.managePlayers') }}
-            <span slot="end" class="text-xl">👥</span>
-          </ion-button>
+                    <!-- Manage Players Button -->
+                    <ion-button
+                        expand="block"
+                        router-link="/players"
+                        fill="outline"
+                        size="large"
+                    >
+<!--                        <ion-icon name="person-outline"></ion-icon>-->
+                        {{ $t('home.managePlayers') }}
+                        <span slot="end" class="text-xl">👥</span>
+                    </ion-button>
 
-          <!-- Settings Button -->
-          <ion-button
-            expand="block"
-            router-link="/settings"
-            fill="outline"
-            size="large"
-          >
-            <ion-icon slot="start" name="settings"></ion-icon>
-            {{ $t('navigation.settings') }}
-            <span slot="end" class="text-xl">⚙️</span>
-          </ion-button>
-        </div>
-      </div>
-    </ion-content>
-  </ion-page>
+                    <!-- Settings Button -->
+                    <ion-button
+                        expand="block"
+                        router-link="/settings"
+                        fill="outline"
+                        size="large"
+                    >
+<!--                        <ion-icon slot="start" name="settings"></ion-icon>-->
+                        {{ $t('navigation.settings') }}
+                        <span slot="end" class="text-xl">⚙️</span>
+                    </ion-button>
+                </div>
+            </div>
+        </ion-content>
+    </ion-page>
 </template>
 
 <script setup lang="ts">

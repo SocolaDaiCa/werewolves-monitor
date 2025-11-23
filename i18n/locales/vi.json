@@ -177,7 +177,7 @@
       "noPlayersAvailable": "Không có người chơi nào"
     },
     "bodyguard": {
-      "title": "Bảo Vệ Bảo Vệ",
+      "title": "Bảo Vệ",
       "description": "Chọn một người chơi để bảo vệ khỏi cái chết vào đêm nay (không thể bảo vệ chính mình)",
       "alivePlayersLabel": "Người Chơi Sống",
       "selectTarget": "Chọn một người chơi để bảo vệ:",
@@ -234,6 +234,7 @@
   },
   "settings": {
     "title": "Cài Đặt",
+    "language": "Ngôn ngữ",
     "bodyguardRules": "Quy Tắc Bảo Vệ",
     "bodyguardRulesDescription": "Cấu hình cài đặt bảo vệ của Bảo Vệ",
     "canProtectSelf": "Có Thể Bảo Vệ Chính Mình",
