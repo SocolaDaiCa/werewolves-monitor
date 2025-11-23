@@ -148,20 +148,7 @@
 
                     <!-- Navigation Buttons -->
                     <div v-if="allRoles.length > 0" class="flex gap-3">
-                        <button
-                            @click="previousRole"
-                            :disabled="gameStore.currentNightRoleIndex === 0"
-                            class="flex-1 py-3 px-4 rounded-lg font-medium bg-gray-200 text-gray-700 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                            ← {{ $t('common.back') }}
-                        </button>
-                        <button
-                            @click="nextRole"
-                            :disabled="gameStore.currentNightRoleIndex === allRoles.length - 1"
-                            class="flex-1 py-3 px-4 rounded-lg font-medium bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                        >
-                            {{ $t('common.next') }} →
-                        </button>
+
                     </div>
 
                     <!-- Phase Complete Action -->
@@ -178,40 +165,56 @@
             </div>
 
             <!-- Fixed Bottom Buttons -->
-            <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 px-6 py-4 shadow-2xl">
-                <div class="max-w-6xl mx-auto flex gap-4">
-                    <button
-                        @click="handleSkipCurrentRole"
-                        :disabled="roleIdsDisabled.has(currentRole?.id || '')"
-                        class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                    >
-                        Skip Action
-                    </button>
+<!--            <div class="fixed bottom-20 left-0 right-0 bg-white border-t border-gray-300 px-6 py-4 shadow-2xl">-->
+<!--                <div class="max-w-6xl mx-auto flex gap-4">-->
+<!--                    <button-->
+<!--                        @click="handleSkipCurrentRole"-->
+<!--                        :disabled="roleIdsDisabled.has(currentRole?.id || '')"-->
+<!--                        class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"-->
+<!--                    >-->
+<!--                        Skip Action-->
+<!--                    </button>-->
 
-                    <button
+<!--                    <button-->
+<!--                        @click="goToMenu"-->
+<!--                        class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"-->
+<!--                    >-->
+<!--                        {{ $t('common.back') }}-->
+<!--                    </button>-->
+
+<!--                    <button-->
+<!--                        @click="skipToDay"-->
+<!--                        class="flex-1 py-3 px-4 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors"-->
+<!--                    >-->
+<!--                        Skip Night-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
+        </ion-content>
+        <ion-footer>
+            <ion-toolbar>
+                <ion-buttons slot="start">
+                    <ion-button
+                        @click="previousRole"
+                        :disabled="gameStore.currentNightRoleIndex === 0 || allRoles.length == 0"
+                    >
+                        <ion-icon :icon="ioniconsArrowBackOutline"></ion-icon>
+                    </ion-button>
+                    <ion-button
                         @click="handleConfirmCurrentRole"
                         :disabled="roleIdsDisabled.has(currentRole?.id || '')"
-                        class="flex-1 py-3 px-4 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                     >
                         Confirm Action
-                    </button>
-
-                    <button
-                        @click="goToMenu"
-                        class="flex-1 py-3 px-4 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"
+                    </ion-button>
+                    <ion-button
+                        @click="nextRole"
+                        :disabled="gameStore.currentNightRoleIndex === allRoles.length - 1 || allRoles.length == 0"
                     >
-                        {{ $t('common.back') }}
-                    </button>
-
-                    <button
-                        @click="skipToDay"
-                        class="flex-1 py-3 px-4 bg-orange-500 text-white rounded-lg font-medium hover:bg-orange-600 transition-colors"
-                    >
-                        Skip Night
-                    </button>
-                </div>
-            </div>
-        </ion-content>
+                        <ion-icon :icon="ioniconsArrowForwardOutline"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-footer>
     </ion-page>
 </template>
 
@@ -228,6 +231,7 @@ import RoleActionPanelWerewolf from '~/components/RoleActionPanelWerewolf.vue'
 import RoleActionPanelSeer from '~/components/RoleActionPanelSeer.vue'
 import RoleActionPanelWitch from '~/components/RoleActionPanelWitch.vue'
 import RoleActionPanelBodyguard from '~/components/RoleActionPanelBodyguard.vue'
+import {ioniconsArrowBackOutline, ioniconsArrowForwardOutline} from "#imports";
 
 const router = useRouter()
 const gameStore = useGameStore()

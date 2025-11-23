@@ -6,6 +6,9 @@ import { useI18n } from 'vue-i18n'
 let roleNightOrder = 1
 
 enum RoleNightOrder {
+    // 12. Body Guard (Bảo vệ)
+    BODYGUARD = roleNightOrder++,
+    /*------------*/
     // 1. Ghost (Hồn ma)
     // 2. § Cupid (Thần tình yêu)
     // 3. § Doppelganger (Người nhân bản)
@@ -18,8 +21,6 @@ enum RoleNightOrder {
     // 9. Leprechaun (Yêu tinh)
     // 10. Zombie (Xác sống)
     // 11. Count Dracula (Bá tước Dracula)
-    // 12. Body Guard (Bảo vệ)
-    BODYGUARD = roleNightOrder++,
     // 13. Witch (Phù thuỷ)
     WITCH = roleNightOrder++,
     // 14. Seer (Tiên tri)
