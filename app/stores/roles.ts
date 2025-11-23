@@ -297,6 +297,7 @@ const defaultRoles: Role[] = [
     // WEREWOLF FACTION
     {
         id: RoleId.WEREWOLF,
+        icon: '🐺',
         name: 'Werewolf',
         nameVi: 'Sói',
         description: 'Each night, choose a player to eliminate.',

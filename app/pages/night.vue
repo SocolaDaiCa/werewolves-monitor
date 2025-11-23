@@ -5,9 +5,13 @@
                 <ion-title>Roles</ion-title>
             </ion-toolbar>
         </ion-header>
-        <ion-content class="ion-padding">
+        <ion-content>
             <ion-list>
-                <ion-item v-for="role in allRoles" :key="role.id">
+                <ion-item
+                    v-for="(role, index) in allRoles"
+                    :key="role.id"
+                    @click="selectRole(index)"
+                >
                     <ion-label>
                         <h2>{{ role.nameVi }}</h2>
                         <p>{{ role.descriptionVi }}</p>
@@ -36,7 +40,7 @@
                 <div class="flex-1 px-6 py-8">
                     <div class="max-w-6xl mx-auto space-y-6">
                         <!-- Role Progress Navigation -->
-                        <div class="bg-white rounded-xl p-6 shadow-md">
+                        <div class="bg-white rounded-xl p-6 shadow-md ion-hide-sm-down">
                             <h2 class="text-lg font-bold text-gray-800 mb-4">{{ $t('nightPhase.roleActionPanel') }}</h2>
 
                             <!-- Progress Indicator -->
