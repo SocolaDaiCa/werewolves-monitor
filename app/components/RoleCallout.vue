@@ -29,9 +29,35 @@
 
         <!-- Player List with Acknowledgment Status -->
         <div class="bg-white rounded-2xl p-6 shadow-md">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">{{ $t('nightZero.playerAcknowledgments') }}</h3>
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                <!-- v-show="!hasPlayerAcknowledged(player.id) || gameStore.roleAcknowledgments[player.id] == currentRole?.id" -->
+            <h3 class="text-xl font-bold text-gray-800 mb-4">
+                {{ $t('nightZero.playerAcknowledgments') }}
+                {{ acknowledgedCount === expectedCount ? '✅ ' : '⏳ ' }}
+                {{ acknowledgedCount }}/{{ expectedCount }}
+            </h3>
+            <ion-list class="ion-hide-sm-up">
+                <ion-item
+                    v-for="player in players"
+                    :key="player.id"
+                    v-show="!gameStore.isPlayerHasRole(player.id) || hasPlayerAcknowledged(player.id)"
+                    lines="none"
+                    @click="togglePlayerAcknowledgment(player.id)"
+                >
+                    <ion-avatar slot="start">
+                        <img
+                            v-if="player.avatar"
+                            :src="player.avatar"
+                            :alt="player.name"
+                        />
+                    </ion-avatar>
+                    <ion-checkbox
+                        :checked="hasPlayerAcknowledged(player.id)"
+                        :disabled="!hasPlayerAcknowledged(player.id) && acknowledgedCount >= expectedCount"
+                    >
+                        {{ player.name }}
+                    </ion-checkbox>
+                </ion-item>
+            </ion-list>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 ion-hide-sm-down">
                 <SelectableCard
                     v-for="player in players"
                     :key="player.id"

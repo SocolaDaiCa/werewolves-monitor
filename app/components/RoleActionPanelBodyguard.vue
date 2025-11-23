@@ -1,16 +1,30 @@
 <template>
-    <div class="space-y-6" :class="{ 'opacity-60': isDisabled }">
+    <div :class="{ 'opacity-60': isDisabled }">
         <!-- Body Guard Header -->
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl p-6 shadow-lg" :class="{ 'opacity-75': isDisabled }">
-            <div class="flex items-center gap-2 mb-2">
-                <h2 class="text-3xl font-bold">🛡️ Body Guard Protection</h2>
+        <ion-card class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-xl p-6 shadow-lg" :class="{ 'opacity-75': isDisabled }">
+            <ion-card-title>
+                <h2 class="text-white">🛡️ Body Guard</h2>
+            </ion-card-title>
+            <ion-card-content>
                 <span v-if="isDisabled" class="text-2xl">☠️</span>
-            </div>
-            <p class="text-blue-50">Choose a player to protect from death during the night (cannot protect yourself)</p>
-            <p v-if="isDisabled" class="text-sm mt-2 font-semibold bg-red-700 bg-opacity-50 inline-block px-2 py-1 rounded">
-                (Player is dead - actions disabled)
-            </p>
-        </div>
+                <ion-text class="text-blue-50">
+                    Choose a player to protect from death during the night
+                    <ion-text
+                        v-if="!settingsStore.bodyguardCanProtectSelf"
+                        class="font-semibold"
+                        color="danger"
+                    >
+                        (cannot protect yourself)
+                    </ion-text>
+                </ion-text>
+                <ion-text
+                    v-if="isDisabled"
+                    class="text-sm mt-2 font-semibold bg-red-700 bg-opacity-50 inline-block px-2 py-1 rounded"
+                >
+                    (Player is dead - actions disabled)
+                </ion-text>
+            </ion-card-content>
+        </ion-card>
 
         <!-- Current Status -->
         <div class="bg-white rounded-xl p-6 shadow-md border-2 border-blue-200">

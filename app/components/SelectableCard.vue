@@ -6,11 +6,11 @@
         <!-- Card Background -->
         <div
             :class="[
-        'relative rounded-2xl transition-all duration-300 border-3 h-40',
-        isSelected
-          ? 'border-green-500 bg-green-50 shadow-lg scale-105'
-          : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
-      ]"
+                'relative rounded-2xl transition-all duration-300 border-3 h-40',
+                isSelected
+                    ? 'border-green-500 bg-green-50 shadow-lg scale-105'
+                    : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-md'
+            ]"
         >
             <!-- Checkmark Badge -->
             <div
