@@ -19,9 +19,9 @@
                             <div>
                                 <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">{{ $t('roles.roleBalance') }}</p>
                                 <div class="flex items-baseline gap-2">
-                  <span class="text-3xl font-bold" :class="getBalanceTextColor()">
-                    {{ balancePoints > 0 ? '+' : '' }}{{ balancePoints }}
-                  </span>
+                                    <span class="text-3xl font-bold" :class="getBalanceTextColor()">
+                                        {{ balancePoints > 0 ? '+' : '' }}{{ balancePoints }}
+                                    </span>
                                     <span class="text-sm text-gray-600">{{ $t('roles.balancePoints') }}</span>
                                 </div>
                             </div>
@@ -52,35 +52,35 @@
                                             <span
                                                 class="text-xs font-semibold ml-2"
                                                 :class="{
-                          'text-green-600': getFactionBalancePoints(faction) > 0,
-                          'text-red-600': getFactionBalancePoints(faction) < 0,
-                          'text-gray-500': getFactionBalancePoints(faction) === 0
-                        }"
+                                                    'text-green-600': getFactionBalancePoints(faction) > 0,
+                                                    'text-red-600': getFactionBalancePoints(faction) < 0,
+                                                    'text-gray-500': getFactionBalancePoints(faction) === 0
+                                                }"
                                             >
-                        ({{ getFactionBalancePoints(faction) > 0 ? '+' : '' }}{{ getFactionBalancePoints(faction) }})
-                      </span>
+                                                ({{ getFactionBalancePoints(faction) > 0 ? '+' : '' }}{{ getFactionBalancePoints(faction) }})
+                                            </span>
                                         </p>
                                     </div>
                                     <div class="flex flex-wrap gap-2">
-                    <span
-                        v-for="role in getSelectedRolesByFaction(faction)"
-                        :key="role.id"
-                    >
-                      <ion-badge class="ion-badge-primary">
-                        {{ role.quantity }}×
-                      </ion-badge>
-                      {{ role.name }}
-                      <span
-                          class="ml-1"
-                          :class="{
-                          'text-green-300': role.balancePoints * role.quantity > 0,
-                          'text-red-300': role.balancePoints * role.quantity < 0,
-                          'text-gray-300': role.balancePoints * role.quantity === 0
-                        }"
-                      >
-                        ({{ role.balancePoints * role.quantity > 0 ? '+' : '' }}{{ role.balancePoints * role.quantity }})
-                      </span>
-                    </span>
+                                        <span
+                                            v-for="role in getSelectedRolesByFaction(faction)"
+                                            :key="role.id"
+                                        >
+                                            <ion-badge class="ion-badge-primary">
+                                                {{ role.quantity }}×
+                                            </ion-badge>
+                                            {{ role.name }}
+                                            <span
+                                                class="ml-1"
+                                                :class="{
+                                                    'text-green-300': role.balancePoints * role.quantity > 0,
+                                                    'text-red-300': role.balancePoints * role.quantity < 0,
+                                                    'text-gray-300': role.balancePoints * role.quantity === 0
+                                                }"
+                                            >
+                                                ({{ role.balancePoints * role.quantity > 0 ? '+' : '' }}{{ role.balancePoints * role.quantity }})
+                                            </span>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -163,17 +163,11 @@ const { t } = useI18n()
 const rolesStore = useRolesStore()
 
 // Reactive state
-const activeFaction = ref<Role['faction']>(RoleFaction.VILLAGER)
 const factions: Role['faction'][] = [RoleFaction.VILLAGER, RoleFaction.WEREWOLF, RoleFaction.SPECIAL]
 
 // Computed properties
 const balancePoints = computed(() => rolesStore.totalBalancePoints)
-const balanceStatusLabel = computed(() => rolesStore.balanceStatus)
 const totalRoleCount = computed(() => rolesStore.totalRoleCount)
-
-const filteredRoles = computed(() => {
-    return rolesStore.rolesByFaction(activeFaction.value)
-})
 
 const hasSelectedRoles = computed(() => {
     return Object.entries(rolesStore.selectedRoles).some(([, quantity]) => quantity > 0)
