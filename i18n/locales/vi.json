@@ -232,6 +232,19 @@
     "maxLength": "Không được vượt quá {max} ký tự",
     "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ"
   },
+  "settings": {
+    "title": "Cài Đặt",
+    "bodyguardRules": "Quy Tắc Bảo Vệ",
+    "bodyguardRulesDescription": "Cấu hình cài đặt bảo vệ của Bảo Vệ",
+    "canProtectSelf": "Có Thể Bảo Vệ Chính Mình",
+    "canProtectSelfDescription": "Cho phép Bảo Vệ bảo vệ chính mình",
+    "canProtectSameOrConsecutive": "Mục Tiêu Giống Nhau Nhiều Đêm",
+    "canProtectSameOrConsecutiveDescription": "Cho phép bảo vệ cùng một người chơi hoặc cùng một mục tiêu hai đêm liên tiếp",
+    "resetToDefaults": "Đặt Lại Mặc Định",
+    "aboutSettings": "Về Các Cài Đặt Này",
+    "aboutCanProtectSelf": "Có Thể Bảo Vệ Chính Mình: Liệu Bảo Vệ có được phép bảo vệ chính mình trong pha đêm hay phải luôn bảo vệ người chơi khác.",
+    "aboutCanProtectSameOrConsecutive": "Mục Tiêu Giống Nhau Nhiều Đêm: Liệu Bảo Vệ có thể bảo vệ cùng một người chơi vào các đêm liên tiếp hay phải chọn một mục tiêu khác."
+  },
   "gameEnd": {
     "title": "Kết Thúc Game",
     "subtitle": "Kết Quả Cuối Cùng",

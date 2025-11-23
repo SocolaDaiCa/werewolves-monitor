@@ -231,6 +231,19 @@
     "maxLength": "Must be no more than {max} characters",
     "invalidEmail": "Please enter a valid email address"
   },
+  "settings": {
+    "title": "Settings",
+    "bodyguardRules": "Bodyguard Rules",
+    "bodyguardRulesDescription": "Configure bodyguard protection settings",
+    "canProtectSelf": "Can Protect Self",
+    "canProtectSelfDescription": "Allow the bodyguard to protect themselves",
+    "canProtectSameOrConsecutive": "Same Target Multiple Nights",
+    "canProtectSameOrConsecutiveDescription": "Allow protecting the same player or same target two consecutive nights",
+    "resetToDefaults": "Reset to Defaults",
+    "aboutSettings": "About These Settings",
+    "aboutCanProtectSelf": "Can Protect Self: Whether the bodyguard is allowed to protect themselves during the night phase instead of always protecting another player.",
+    "aboutCanProtectSameOrConsecutive": "Same Target Multiple Nights: Whether the bodyguard can protect the same player on consecutive nights or if they must choose a different target."
+  },
   "gameEnd": {
     "title": "Game Over",
     "subtitle": "Final Results",

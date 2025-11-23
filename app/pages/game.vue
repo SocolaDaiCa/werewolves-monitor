@@ -260,11 +260,11 @@ const goToMenu = () => {
 
 onMounted(() => {
     // Initialize night phase
-    if (currentPhase.value === GamePhase.NIGHT) {
-        gameStore.startNightPhase()
-    } else if (currentPhase.value === GamePhase.DAY) {
-        startDayPhaseTimer()
-    }
+    // if (currentPhase.value === GamePhase.NIGHT) {
+    //     gameStore.startNightPhase()
+    // } else if (currentPhase.value === GamePhase.DAY) {
+    //     startDayPhaseTimer()
+    // }
 })
 
 onUnmounted(() => {

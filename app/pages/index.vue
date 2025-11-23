@@ -48,15 +48,15 @@
             <span slot="end" class="text-xl">👥</span>
           </ion-button>
 
-          <!-- Settings Button (Disabled) -->
+          <!-- Settings Button -->
           <ion-button
             expand="block"
-            disabled
+            router-link="/settings"
             fill="outline"
             size="large"
           >
             <ion-icon slot="start" name="settings"></ion-icon>
-            {{ $t('home.viewStats') }}
+            {{ $t('navigation.settings') }}
             <span slot="end" class="text-xl">⚙️</span>
           </ion-button>
         </div>

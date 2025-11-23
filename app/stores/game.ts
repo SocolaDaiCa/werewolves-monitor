@@ -31,6 +31,7 @@ export const useGameStore = defineStore('game', {
         currentDayOrNightAction: {} as DayOrNightAction,
         // ---
         players: [] as string[],
+        alivePlayers: [] as string[],
         selectedRoles: {} as { [roleId: string]: number },
         gameLog: [] as GameEvent[],
         roleAcknowledgments: {} as { [playerId: string]: string },
@@ -39,7 +40,6 @@ export const useGameStore = defineStore('game', {
         // Night phase state
         nightPhaseActions: [] as RoleAction[],
         currentNightRoleIndex: 0,
-        alivePlayers: [] as string[],
         // Day phase state
         dayPhaseVotes: [] as DayPhaseVote[],
         eliminatedPlayers: [] as string[],
@@ -129,18 +129,18 @@ export const useGameStore = defineStore('game', {
         },
     },
     actions: {
-        resetGame() {
+        resetGame(playerIds = [] as string[]) {
             this.phase = GamePhase.SETUP
             this.round = 1
             this.status = GameStatus.SETUP
-            this.players = []
+            this.players = playerIds
+            this.alivePlayers = playerIds
             this.selectedRoles = {}
             this.gameLog = []
             this.roleAcknowledgments = {}
             this.currentRoleRevealIndex = 0
             this.playerRoles = {}
             this.currentNightRoleIndex = 0
-            this.alivePlayers = []
             this.dayPhaseVotes = []
             this.eliminatedPlayers = []
             this.playerEliminations = []
@@ -164,8 +164,7 @@ export const useGameStore = defineStore('game', {
             this.selectedRoles = roles
         },
         initializeGame(playerIds: string[], roles: { [roleId: string]: number }) {
-            this.resetGame()
-            this.players = playerIds
+            this.resetGame(playerIds)
             this.selectedRoles = roles
         },
         addGameEvent(message: string) {
@@ -208,6 +207,7 @@ export const useGameStore = defineStore('game', {
             this.playerRoles = { ...this.roleAcknowledgments }
         },
         updateAlivePlayers() {
+            console.log('updateAlivePlayers', this.currentDayOrNightAction)
             let currentEliminatedPlayers = []
 
             if (

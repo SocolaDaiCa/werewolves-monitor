@@ -124,6 +124,8 @@
 import { computed, ref } from 'vue'
 import { useGameStore } from '~/stores/game'
 import { usePlayersStore } from '~/stores/players'
+import type {Player} from "~/types";
+import { useSettingsStore } from "~/stores/settings";
 
 interface Props {
     isDisabled?: boolean
@@ -142,6 +144,7 @@ const emit = defineEmits<Emits>()
 
 const gameStore = useGameStore()
 const playersStore = usePlayersStore()
+const settingsStore = useSettingsStore()
 
 const selectedTarget = ref<string>('')
 
@@ -155,9 +158,23 @@ const currentBodyGuard = computed(() => {
 
 // Available players (alive + cannot be self)
 const availablePlayers = computed(() => {
-    return gameStore.alivePlayersWithDetails.filter(
-        player => player.id !== currentBodyGuard.value
-    )
+    return gameStore.alivePlayersWithDetails.filter((player: Player) => {
+        if (
+            !settingsStore.bodyguardCanProtectSelf
+            && player.id == currentBodyGuard.value
+        ) {
+            return false
+        }
+
+        if (
+            !settingsStore.bodyguardCanProtectSamePlayerOrTwoConsecutiveNights
+            && player.id === gameStore.yesterdayBodyguardProtectToPlayerId
+        ) {
+            return false
+        }
+
+        return true
+    })
 })
 
 /**

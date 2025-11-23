@@ -81,11 +81,11 @@
                 @click="skipAction"
                 :disabled="isDisabled"
                 :class="[
-          'flex-1 py-3 px-4 rounded-lg font-medium transition-colors',
-          isDisabled
-            ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
-            : 'bg-gray-500 text-white hover:bg-gray-600'
-        ]"
+                    'flex-1 py-3 px-4 rounded-lg font-medium transition-colors',
+                    isDisabled
+                        ? 'bg-gray-400 text-gray-300 cursor-not-allowed'
+                        : 'bg-gray-500 text-white hover:bg-gray-600'
+                ]"
             >
                 Skip
             </button>
@@ -128,7 +128,7 @@ const emit = defineEmits<Emits>()
 const gameStore = useGameStore()
 const playersStore = usePlayersStore()
 
-const selectedTarget = ref<string>('')
+const selectedTarget = ref<string>(gameStore.currentDayOrNightAction?.werewolfKillToPlayerId || '')
 
 /**
  * Select a player to kill
