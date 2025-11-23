@@ -73,3 +73,13 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+
+Luật chơi:
+
+- Bảo vệ không được bảo vệ 1 người trong 2 đêm liên tiếp
+- Bảo vệ không được bảo vệ chính mình
+- Phù thuỷ chỉ được giết và cứu 1 lần mỗi loại trong 1 game
+- Phù thuỷ được phép vừa giết vừa cứu 1 người trong 1 đêm
+- Tiên tri chỉ được kiểm tra 1 người trong 1 đêm
+- Tiên tri chỉ được kiểm tra 1 người trong 1 đêm
