@@ -1,5 +1,22 @@
 <template>
-    <ion-page>
+    <ion-menu content-id="page-night">
+        <ion-header>
+            <ion-toolbar>
+                <ion-title>Roles</ion-title>
+            </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+            <ion-list>
+                <ion-item v-for="role in gameStore.rolesInGame" :key="role.name">
+                    <ion-label>
+                        <h2>{{ $t(`roles.${role.name}.name`) }}</h2>
+                        <p>{{ $t(`roles.${role.name}.description`) }}</p>
+                    </ion-label>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-menu>
+    <ion-page id="page-night">
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
@@ -8,13 +25,13 @@
                 <ion-title>
                     🌙 {{ $t('game.night') }} {{ gameStore.round }}
                 </ion-title>
+                <ion-buttons slot="end">
+                    <ion-menu-button></ion-menu-button>
+                </ion-buttons>
             </ion-toolbar>
         </ion-header>
         <ion-content>
-            <div class="min-h-screen bg-gradient-to-b from-slate-50 to-white flex flex-col">
-                <!-- Phase Header -->
-                <PhaseHeader />
-
+            <div>
                 <!-- Main Content -->
                 <div class="flex-1 px-6 py-8">
                     <div class="max-w-6xl mx-auto">
@@ -43,9 +60,6 @@
                         </button>
                     </div>
                 </div>
-
-                <!-- Safe area padding for fixed buttons -->
-                <div class="h-20" />
             </div>
         </ion-content>
     </ion-page>
@@ -54,8 +68,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useGameStore } from '~/stores/game'
-import { GamePhase } from '~/types/game'
-import PhaseHeader from '~/components/PhaseHeader.vue'
 import RoleActionPanel from '~/components/RoleActionPanel.vue'
 
 const router = useRouter()
