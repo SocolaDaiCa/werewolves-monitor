@@ -126,7 +126,6 @@ withDefaults(defineProps<Props>(), {
 const emit = defineEmits<Emits>()
 
 const gameStore = useGameStore()
-const playersStore = usePlayersStore()
 
 const selectedTarget = ref<string>(gameStore.currentDayOrNightAction?.werewolfKillToPlayerId || '')
 

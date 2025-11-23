@@ -3,7 +3,7 @@
         <ion-header>
             <ion-toolbar>
                 <ion-buttons slot="start">
-                    <ion-back-button default-href="/"></ion-back-button>
+                    <ion-back-button default-href="/game-setup"></ion-back-button>
                 </ion-buttons>
                 <ion-title>{{ $t('nightZero.title') }}</ion-title>
             </ion-toolbar>
@@ -26,7 +26,7 @@
                         <!-- Right: Role Progress and Status -->
                         <div class="space-y-6">
                             <!-- Role Progress -->
-                            <div class="bg-white rounded-2xl p-6 shadow-md h-fit sticky top-24">
+                            <div class="bg-white rounded-2xl p-6 shadow-md h-fit">
                                 <h3 class="text-lg font-bold text-gray-800 mb-4">{{ $t('nightZero.roleProgress') }}</h3>
                                 <div class="space-y-2 max-h-96 overflow-y-auto">
                                     <button
@@ -144,13 +144,6 @@
                     >
                         <ion-icon :icon="ioniconsArrowForwardOutline" size="large"></ion-icon>
                     </button>
-                    <!-- Back to Setup -->
-                    <NuxtLink
-                        to="/game-setup"
-                        class="px-4 py-3 bg-gray-500 hover:bg-gray-600 text-white font-semibold rounded-lg transition text-center"
-                    >
-                        {{ $t('nightZero.backToSetup') }}
-                    </NuxtLink>
                     <!-- Start Game -->
                     <button
                         @click="startGame"
