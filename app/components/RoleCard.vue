@@ -26,7 +26,7 @@
                 {{ currentLanguage === 'vi' ? role.nameVi : role.name }}
             </h3>
             <p class="text-xs font-semibold uppercase tracking-wide mb-1" :class="`text-${getFactionColor()}`">
-                {{ getFactionLabel() }}
+                {{ rolesStore.getFactionLabel(role.faction) }}
             </p>
             <p class="text-xs text-gray-600 line-clamp-2">
                 {{ currentLanguage === 'vi' ? role.descriptionVi : role.description }}
@@ -156,17 +156,6 @@ const decreaseQuantity = () => {
         localQuantity.value = quantity.value
         emit('quantityChange', quantity.value)
     }
-}
-
-const getFactionLabel = () => {
-    const factionMap: { [key: string]: string } = {
-        [RoleFaction.VILLAGER]: '🏘️ Village',
-        [RoleFaction.WEREWOLF]: '🐺 Werewolf',
-        [RoleFaction.CULT]: '🔮 Cult',
-        [RoleFaction.VAMPIRE]: '🧛 Vampire',
-        [RoleFaction.SPECIAL]: '✨ Special',
-    }
-    return factionMap[props.role.faction] || props.role.faction
 }
 
 const getFactionColor = () => {

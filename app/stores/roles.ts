@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import {type Role, RoleId} from '~/types/role'
 import { RoleFaction, NightlyActivity, RoleActionType } from '~/types/role'
+import { useI18n } from 'vue-i18n'
 
 let roleNightOrder = 1
 
@@ -549,6 +550,18 @@ export const useRolesStore = defineStore('roles', {
 
         getRoleName(roleId: string): string {
             return this.getRoleById(roleId)?.name || 'Unknown'
+        },
+
+        getFactionLabel(faction: Role['faction']): string {
+            const { t } = useI18n()
+            const labels: Record<Role['faction'], string> = {
+                [RoleFaction.VILLAGER]: '🏘️ ' + t('roles.villagers'),
+                [RoleFaction.WEREWOLF]: '🐺 ' + t('roles.werewolves'),
+                [RoleFaction.CULT]: '🔮 ' + t('roles.cult'),
+                [RoleFaction.VAMPIRE]: '🧛 ' + t('roles.vampire'),
+                [RoleFaction.SPECIAL]: '✨ ' + t('roles.special'),
+            }
+            return labels[faction] || faction
         },
 
         getRoleDescription(roleId: string): string {

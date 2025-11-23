@@ -48,7 +48,7 @@
                                 <div v-if="getSelectedRolesByFaction(faction).length > 0" class="mb-4">
                                     <div class="flex items-center justify-between mb-3">
                                         <p class="text-xs font-semibold text-gray-600">
-                                            {{ getFactionLabel(faction) }}
+                                            {{ rolesStore.getFactionLabel(faction) }}
                                             <span
                                                 class="text-xs font-semibold ml-2"
                                                 :class="{
@@ -97,7 +97,7 @@
                                 :content-id="faction"
                             >
                                 <ion-label>
-                                    {{ getFactionLabel(faction) }}
+                                    {{ rolesStore.getFactionLabel(faction) }}
                                 </ion-label>
                             </ion-segment-button>
                         </ion-segment>
@@ -190,16 +190,6 @@ const getFactionBalancePoints = (faction: Role['faction']) => {
 }
 
 // Methods
-const getFactionLabel = (faction: Role['faction']) => {
-    const labels: Record<Role['faction'], string> = {
-        [RoleFaction.VILLAGER]: '🏘️ ' + t('roles.villagers'),
-        [RoleFaction.WEREWOLF]: '🐺 ' + t('roles.werewolves'),
-        [RoleFaction.CULT]: '🔮 ' + t('roles.cult'),
-        [RoleFaction.VAMPIRE]: '🧛 ' + t('roles.vampire'),
-        [RoleFaction.SPECIAL]: '✨ ' + t('roles.special'),
-    }
-    return labels[faction] || faction
-}
 
 const getBalanceStatusText = () => {
     const points = balancePoints.value
