@@ -1,22 +1,5 @@
-export enum GamePhase {
-  NIGHT = 'NIGHT',
-  DAY = 'DAY',
-  SETUP = 'SETUP',
-  END = 'END'
-}
 
-export enum GameStatus {
-  SETUP = 'SETUP',
-  PLAYING = 'PLAYING',
-  FINISHED = 'FINISHED'
-}
-export enum Faction {
-  VILLAGER = 'VILLAGER',
-  WEREWOLF = 'WEREWOLF',
-  CULT = 'CULT',
-  VAMPIRE = 'VAMPIRE',
-  SPECIAL = 'SPECIAL'
-}
+
 
 export interface GameEvent {
   round: number
@@ -55,16 +38,7 @@ export interface PlayerRole {
 }
 
 // Night Phase Action Types
-export enum RoleActionType {
-  SELECT_PLAYER = 'SELECT_PLAYER',
-  SELECT_TARGET = 'SELECT_TARGET',
-  DUAL_SELECT = 'DUAL_SELECT',
-  TEXT_INPUT = 'TEXT_INPUT',
-  ACKNOWLEDGE = 'ACKNOWLEDGE',
-  DUAL_OPTION = 'DUAL_OPTION',
-  SKIP = 'SKIP',
-  NONE = 'NONE'
-}
+
 
 export interface RoleAction {
   roleId: string

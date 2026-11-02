@@ -1,40 +1,21 @@
-export enum RoleId {
-  VILLAGER = 'villager',
-  SEER = 'seer',
-  WITCH = 'witch',
-  WEREWOLF = 'werewolf',
-  BODYGUARD = 'bodyguard',
+export enum GamePhase {
+  NIGHT = 'NIGHT',
+  DAY = 'DAY',
+  SETUP = 'SETUP',
+  END = 'END'
 }
 
-export enum RoleFaction {  
-  VILLAGER = 'VILLAGER',
-  WEREWOLF = 'WEREWOLF',
-  CULT = 'CULT',
-  VAMPIRE = 'VAMPIRE',
-  SPECIAL = 'SPECIAL'
+export enum GameStatus {
+  SETUP = 'SETUP',
+  PLAYING = 'PLAYING',
+  FINISHED = 'FINISHED'
 }
 
-export enum NightlyActivity {
-  ALWAYS = 'ALWAYS',
-  FIRST_NIGHT = 'FIRST_NIGHT',
-  NEVER = 'NEVER'
-}
+
 
 import type { RoleActionType } from '~/types/game'
 
-export interface Role {
-  id: RoleId
-  name: string
-  nameVi: string
-  description: string
-  descriptionVi: string
-  faction: RoleFaction
-  balancePoints: number
-  nightly: NightlyActivity
-  nightOrder?: number
-  actionType?: RoleActionType
-  icon?: string // URL to role icon
-}
+
 
 // Re-export RoleActionType for convenience
 export { RoleActionType } from '~/types/game'
